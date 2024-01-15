@@ -4,8 +4,12 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var indexRouter = require('./routes/API/index');
+var usersRouter = require('./routes/API/users');
+var apiCate=require('./routes/API/api.cate');
+var apiStaff=require('./routes/API/api.staff');
+var apiDonHang=require('./routes/API/api.donhang');
+var apiHoaDon=require('./routes/API/api.hoaDon');
 const bodyParser = require('body-parser');
 var app = express();
 
@@ -22,6 +26,10 @@ app.use(bodyParser.json());
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/apiCate',apiCate);
+app.use('/apistaff',apiStaff);
+app.use('/donhang',apiDonHang);
+app.use('/hoaDon',apiHoaDon);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
