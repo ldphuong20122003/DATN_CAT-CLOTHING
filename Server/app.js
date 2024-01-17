@@ -11,6 +11,10 @@ var apiStaff=require('./routes/API/api.staff');
 var apiDonHang=require('./routes/API/api.donhang');
 var apiHoaDon=require('./routes/API/api.hoaDon');
 var apiRating=require('./routes/API/api.Rating');
+var apiNotification=require('./routes/API/api.notification');
+var apiFVR=require('./routes/API/api.FVR');
+
+
 const bodyParser = require('body-parser');
 var app = express();
 
@@ -32,6 +36,9 @@ app.use('/apistaff',apiStaff);
 app.use('/donhang',apiDonHang);
 app.use('/hoaDon',apiHoaDon);
 app.use('/Rating',apiRating);
+app.use('/Ntf',apiNotification);
+app.use('/Fvr',apiFVR);
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
