@@ -119,7 +119,7 @@ const Login = () => {
             borderRadius: 6,
           }}
         >
-          <Text style={{ color: "#fff" }}>Đăng nhập</Text>
+          <Text style={{ color: "#fff",fontSize:16,fontWeight:500 }}>Đăng ký</Text>
         </View>
       </TouchableOpacity>
       <View style={{ alignItems: "center" }}>
