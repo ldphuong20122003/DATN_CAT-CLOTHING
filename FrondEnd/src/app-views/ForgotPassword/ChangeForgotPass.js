@@ -7,6 +7,7 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
+  Modal,
 } from "react-native";
 import LogoCat from "../../../assets/Svg/LogoCat";
 import PhoneSvg from "../../../assets/Svg/PhoneSvg";
@@ -16,48 +17,52 @@ import GoogleSvg from "../../../assets/Svg/GoogleSvg";
 import FacebookSvg from "../../../assets/Svg/FacebookSvg";
 import EyeSvg from "../../../assets/Svg/EyeSvg";
 import ForgotPass from "../ForgotPassword/ForgotPass";
+import TickSvg from "../../../assets/Svg/TickSvg";
 
-
-const Login = ({navigation}) => {
+const ModalPopups = ({ visible, children }) => {
+  const [showModal, setShowModal] = React.useState(visible);
+  React.useEffect(()=>{
+    toggleModal();
+  },[visible]);
+  const toggleModal=()=>{
+    if(visible){
+      setShowModal(true)
+    }else{
+      setShowModal(false)
+    }
+  }
+  return (
+    <Modal transparent visible={showModal}>
+      <View style={styles.modalBackground}>
+        <View
+          style={{
+            width: "80%",
+            backgroundColor: "#fff",
+            paddingHorizontal: 20,
+            paddingVertical: 30,
+            borderRadius: 20,
+            elevation: 20,
+          }}
+        >
+          {children}
+        </View>
+      </View>
+    </Modal>
+  );
+};
+const ChangeForgotPass = ({navigation}) => {
+  const [visible, setVisible] = React.useState(false);
   const [isChecked, setChecked] = useState(false);
-
+  const gotoLogin =()=>navigation.navigate('Login');
 
   const gotoRegister =()=>{ navigation.navigate('Register')};
   const gotoForgotPass =()=>{ navigation.navigate('ForgotPass')};
   return (
     <View style={{ flex: 1, width: "100%" ,backgroundColor:'#fff'}}>
-      <View style={{ alignItems: "center" }}>
-        <SvgXml xml={BannerSvg()} />
-        <SvgXml style={{ marginTop: 10 }} xml={LogoCat()} />
-        <Text style={{ fontSize: 32, fontWeight: 400, marginTop: 9 }}>
-          Đăng nhập
-        </Text>
-      </View>
+  
       <View style={{ paddingHorizontal: 8, marginTop: 10 }}>
         <Text style={{ marginLeft: 16, fontSize: 16, fontWeight: 400 }}>
-         Số điện thoại
-        </Text>
-        <View
-          style={{
-            flexDirection: "row",
-            paddingHorizontal: 16,
-            paddingVertical: 10,
-            marginTop: 7,
-            borderWidth: 1,
-            borderRadius: 8,
-            alignItems: "center",
-          }}
-        >
-          <SvgXml xml={PhoneSvg()} />
-          <TextInput
-            style={{ marginLeft: 8 }}
-            placeholder="Phone Number"
-         />
-        </View>
-      </View>
-      <View style={{ paddingHorizontal: 8, marginTop: 7 }}>
-        <Text style={{ marginLeft: 16, fontSize: 16, fontWeight: 400 }}>
-         Mật khẩu
+         Mật khẩu mới
         </Text>
         <View
           style={{
@@ -82,45 +87,35 @@ const Login = ({navigation}) => {
           <SvgXml xml={EyeSvg()} />
         </View>
       </View>
-      <View
-        style={{
-          marginTop: 10,
-          flexDirection: "row",
-          paddingHorizontal: 8,
-          justifyContent: "space-between",
-        }}
-      >
-        <View style={{ flexDirection: "row" }}>
-          <Checkbox
-            value={isChecked}
-            onValueChange={setChecked}
-            color={isChecked ? "#6AC259" : undefined}
-          />
-          <Text
-            style={{
-              marginLeft: 8,
-              fontSize: 14,
-              fontWeight: 400,
-              color: "#5A5A5A",
-            }}
-          >
-            Nhớ mật khẩu
-          </Text>
+      <View style={{ paddingHorizontal: 8, marginTop: 7 }}>
+        <Text style={{ marginLeft: 16, fontSize: 16, fontWeight: 400 }}>
+          Nhập lại mật khẩu mới
+        </Text>
+        <View
+          style={{
+            flexDirection: "row",
+            paddingHorizontal: 16,
+            paddingVertical: 10,
+            marginTop: 7,
+            borderWidth: 1,
+            borderRadius: 8,
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <View style={{ flexDirection: "row" ,alignItems:'center'}}>
+            <SvgXml xml={LockSvg()} />
+            <TextInput
+              style={{ marginLeft: 8 }}
+              placeholder="Password"
+              secureTextEntry={true}
+            />
+          </View>
+          <SvgXml xml={EyeSvg()} />
         </View>
-        <TouchableOpacity onPress={gotoForgotPass}>
-          <Text
-            style={{
-              marginLeft: 8,
-              fontSize: 14,
-              fontWeight: 400,
-              color: "#1890FF",
-            }}
-          >
-            Quên mật khẩu ?
-          </Text>
-        </TouchableOpacity>
       </View>
-      <TouchableOpacity>
+    
+      <TouchableOpacity onPress={()=>setVisible(true)}>
         <View
           style={{
             marginTop: 30,
@@ -133,51 +128,37 @@ const Login = ({navigation}) => {
           }}
         >
           <Text style={{ color: "#fff", fontSize: 16, fontWeight: 500 }}>
-            Đăng nhập
+            Đổi mật khẩu
           </Text>
         </View>
       </TouchableOpacity>
-      <View style={{ alignItems: "center" }}>
-        <Text
-          style={{
-            marginTop: 30,
-            color: "#707070",
-            fontSize: 20,
-            fontWeight: 400,
-          }}
-        >
-          Hoặc
-        </Text>
-      </View>
-      <View
-        style={{
-          flexDirection: "row",
-          marginTop: 20,
-          justifyContent: "space-evenly",
-        }}
-      >
-        <TouchableOpacity>
-          <SvgXml xml={GoogleSvg()} />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <SvgXml xml={FacebookSvg()} />
-        </TouchableOpacity>
-      </View>
-      <View
-        style={{
-          flex: 1,
-          flexDirection: "row",
-          justifyContent: "center",
-          alignItems: "flex-end",
-          marginBottom: 30,
-        }}
-      >
-        <Text>Bạn chưa có tài khoản ?</Text>
-        <TouchableOpacity onPress={gotoRegister}>
-        <Text style={{ color: "#1890FF", marginLeft: 5 }}>Đăng ký ngay</Text>
-        </TouchableOpacity>
-      </View>
+      <ModalPopups visible={visible}>
+          <View style={{alignItems:'center'}}>
+         
+              <SvgXml xml={TickSvg()}/>
+           <Text style={{color:'#6AC259',fontSize:16,fontWeight:600}}>Đổi mật khẩu thành công</Text>
+           <Text style={{fontSize:12,fontWeight:400,color:'#707070'}}>Chuyển tới trang đăng nhập trong vài giây nữa</Text>
+           <TouchableOpacity onPress={gotoLogin}>
+           <View style={{width:180,padding:15,backgroundColor:'#1890FF',alignItems:'center',marginTop:30,borderRadius:6}}>
+            <Text style={{color:'#fff',fontSize:14,fontWeight:600}}>Đi tới trang đăng nhập</Text>
+           </View>
+           </TouchableOpacity>
+          </View>
+        </ModalPopups>
+    
+  
     </View>
   );
 };
-export default Login;
+export default ChangeForgotPass;
+const styles = StyleSheet.create({
+
+  modalBackground: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+});
+

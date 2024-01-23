@@ -1,9 +1,9 @@
 
 import React from "react";
-import { View,StyleSheet, Text, TextInput } from "react-native";
+import { View,StyleSheet, Text, TextInput, TouchableOpacity } from "react-native";
 
-const ForgotPass = () => {
-  
+const ForgotPass = ({navigation}) => {
+  const gotoOTPForgotPass=()=>{navigation.navigate('OTPForgotPass')}
   return (
 
     <View style={{ flex: 1, width: "100%" ,backgroundColor:'#fff'}}>
@@ -18,6 +18,7 @@ const ForgotPass = () => {
        <Text style={{marginTop:8,fontSize:14,fontWeight:400,color:'#707070'}}>Bạn sẽ nhận được một mã OTP được gửi về tin nhắn điện thoại của bạn.</Text>
        
        </View>
+       <TouchableOpacity onPress={gotoOTPForgotPass}>
        <View
           style={{
             marginTop: 24,
@@ -33,6 +34,7 @@ const ForgotPass = () => {
           Xác nhận
           </Text>
         </View>
+        </TouchableOpacity>
     </View>
   );
 };
