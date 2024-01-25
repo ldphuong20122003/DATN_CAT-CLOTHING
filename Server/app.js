@@ -4,6 +4,11 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+
+var homeRouter = require('./routes/WebServer/home');
+var productRouter = require('./routes/WebServer/product');
+
+
 var indexRouter = require('./routes/API/index');
 var usersRouter = require('./routes/API/users');
 var apiCate=require('./routes/API/api.cate');
@@ -29,15 +34,20 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/apiCate',apiCate);
-app.use('/apistaff',apiStaff);
-app.use('/donhang',apiDonHang);
-app.use('/hoaDon',apiHoaDon);
-app.use('/Rating',apiRating);
-app.use('/Ntf',apiNotification);
-app.use('/Fvr',apiFVR);
+//WEB SERVER
+app.use('/', homeRouter);
+app.use('/products',productRouter);
+
+//API
+app.use('/API/product', indexRouter);
+app.use('/API/users', usersRouter);
+app.use('/API/Cate',apiCate);
+app.use('/API/staff',apiStaff);
+app.use('/API/donhang',apiDonHang);
+app.use('/API/hoaDon',apiHoaDon);
+app.use('/API/Rating',apiRating);
+app.use('/API/ntf',apiNotification);
+app.use('/API/fvr',apiFVR);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
