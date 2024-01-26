@@ -96,9 +96,18 @@ exports.put=async(req,res,next)=>{
     try {
       const docId = req.params.id; // Lấy ID tài liệu từ URL
       const newData = req.body; // Dữ liệu mới từ request body
-  
+      const Size = req.body.Size || [];
+      let newdata2={
+      
+        Name :req.body.Name,
+        Categories :req.body.Categories,
+        Content :req.body.Content,
+        Price :req.body.Price,
+        Img:req.body.Img,
+        Size: Size,
+      }
       // Cập nhật tài liệu dựa trên ID và dữ liệu mới đã cung cấp
-      await admin.firestore().collection('products').doc(docId).set(newData, { merge: true });
+      await admin.firestore().collection('products').doc(docId).set(newdata2, { merge: true });
   
       res.redirect('/products');
     } catch (error) {

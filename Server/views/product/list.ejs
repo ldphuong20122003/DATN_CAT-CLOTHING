@@ -215,8 +215,38 @@
                             <label for=" priceProduct" class="form-label">Price</label>
                             <input name="Price" type="text" id="priceProduct" class="form-control">
                             <label for=" sizeProduct" class="form-label">Size</label>
-                            <input name="Size" type="text" id="sizeProduct" class="form-control"
-                            placeholder="Ví dụ: key1:value1, key2:value2, key3:value3" oninput="saveToFirestore()">
+                            <div class="form-check " id="sizeProduct">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" value="S" id="sizeProduct1" name="Size" checked>
+                                        <label class="form-check-label" for="sizeProduct1">
+                                            S
+                                        </label>
+                                        </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" value="M" id="sizeProduct2" name="Size" >
+                                        <label class="form-check-label" for="sizeProduct2">
+                                            M
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" value="L" id="sizeProduct3" name="Size">
+                                        <label class="form-check-label" for="sizeProduct3">
+                                            L
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" value="XL" id="sizeProduct4" name="Size">
+                                        <label class="form-check-label" for="sizeProduct4">
+                                            XL
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" value="XXL" id="sizeProduct5" name="Size">
+                                        <label class="form-check-label" for="sizeProduct5">
+                                            XXL
+                                        </label>
+                                    </div>
+                                
                             
                         </div>
                         <div class="modal-footer">
