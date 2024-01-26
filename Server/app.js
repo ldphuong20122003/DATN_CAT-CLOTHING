@@ -3,7 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
+var session = require('express-session');
 
 var homeRouter = require('./routes/WebServer/home');
 var productRouter = require('./routes/WebServer/product');
@@ -33,6 +33,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
+app.use(session({
+  secret: 'nhNNGHSNFGH83sdf23435Fdzgsfnksjdfh9', // Thay thế bằng một khóa bí mật mạnh mẽ hơn trong thực tế
+  resave: false,
+  saveUninitialized: true
+}));
 
 //WEB SERVER
 app.use('/', homeRouter);

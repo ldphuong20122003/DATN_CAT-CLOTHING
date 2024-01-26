@@ -36,16 +36,28 @@ exports.listProducts = async (req, res, next) => {
 
 exports.addProduct= async(req,res,next)=>{
     try {
+      
         // const storage = firebase.storage();
         const collectionRef=admin.firestore().collection('products');
         const documentId = req.body.id;
-        
+        const Size = req.body.Size || [];
+        let data2={
+          id: req.body.id,
+          Name :req.body.Name,
+          Categories :req.body.Categories,
+          Content :req.body.Content,
+          Price :req.body.Price,
+          Img:req.body.Img,
+          Size: Size,
+        }
         const data = req.body; // Dữ liệu từ request body
         const docID = documentId ? collectionRef.doc(documentId) : collectionRef.doc();
-        const documentRef = collectionRef.doc(documentId); // Thay thế bằng collection và document ID của bạn
+        const dataRef = collectionRef.doc(documentId);
+      // Thay thế bằng collection và document ID của bạn
 
       // Thêm dữ liệu vào collection cụ thể (ví dụ: 'your-collection-name')
-      docID.set(data)
+      
+      docID.set(data2)
     .then(() => {
       res.redirect('/products');
     })
