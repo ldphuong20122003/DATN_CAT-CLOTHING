@@ -24,6 +24,7 @@ const Login = ({navigation}) => {
 
   const gotoRegister =()=>{ navigation.navigate('Register')};
   const gotoForgotPass =()=>{ navigation.navigate('ForgotPass')};
+  const gotoHome =()=>{ navigation.navigate('BottomTabScreen')};
   return (
     <View style={{ flex: 1, width: "100%" ,backgroundColor:'#fff'}}>
       <View style={{ alignItems: "center" }}>
@@ -120,7 +121,7 @@ const Login = ({navigation}) => {
           </Text>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={gotoHome}>
         <View
           style={{
             marginTop: 30,
