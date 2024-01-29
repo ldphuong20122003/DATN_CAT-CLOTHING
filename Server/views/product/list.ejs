@@ -78,7 +78,7 @@
                                         data-item-price="<%= item.Price %>" 
                                         data-item-image="<%= item.Img %>"
                                         data-item-size="<%= item.Size %>"
-                                        class="btn btn-success m-2" data-bs-toggle="modal"
+                                        class="btn btn-success m-2" data-bs-toggle="modal" data-item-id
                                         data-bs-target="#editModal">Edit</button>
 
                                     <button data-item-id="<%= item.id %>" data-item-name="<%= item.Name %>"
@@ -114,7 +114,7 @@
                         <h1 class="modal-title fs-5" id="addModalLabel">Add product</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <form action="products/add" method="POST" >
+                    <form action="products/add" method="POST" enctype="multipart/form-data">
                         <div class="modal-body">
                             <label for="idProduct" class="form-label" readonly>Id</label>
                                 <div class="input-group mb-3">
@@ -132,7 +132,7 @@
                                     <% }) %>
                             </select>
                             <label for="imageProduct" class="form-label">Image</label>
-                            <input type="file" aria-label="First name" class="form-control" name="Img" value="" id="imageProduct">
+                            <input type="file" aria-label="First name" class="form-control" name="avatar" id="imageProduct">
                             <label for="descriptionProduct" class="form-label">Description</label>
                             <input name="Content" type="text" id="descriptionProduct" class="form-control">
                             <label for=" priceProduct" class="form-label">Price</label>
@@ -186,6 +186,49 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Modal Edit-->
+        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="editModalLabel">Edit product</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form id="editForm" action="products/edit   " method="POST" enctype="multipart/form-data">
+
+                        <div class="modal-body">
+                            <input type="text" id="itemIdInput">
+                            <label for="inputCode" class="form-label" >Name</label>
+                            <input name="Name" type="text" id="nameProduct" class="form-control" >
+                            <label for="cateId">Category</label>
+                            <select class="form-select mt-2" aria-label="Pick Category" name="Categories" required >
+                                <% categories.forEach(item=> { %>
+                                    <option value="<%= item.Name %>">
+                                        <%= item.Name %>
+                                    </option>
+                                    <% }) %>
+                            </select>
+                            <label for="imageProduct" class="form-label">Image</label>
+                            <input type="file" aria-label="First name" class="form-control" name="avatar" id="imageProduct">
+                            <label for="descriptionProduct" class="form-label">Description</label>
+                            <input name="Content" type="text" id="descriptionProduct" class="form-control">
+                            <label for=" priceProduct" class="form-label">Price</label>
+                            <input name="Price" type="text" id="priceProduct" class="form-control">
+                            <label for=" sizeProduct" class="form-label">Size</label>
+                            <input name="Size" type="text" id="sizeProduct" class="form-control"
+                            placeholder="Ví dụ: key1:value1, key2:value2, key3:value3" oninput="saveToFirestore()">
+                            
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <!-- Modal delete -->
         <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -206,79 +249,7 @@
                 </div>
             </div>
         </div>
-        
-        <!-- Modal Edit-->
-        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="editModalLabel">Edit product</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <form id="editForm" method="POST">
-                        <div class="modal-body">
-
-                            <label for="inputCode" class="form-label" >Name</label>
-                            <input name="Name" type="text" id="nameProduct" class="form-control" >
-                            <label for="cateId">Category</label>
-                            <select class="form-select mt-2" aria-label="Pick Category" name="Categories" required >
-                                <% categories.forEach(item=> { %>
-                                    <option value="<%= item.Name %>">
-                                        <%= item.Name %>
-                                    </option>
-                                    <% }) %>
-                            </select>
-                            <label for="imageProduct" class="form-label">Image</label>
-                            <input name="Img" type="text" id="imageProduct" class="form-control">
-                            <label for="descriptionProduct" class="form-label">Description</label>
-                            <input name="Content" type="text" id="descriptionProduct" class="form-control">
-                            <label for=" priceProduct" class="form-label">Price</label>
-                            <input name="Price" type="text" id="priceProduct" class="form-control">
-                            <label for=" sizeProduct" class="form-label">Size</label>
-                             <div class="form-check " id="sizeProduct">
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="checkbox" value="S" id="sizeProduct1" name="Size" checked>
-                                        <label class="form-check-label" for="sizeProduct1">
-                                            S
-                                        </label>
-                                        </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="checkbox" value="M" id="sizeProduct2" name="Size" >
-                                        <label class="form-check-label" for="sizeProduct2">
-                                            M
-                                        </label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="checkbox" value="L" id="sizeProduct3" name="Size">
-                                        <label class="form-check-label" for="sizeProduct3">
-                                            L
-                                        </label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="checkbox" value="XL" id="sizeProduct4" name="Size">
-                                        <label class="form-check-label" for="sizeProduct4">
-                                            XL
-                                        </label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="checkbox" value="XXL" id="sizeProduct5" name="Size">
-                                        <label class="form-check-label" for="sizeProduct5">
-                                            XXL
-                                        </label>
-                                    </div>
-                                
-                            
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-      
+        <%- include('../inc/footer') %>
 
             <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
                 integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
@@ -303,8 +274,8 @@
                         const itemPrice = this.getAttribute('data-item-price');
                         const itemDescription = this.getAttribute('data-item-description');
                         const itemSize = this.getAttribute('data-item-size');
-
-
+                        const itemIdInput = editModal.querySelector('#itemIdInput');
+                        itemIdInput.value = itemId;
                         // Truy xuất phần tử trong modal để cập nhật nội dung
                         const modalBody = editModal._element.querySelector('.modal-body');
                         const nameInput = editForm.querySelector('#nameProduct');
@@ -315,7 +286,7 @@
                         const descriptionInput = editForm.querySelector('#descriptionProduct');
 
                         // Cập nhật nội dung modal và input với item_id và item_name tương ứng
-                        nameInput.value = itemName;
+                        nameInput.value = itemId;
                         imageInput.value = itemImage;
                         priceInput.value = itemPrice;
                         sizeInput.value= itemSize;
@@ -388,10 +359,67 @@
 </script>
 
      
- 
-<%- include('../inc/footer') %>
+<script>
+    function saveToFirestore() {
+    // Lấy giá trị từ trường nhập văn bản
+    const inputValue = document.getElementById('sizeProduct').value;
 
-    
+    // Chuyển đổi giá trị thành mảng
+    const inputObject = {};
+    inputValue.split(',').forEach(pair => {
+      const [key, value] = pair.trim().split(':');
+      inputObject[key] = value;
+    });
+    // Lưu mảng vào Firestore (ở đây bạn sẽ lưu vào một collection cụ thể)
+}
+    </script>
+
+    <script>
+  function uploadAndSave() {
+    // Lấy tệp từ trường input
+    const fileInput = document.getElementById('imageProduct');
+    const file = fileInput.files[0];
+
+    // Tạo tham chiếu đến nơi lưu trữ trên Firebase
+    const storageRef = storage.ref();
+
+    // Tạo một thư mục có tên 'images' (bạn có thể đặt tên thư mục theo ý muốn)
+    const imagesRef = storageRef.child('./public/uploads/');
+
+    // Tạo tham chiếu đến tệp trên Firebase Storage
+    const fileRef = imagesRef.child(file.name);
+
+    // Tải tệp lên Firebase Storage
+    fileRef.put(file)
+      .then(snapshot => {
+        console.log('Tệp đã được tải lên thành công');
+
+        // Lấy đường dẫn tới tệp từ Storage
+        return fileRef.getDownloadURL();
+      })
+      .then(downloadURL => {
+        console.log('Đường dẫn tới tệp:', downloadURL);
+
+        // Lưu đường dẫn vào Firestore
+        const collectionRef = admin.firestore().collection('products'); // Thay thế bằng tên collection của bạn
+
+        // Dữ liệu bạn muốn lưu trữ
+        const data = {
+          imageUrl: downloadURL
+        };
+
+        // Thêm dữ liệu vào Firestore
+        return collectionRef.add(data);
+      })
+      .then(docRef => {
+        console.log('Dữ liệu đã được lưu trữ trong Firestore với ID:', docRef.id);
+      })
+      .catch(error => {
+        console.error('Lỗi khi tải lên và lưu vào Firestore:', error);
+      });
+  }
+</script>
+
 
 </body>
 

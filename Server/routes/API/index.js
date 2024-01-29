@@ -50,13 +50,13 @@ router.get('/', async(req, res, next) =>{
     }
   });
 
-  router.put('/update/:id',async(req,res,next)=>{
+  router.put('/update',async(req,res,next)=>{
     try {
       const docId = req.params.id; // Lấy ID tài liệu từ URL
-      const newData = req.body; // Dữ liệu mới từ request body
-  
-      // Cập nhật tài liệu dựa trên ID và dữ liệu mới đã cung cấp
-      await db.collection('products').doc(docId).set(newData, { merge: true });
+      // const newData = req.body; // Dữ liệu mới từ request body
+      //
+      // // Cập nhật tài liệu dựa trên ID và dữ liệu mới đã cung cấp
+      // await db.collection('products').doc(docId).set(newData, { merge: true });
   
       res.status(200).send(`Document with ID: ${docId} updated successfully`);
     } catch (error) {
