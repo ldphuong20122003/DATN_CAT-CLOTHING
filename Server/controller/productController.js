@@ -37,6 +37,9 @@ exports.loginScreen = async (req, res, next) => {
 const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
+
+
+
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, './public/uploads');
@@ -64,12 +67,14 @@ exports.addProduct= async(req,res,next)=>{
         await bucket.upload(filePath, options);
         const UrlFile='https://firebasestorage.googleapis.com/v0/b/produc-e30a9.appspot.com/o/'+fileName+'?alt=media&token=1f7538b4-68a2-408e-8bc6-96f8f5a51650';
 try {
+          
 
             const collectionRef = admin.firestore().collection('products');
-            const documentId = req.body.id;
+            const Id = collectionRef.doc().id;
+            
             const Size = req.body.Size || [];
             let data2 = {
-                id: req.body.id,
+                id: Id,
                 Name: req.body.Name,
                 Categories: req.body.Categories,
                 Content: req.body.Content,
@@ -79,9 +84,9 @@ try {
                 Img: UrlFile,
                 Size: Size,
             }
-            const data = req.body; // Dữ liệu từ request body
-            const docID = documentId ? collectionRef.doc(documentId) : collectionRef.doc();
-            const dataRef = collectionRef.doc(documentId);
+            // Dữ liệu từ request body
+            const docID = Id ? collectionRef.doc(Id) : collectionRef.doc();
+            const dataRef = collectionRef.doc(Id);
             // Thay thế bằng collection và document ID của bạn
 
             // Thêm dữ liệu vào collection cụ thể (ví dụ: 'your-collection-name')
@@ -89,6 +94,7 @@ try {
             docID.set(data2)
                 .then(() => {
                     res.redirect('/products');
+                    return collectionRef.doc().id;
                 })
                 .catch(error => {
                     console.error('Lỗi khi thêm tài liệu:', error);
@@ -101,7 +107,7 @@ try {
 
         } catch (error) {
             console.error('Error adding data:', error);
-          v
+          
         }
 
     });
