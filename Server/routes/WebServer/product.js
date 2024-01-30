@@ -14,7 +14,7 @@ router.get('/',productCtrl.listProducts);
 // //Thêm
 router.post('/add',productCtrl.addProduct);
 // //Sửa
-router.post('/edit',productCtrl.put);
+router.post('/edit/:id',productCtrl.put);
 // //Xóa
 router.post('/delete/:id',productCtrl.delete);
 // router.delete('/delete/:id',productCtrl.delete)

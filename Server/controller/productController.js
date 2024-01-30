@@ -39,7 +39,7 @@ const path = require('path');
 const multer = require('multer');
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, '../uploads');
+        cb(null, './public/uploads');
     },
     filename: (req, file, cb) => {
         const ext = path.extname(file.originalname);
@@ -74,6 +74,8 @@ try {
                 Categories: req.body.Categories,
                 Content: req.body.Content,
                 Price: req.body.Price,
+                Amount: req.body.Amount,
+
                 Img: UrlFile,
                 Size: Size,
             }
@@ -122,7 +124,7 @@ try {
 }
 
 exports.put=async(req,res,next)=>{
-    upload.single('avatar2')(req, res, async (err) => {
+    upload.single('avatar')(req, res, async (err) => {
         if (err) {
             console.error('Lỗi tải lên tệp tin:', err);
             res.status(500).json({ message: 'Lỗi tải lên tệp tin' });
@@ -130,38 +132,38 @@ exports.put=async(req,res,next)=>{
         }
         const fileName=req.file.filename;
         const filePath = path.resolve(req.file.path);
-        // const options = {
-        //     destination: fileName
-        // };
-        // await bucket.upload(filePath, options);
-        // const UrlFile='https://firebasestorage.googleapis.com/v0/b/produc-e30a9.appspot.com/o/'+fileName+'?alt=media&token=1f7538b4-68a2-408e-8bc6-96f8f5a51650';
-        // try {
-        //     const Size = req.body.Size || [];
-        //     let data2 = {
-        //         id: req.body.id,
-        //         Name: req.body.Name,
-        //         Categories: req.body.Categories,
-        //         Content: req.body.Content,
-        //         Price: req.body.Price,
-        //         Img: UrlFile,
-        //         Size: Size,
-        //     }
-        //
-        //     const docId = req.params.id; // Lấy ID tài liệu từ URL
-        //     const newData = req.body; // Dữ liệu mới từ request body
-        //
-        //     // Cập nhật tài liệu dựa trên ID và dữ liệu mới đã cung cấp
-        //     await admin.firestore().collection('products').doc(docId).set(data2, { merge: true });
-        //     res.redirect('/products');
-        //     // const docRef = await collectionRef.add(data);
-        //
-        //     // Lấy Document ID đã sinh tự động
-        //
-        //
-        // } catch (error) {
-        //     console.error('Error adding data:', error);
-        //     res.status(500).send('Error adding data to Firestore');
-        // }
+        const options = {
+            destination: fileName
+        };
+        await bucket.upload(filePath, options);
+        const UrlFile='https://firebasestorage.googleapis.com/v0/b/produc-e30a9.appspot.com/o/'+fileName+'?alt=media&token=1f7538b4-68a2-408e-8bc6-96f8f5a51650';
+        try {
+            const Size = req.body.Size || [];
+            let data2 = {
+                
+                Name: req.body.Name,
+                Categories: req.body.Categories,
+                Content: req.body.Content,
+                Price: req.body.Price,
+                Img: UrlFile,
+                Size: Size,
+            }
+        
+            const docId = req.params.id; // Lấy ID tài liệu từ URL
+             // Dữ liệu mới từ request body
+        
+            // Cập nhật tài liệu dựa trên ID và dữ liệu mới đã cung cấp
+            await admin.firestore().collection('products').doc(docId).set(data2, { merge: true });
+            res.redirect('/products');
+            // const docRef = await collectionRef.add(data);
+        
+            // Lấy Document ID đã sinh tự động
+        
+        
+        } catch (error) {
+            console.error('Error adding data:', error);
+            res.status(500).send('Error adding data to Firestore');
+        }
 
     });
   }
