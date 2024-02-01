@@ -15,11 +15,18 @@ import Checkbox from "expo-checkbox";
 import GoogleSvg from "../../../assets/Svg/GoogleSvg";
 import FacebookSvg from "../../../assets/Svg/FacebookSvg";
 import EyeSvg from "../../../assets/Svg/EyeSvg";
+import ForgotPass from "../ForgotPassword/ForgotPass";
 
-const Login = () => {
+
+const Login = ({navigation}) => {
   const [isChecked, setChecked] = useState(false);
+
+
+  const gotoRegister =()=>{ navigation.navigate('Register')};
+  const gotoForgotPass =()=>{ navigation.navigate('ForgotPass')};
+  const gotoHome =()=>{ navigation.navigate('BottomTabScreen')};
   return (
-    <View style={{ flex: 1, width: "100%" }}>
+    <View style={{ flex: 1, width: "100%" ,backgroundColor:'#fff'}}>
       <View style={{ alignItems: "center" }}>
         <SvgXml xml={BannerSvg()} />
         <SvgXml style={{ marginTop: 10 }} xml={LogoCat()} />
@@ -29,7 +36,7 @@ const Login = () => {
       </View>
       <View style={{ paddingHorizontal: 8, marginTop: 10 }}>
         <Text style={{ marginLeft: 16, fontSize: 16, fontWeight: 400 }}>
-          Phone
+         Số điện thoại
         </Text>
         <View
           style={{
@@ -46,12 +53,12 @@ const Login = () => {
           <TextInput
             style={{ marginLeft: 8 }}
             placeholder="Phone Number"
-          ></TextInput>
+         />
         </View>
       </View>
       <View style={{ paddingHorizontal: 8, marginTop: 7 }}>
         <Text style={{ marginLeft: 16, fontSize: 16, fontWeight: 400 }}>
-          Password
+         Mật khẩu
         </Text>
         <View
           style={{
@@ -62,18 +69,18 @@ const Login = () => {
             borderWidth: 1,
             borderRadius: 8,
             alignItems: "center",
-            justifyContent:'space-between'
+            justifyContent: "space-between",
           }}
         >
-          <View style={{flexDirection:'row'}}>
-          <SvgXml xml={LockSvg()} />
-          <TextInput
-            style={{ marginLeft: 8 }}
-            placeholder="Password"
-            secureTextEntry={true}
-          ></TextInput>
+          <View style={{ flexDirection: "row" ,alignItems:'center'}}>
+            <SvgXml xml={LockSvg()} />
+            <TextInput
+              style={{ marginLeft: 8 }}
+              placeholder="Password"
+              secureTextEntry={true}
+            />
           </View>
-           <SvgXml xml={EyeSvg()} />
+          <SvgXml xml={EyeSvg()} />
         </View>
       </View>
       <View
@@ -90,11 +97,18 @@ const Login = () => {
             onValueChange={setChecked}
             color={isChecked ? "#6AC259" : undefined}
           />
-          <Text style={{ marginLeft: 8, fontSize: 14, fontWeight: 400,color:'#5A5A5A' }}>
+          <Text
+            style={{
+              marginLeft: 8,
+              fontSize: 14,
+              fontWeight: 400,
+              color: "#5A5A5A",
+            }}
+          >
             Nhớ mật khẩu
           </Text>
         </View>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={gotoForgotPass}>
           <Text
             style={{
               marginLeft: 8,
@@ -107,7 +121,7 @@ const Login = () => {
           </Text>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={gotoHome}>
         <View
           style={{
             marginTop: 30,
@@ -119,7 +133,9 @@ const Login = () => {
             borderRadius: 6,
           }}
         >
-          <Text style={{ color: "#fff",fontSize:16,fontWeight:500 }}>Đăng ký</Text>
+          <Text style={{ color: "#fff", fontSize: 16, fontWeight: 500 }}>
+            Đăng nhập
+          </Text>
         </View>
       </TouchableOpacity>
       <View style={{ alignItems: "center" }}>
@@ -158,7 +174,9 @@ const Login = () => {
         }}
       >
         <Text>Bạn chưa có tài khoản ?</Text>
+        <TouchableOpacity onPress={gotoRegister}>
         <Text style={{ color: "#1890FF", marginLeft: 5 }}>Đăng ký ngay</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );

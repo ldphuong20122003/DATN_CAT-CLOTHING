@@ -15,10 +15,16 @@ import EyeSvg from "../../../assets/Svg/EyeSvg";
 import UserSvg from "../../../assets/Svg/UserSvg";
 import EmailSvg from "../../../assets/Svg/EmailSvg";
 
-const Register = () => {
+const Register = ({navigation}) => {
   const [isChecked, setChecked] = useState(false);
+  const gotoLogin = () => {
+    navigation.navigate('Login');
+  };
+  const gotoOTP = () => {
+    navigation.navigate('OTPScreen');
+  };
   return (
-    <View style={{ flex: 1, width: "100%" }}>
+    <View style={{ flex: 1, width: "100%" ,backgroundColor:'#fff'}}>
       <View style={{ alignItems: "center" }}>
         <SvgXml xml={BannerSvg()} />
         <SvgXml style={{ marginTop: 10 }} xml={LogoCat()} />
@@ -127,7 +133,7 @@ const Register = () => {
         </View>
       </View>
 
-      <TouchableOpacity>
+      <TouchableOpacity onPress={gotoOTP}>
         <View
           style={{
             marginTop: 30,
@@ -155,7 +161,9 @@ const Register = () => {
         }}
       >
         <Text>Bạn đã có tài khoản ?</Text>
+        <TouchableOpacity onPress={gotoLogin}>
         <Text style={{ color: "#1890FF", marginLeft: 5 }}>Đăng nhập ngay</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
