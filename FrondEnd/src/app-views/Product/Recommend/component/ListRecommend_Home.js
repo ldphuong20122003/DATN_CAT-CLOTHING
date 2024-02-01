@@ -18,12 +18,12 @@ const ListRecommend_Home = ({ data, onPress }) => {
               justifyContent: "center",
               marginTop: 14,
               borderRadius: 1,
-              marginRight: 25,
+           
               backgroundColor: "#fff",
             borderRadius:4
             }}
           >
-            <View>
+            <View style={{}}>
               <View>
                 {item.image && (
                   <Image
@@ -135,7 +135,7 @@ const ListRecommend_Home = ({ data, onPress }) => {
   };
   return (
     <FlatList
-      horizontal={true}
+      scrollEnabled={false}
       data={data}
       renderItem={_renderItem}
       keyExtractor={(item, index) => index.toString()}
