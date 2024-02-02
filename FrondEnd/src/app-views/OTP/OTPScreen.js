@@ -1,5 +1,4 @@
-import { Container } from "native-base";
-import React, { useRef, useState } from "react";
+import React, { useRef} from "react";
 import {
   Text,
   TextInput,
@@ -10,37 +9,9 @@ import {
 } from "react-native";
 import { SvgXml } from "react-native-svg";
 import TickSvg from "../../../assets/Svg/TickSvg";
-const ModalPopups = ({ visible, children }) => {
-  const [showModal, setShowModal] = React.useState(visible);
-  React.useEffect(()=>{
-    toggleModal();
-  },[visible]);
-  const toggleModal=()=>{
-    if(visible){
-      setShowModal(true)
-    }else{
-      setShowModal(false)
-    }
-  }
-  return (
-    <Modal transparent visible={showModal}>
-      <View style={styles.modalBackground}>
-        <View
-          style={{
-            width: "80%",
-            backgroundColor: "#fff",
-            paddingHorizontal: 20,
-            paddingVertical: 30,
-            borderRadius: 20,
-            elevation: 20,
-          }}
-        >
-          {children}
-        </View>
-      </View>
-    </Modal>
-  );
-};
+import ModalPopups from "../Modal/ModalPopup";
+
+
 const OTPScreen = ({navigation}) => {
   const inputRefs = Array.from({ length: 6 }, () => useRef(null));
 const gotoLogin =()=>navigation.navigate('Login');
