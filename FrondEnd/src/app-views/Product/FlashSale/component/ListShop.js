@@ -8,18 +8,18 @@ const ListShop = ({ data, onPress }) => {
   };
   const _renderItem = ({ item, index }) => {
     return (
-      <View style={{ marginRight:-15 }}>
+      <View style={{  }}>
         <TouchableOpacity onPress={() => pressItem(item)}>
         <View 
-        style={{width:126,justifyContent:'center',marginTop:14}}>
-              <View style={{width:126,justifyContent:'center'}}>
+        style={{marginTop:14,marginRight:20}}>
+              <View style={{justifyContent:'center',alignItems:'center'}}>
                 <View>
                   {item.image && (
                     <Image
                       source={{uri: item.image}}
                       style={{
-                        height: 70,
-                        width: 70,
+                        height: 40,
+                        width: 40,
                         justifyContent: 'center',
                         borderRadius: 100
                       }}
@@ -28,7 +28,7 @@ const ListShop = ({ data, onPress }) => {
                 </View>
 
                 <View >
-                  <Text style={{ fontSize:12,fontWeight:400,color:'black'}}>
+                  <Text style={{ fontSize:12,fontWeight:400,color:'black',marginTop:5}}>
                     {item.name}
                   </Text>
                 </View>

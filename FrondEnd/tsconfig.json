@@ -7,4 +7,5 @@
     "esModuleInterop": true
   },
   "extends": "expo/tsconfig.base"
+
 }
