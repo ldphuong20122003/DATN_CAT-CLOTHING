@@ -7,6 +7,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  useWindowDimensions,
 } from "react-native";
 import { SvgXml } from "react-native-svg";
 import iconBackSvg from "../../../../assets/Svg/iconBackSvg";
@@ -19,21 +20,41 @@ import ModalFilter from "../../Modal/ModalFilter";
 import * as Animatable from 'react-native-animatable';
 
 import ListCategory_Filter from "../../Category/component/ListCategory_Filter";
+import All_Products from "./All_Product";
+import { SceneMap, TabBar, TabView } from "react-native-tab-view";
+
 const Product_Search = ({ navigation }) => {
   const gotoBack = () => {
     navigation.goBack();
   };
-
-
-  
-
-  
-
   const [visible, setVisible] = React.useState(false);
   const route = useRoute();
   const { keyword } = route.params;
+  const layout = useWindowDimensions();
+
+  const [index, setIndex] = React.useState(0);
+  const [routes] = React.useState([
+    { key: '1', title: 'Tất cả' },
+    { key: '2', title: 'Mới nhất' },
+    { key: '3', title: 'Bán chạy' },
+    { key: '4', title: 'Giá' },
+  ]);
+  const renderScene = ({ route }) => {
+    switch (route.key) {
+      case '1':
+        return <All_Products />;
+      case '2':
+        return <All_Products />;
+      case '3':
+        return <All_Products />;
+      case '4':
+        return <All_Products />;
+      default:
+        return null;
+    }
+  };
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{backgroundColor:'#fff'}}>
       <View style={styles.Header}>
         <View
           style={{
@@ -245,6 +266,31 @@ const Product_Search = ({ navigation }) => {
           </View>
         </View>
       </ModalFilter>
+      <View style={styles.Content}>
+      <TabView
+          navigationState={{ index, routes }}
+          renderScene={renderScene}
+          onIndexChange={setIndex}
+          initialLayout={{ width:'100%' }}
+          lazy={true}
+          renderTabBar={props => (
+            <TabBar
+              {...props}
+              
+              style={{ backgroundColor: 'white',marginTop:5 }} // Chỉnh style cho thanh tab
+              indicatorStyle={{ backgroundColor: '#1890FF' }} // Chỉnh style cho chỉ mục hiện tại
+              labelStyle={{
+                fontSize: 14,
+                fontFamily: 'Roboto',
+                fontWeight: '400',
+                textTransform: 'none',
+                color: '#5A5A5A',
+              }}
+              activeColor={'#1890FF'}
+            />
+          )}
+        />
+      </View>
     </SafeAreaView>
   );
 };
@@ -269,4 +315,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginHorizontal:16,justifyContent:'space-between',width:'100%',paddingVertical:8
   },
+  Content:{
+height:'100%' }
 });

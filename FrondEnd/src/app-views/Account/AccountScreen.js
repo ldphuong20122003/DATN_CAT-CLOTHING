@@ -23,9 +23,12 @@ import DoneSvg from "../../../assets/Svg/DoneSvg";
 import CancelSvg from "../../../assets/Svg/CancelSvg";
 import UserSvg from "../../../assets/Svg/UserSvg";
 
-const AccountScreen = ({}) => {
+const AccountScreen = ({ navigation }) => {
+  const gotoLogin = () => {
+    navigation.navigate("Login");
+  };
   return (
-    <SafeAreaView style={{ flex: 0.93 }}>
+    <SafeAreaView style={{ flex: 0.93,backgroundColor:'#fff' }}>
       <ScrollView>
         <View>
           <View style={styles.slide}>
@@ -42,6 +45,7 @@ const AccountScreen = ({}) => {
                   width: 60,
                   height: 60,
                   borderRadius: 100,
+                  
                 }}
               />
               <View style={{ justifyContent: "center", marginLeft: 8 }}>
@@ -142,6 +146,8 @@ const AccountScreen = ({}) => {
               flexDirection: "row",
               justifyContent: "space-between",
               alignItems: "center",
+              paddingVertical:12,borderBottomWidth:1,
+              borderBottomColor: "#D4D4D4",
             }}
           >
             <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -167,7 +173,7 @@ const AccountScreen = ({}) => {
           </View>
           <Shop />
         </View>
-       
+
         <View style={styles.ReOrder}>
           <View
             style={{ flexDirection: "row", justifyContent: "space-between" }}
@@ -184,80 +190,111 @@ const AccountScreen = ({}) => {
           </View>
           <FlashSale_Home />
         </View>
-       <View style={{paddingHorizontal:16}}>
-        <View style={{paddingVertical:16, flexDirection: "row",alignItems:'center',borderBottomWidth:1,borderBottomColor:'#D4D4D4'}}>
-        <View style={{flexDirection:'row' ,alignItems:'center'}}>
-          <Image source={require("../../../assets/Voucher.png")} style={{width:24,height:24}}/>
-            <Text
-              style={{
-                fontSize: 14,
-                fontWeight: "400",
-                color: "black",
-                marginLeft:10
-              }}
-            >
-             Voucher của tôi
-            </Text>
+        <View style={{ paddingHorizontal: 16 }}>
+          <View
+            style={{
+              paddingVertical: 16,
+              flexDirection: "row",
+              alignItems: "center",
+              borderBottomWidth: 1,
+              borderBottomColor: "#D4D4D4",
+            }}
+          >
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Image
+                source={require("../../../assets/Voucher.png")}
+                style={{ width: 24, height: 24 }}
+              />
+              <Text
+                style={{
+                  fontSize: 14,
+                  fontWeight: "400",
+                  color: "black",
+                  marginLeft: 10,
+                }}
+              >
+                Voucher của tôi
+              </Text>
             </View>
-          <View style={{ marginLeft: 300 }}>
-            <SvgXml xml={CareRightSvg("black")} />
-          </View>
-        </View>
-
-        <View style={{paddingVertical:16, flexDirection: "row",alignItems:'center',borderBottomWidth:1,borderBottomColor:'#D4D4D4'}}>
-        <View style={{flexDirection:'row'}}>
-        <Image source={require("../../../assets/Star.png")} style={{width:24,height:24}}/>
-
-            <Text
-              style={{
-                fontSize: 14,
-                fontWeight: "400",
-                color: "black",
-                marginLeft:10
-              
-              }}
-            >
-            Đánh giá của tôi
-            </Text>
+            <View style={{ marginLeft: 300 }}>
+              <SvgXml xml={CareRightSvg("black")} />
             </View>
-        
-          <View style={{ marginLeft: 300 }}>
-            <SvgXml xml={CareRightSvg("black")} />
           </View>
-        </View>
 
-        <View style={{paddingVertical:16, flexDirection: "row",alignItems:'center',borderBottomWidth:1,borderBottomColor:'#D4D4D4'}}>
-          <View style={{flexDirection:'row'}}>
-            <SvgXml xml={UserSvg()}/>
-            <Text
-              style={{
-                fontSize: 14,
-                fontWeight: "400",
-                color: "black",
-                marginLeft:10
-              }}
-            >
-              Thiết lập tài khoản
-            </Text>
+          <View
+            style={{
+              paddingVertical: 16,
+              flexDirection: "row",
+              alignItems: "center",
+              borderBottomWidth: 1,
+              borderBottomColor: "#D4D4D4",
+            }}
+          >
+            <View style={{ flexDirection: "row" }}>
+              <Image
+                source={require("../../../assets/Star.png")}
+                style={{ width: 24, height: 24 }}
+              />
+
+              <Text
+                style={{
+                  fontSize: 14,
+                  fontWeight: "400",
+                  color: "black",
+                  marginLeft: 10,
+                }}
+              >
+                Đánh giá của tôi
+              </Text>
             </View>
-          <View style={{ marginLeft: 300 }}>
-            <SvgXml xml={CareRightSvg("black")} />
+
+            <View style={{ marginLeft: 300 }}>
+              <SvgXml xml={CareRightSvg("black")} />
+            </View>
           </View>
-        </View>
-        <View style={{padding:16}}>
-          <View style={{alignItems:'center'}}>
-            <Text
-              style={{
-                fontSize: 20,
-                fontWeight: "bold",
-                color: "#FF1826",
-                marginLeft: 10,
-              }}
-            >
-              Đăng xuất
-            </Text>
+
+          <View
+            style={{
+              paddingVertical: 16,
+              flexDirection: "row",
+              alignItems: "center",
+              borderBottomWidth: 1,
+              borderBottomColor: "#D4D4D4",
+            }}
+          >
+            <View style={{ flexDirection: "row" }}>
+              <SvgXml xml={UserSvg()} />
+              <Text
+                style={{
+                  fontSize: 14,
+                  fontWeight: "400",
+                  color: "black",
+                  marginLeft: 10,
+                }}
+              >
+                Thiết lập tài khoản
+              </Text>
+            </View>
+            <View style={{ marginLeft: 300 }}>
+              <SvgXml xml={CareRightSvg("black")} />
+            </View>
           </View>
-        </View>
+          <TouchableOpacity onPress={gotoLogin}>
+            <View style={{ padding: 16 }}>
+              <View style={{ alignItems: "center" }}>
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontWeight: "bold",
+                    color: "#FF1826",
+                    marginLeft: 10,
+                  }}
+                >
+                  Đăng xuất
+                </Text>
+              </View>
+            </View>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -306,8 +343,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
-  ReOrder:{
-    marginTop: 10, paddingHorizontal: 16 
+  ReOrder: {
+    marginTop: 10,
+    paddingHorizontal: 16,
   },
 
   Voucher2: {

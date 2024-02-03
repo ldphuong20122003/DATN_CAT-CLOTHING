@@ -23,7 +23,15 @@ const ListRecommend_Search = ({ data, onPress }) => {
             
            
               backgroundColor: "#fff",
-            borderRadius:4
+            borderRadius:4,
+              shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: 4,
+          },
+          shadowOpacity: 0.2,
+          shadowRadius: 2,
+          elevation: 4, // Dành cho Android
             }}
           >
             <View style={{}}>
