@@ -95,7 +95,7 @@ const Search = ({ navigation }) => {
     : [];
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{backgroundColor:'#fff'}}>
       <View style={styles.Header}>
         <View
           style={{

@@ -4,7 +4,7 @@ import { SvgXml } from "react-native-svg";
 import BackgroundFreeShip from "../../../../../assets/Svg/BackgroundFreeShip";
 import BackgroundFavourite from "../../../../../assets/Svg/BackgroundFavourite";
 import AddressSvg from "../../../../../assets/Svg/AddressSvg";
-const ListRecommend_Home = ({ data, onPress }) => {
+const List_AllProduct = ({ data, onPress }) => {
   const pressItem = (item) => {
     onPress && onPress(item);
   };
@@ -153,4 +153,4 @@ const ListRecommend_Home = ({ data, onPress }) => {
     />
   );
 };
-export default ListRecommend_Home;
+export default List_AllProduct;

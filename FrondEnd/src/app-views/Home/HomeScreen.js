@@ -26,7 +26,7 @@ import Recommend_Home from "../Product/Recommend/Recommend_Home";
 const HomeScreen = ({navigation}) => {
   const gotoSearch =()=>{navigation.navigate('Search')};
   return (
-    <SafeAreaView style={{ flex: 0.93 }}>
+    <SafeAreaView style={{ flex: 0.93,backgroundColor:'#fff' }}>
      <ScrollView>
         <View style={styles.Banner}>
           <Swiper
