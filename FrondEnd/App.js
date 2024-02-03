@@ -27,6 +27,7 @@ export default function App() {
         <Stack.Screen name="BottomTabScreen" component={BottomTabBar} options={{ headerShown: false }} />
         <Stack.Screen name="Search" component={Search} options={{ headerShown: false }} />
         <Stack.Screen name="Product_Search" component={Product_Search} options={{ headerShown: false }} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );
