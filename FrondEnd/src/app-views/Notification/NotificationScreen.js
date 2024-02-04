@@ -16,27 +16,42 @@ import { View,
     import CareRightSvg from "../../../assets/Svg/CareRightSvg";
     import Voucher_Home from "../Voucher/Voucher_Home";
     import Category_Home from "../Category/Category_Home";
-    import FlashSale_Home from "../Product/FlashSale/FlashSale_Home";
-    import Recommend_Home from "../Product/Recommend/Recommend_Home";  
+    import Recommend_Noti from "./Recommend_Noti";    
 import BackSvg from "../../../assets/Svg/BackSvg";
 import CheckSvg from "../../../assets/Svg/CheckSvg";
+import { FlatList } from "react-native-gesture-handler";
     
 
 const NotificationScreen =({})=>{
     return(
         <SafeAreaView style={{ flex: 0.93 }}>
     <ScrollView style= {{margin: 8}}>
-          
-        <View style={{backgroundColor: "#1890FF", alignItems : "center",flexDirection: "row", marginTop: 20 ,position: "relative",
+    <View style={{backgroundColor: "#1890FF", alignItems : "center",flexDirection: "row", marginTop: 20 ,position: "relative",
     width: "100%",
     height: 40,
     alignSelf: "center"}}>
         <SvgXml xml={BackSvg("white")} />
-          <Text style={{ color: "white", fontSize: 25, fontWeight: 380, marginLeft: 120 }}>
+          <Text style={{ color: "white", fontSize: 25, fontWeight: 400, marginLeft: 120 }}>
             Thông báo
           </Text>
           <SvgXml xml={CheckSvg("white")} style= {{marginLeft: 100}}/> 
         </View> 
+
+
+        <View style={{ marginTop: 10 }}>
+          <Recommend_Noti/>
+          
+        </View>
+
+
+
+        {/* <FlatList 
+        horizontal={true}
+      keyExtractor={(item, index) => index.toString()}
+      showsHorizontalScrollIndicator={false}
+      showsVerticalScrollIndicator={false}
+    >
+        
         
         <View style={styles.Voucher1}>
             <View style={{width: 50, height: 50}}>
@@ -313,7 +328,9 @@ const NotificationScreen =({})=>{
                 </View>                  
           </View>
           <View style={{marginLeft: 150}}><SvgXml xml={CameraSvg()} /></View>
-        </View>
+        </View>   
+        </FlatList>   */}
+        
         </ScrollView>
     </SafeAreaView>
     )
@@ -322,21 +339,21 @@ export default NotificationScreen;
 const styles = StyleSheet.create({
     
     Hearder: {
-        marginTop: 20, fontWeight: "bold", fontSize: 40
-    },
-    Voucher: {   
-      flexDirection: "row",
-      backgroundColor: "#fff",
-      top: 50,
-      left: 32,
-      alignItems: "center",
-      padding: 8,
-      borderRadius: 4
-
-      
-    },
-    Voucher1: {
+        marginTop: 20,
+        fontWeight: "bold",
+        fontSize: 40,
+      },
+      Voucher: {
         flexDirection: "row",
-        marginTop: 30
+        backgroundColor: "#fff",
+        top: 50,
+        left: 32,
+        alignItems: "center",
+        padding: 8,
+        borderRadius: 4,
+      },
+      Voucher1: {
+        flexDirection: "row",
+        marginTop: 30,
       },
   });

@@ -16,9 +16,10 @@ import { View,
     import CareRightSvg from "../../../assets/Svg/CareRightSvg";
     import Voucher_Home from "../Voucher/Voucher_Home";
     import Category_Home from "../Category/Category_Home";
-    import FlashSale_Home from "../Product/FlashSale/FlashSale_Home";
-    import Recommend_Home from "../Product/Recommend/Recommend_Home";  
+    
+   
 import BackSvg from "../../../assets/Svg/BackSvg";
+import Recommend_Favou from "./Recommend_Favou";
 const FavouriteScreen =({})=>{
     return(
         <SafeAreaView  style={{ flex: 0.93 }}>
@@ -35,7 +36,7 @@ const FavouriteScreen =({})=>{
         </View> 
         <View style={{ marginTop: 10, paddingHorizontal: 16 }}>
           
-          <Recommend_Home />
+          <Recommend_Favou />
         </View>
             </ScrollView>
 
