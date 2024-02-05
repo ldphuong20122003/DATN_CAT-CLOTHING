@@ -26,7 +26,7 @@ const screenOptions = {
 export default function BottomTabBar() {
   return (
   
-      <Tab.Navigator screenOptions={screenOptions}>
+      <Tab.Navigator screenOptions={screenOptions} >
         <Tab.Screen
           name="Home"
           component={HomeScreen}

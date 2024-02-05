@@ -54,7 +54,7 @@ const Product_Search = ({ navigation }) => {
     }
   };
   return (
-    <SafeAreaView style={{backgroundColor:'#fff'}}>
+    <SafeAreaView >
       <View style={styles.Header}>
         <View
           style={{
@@ -277,7 +277,7 @@ const Product_Search = ({ navigation }) => {
             <TabBar
               {...props}
               
-              style={{ backgroundColor: 'white',marginTop:5 }} // Chỉnh style cho thanh tab
+              style={{ backgroundColor: '#f2f2f2',marginTop:5 }} // Chỉnh style cho thanh tab
               indicatorStyle={{ backgroundColor: '#1890FF' }} // Chỉnh style cho chỉ mục hiện tại
               labelStyle={{
                 fontSize: 14,

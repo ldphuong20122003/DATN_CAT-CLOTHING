@@ -28,7 +28,7 @@ const AccountScreen = ({ navigation }) => {
     navigation.navigate("Login");
   };
   return (
-    <SafeAreaView style={{ flex: 0.93,backgroundColor:'#fff' }}>
+    <SafeAreaView style={{ flex: 0.93}}>
       <ScrollView>
         <View>
           <View style={styles.slide}>
