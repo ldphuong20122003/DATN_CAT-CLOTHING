@@ -12,6 +12,7 @@ import Option_Account from "../app-views/Account/settings/Option_Account";
 import Trans_Account from "../app-views/Account/settings/Trans_Account";
 import Update_Account from "../app-views/Account/settings/Update_Account";
 import Update_Pass from "../app-views/Account/settings/Update_Pass";
+import AccountVoucher from "../app-views/Account/AccountVoucher";
 
 const Tab = createBottomTabNavigator();
 const screenOptions = {
@@ -93,7 +94,7 @@ export default function BottomTabBar() {
         />
           <Tab.Screen
           name="Account"
-          component={Update_Pass}
+          component={AccountVoucher}
           options={{
             tabBarIcon: ({ focused }) => {
               return (
