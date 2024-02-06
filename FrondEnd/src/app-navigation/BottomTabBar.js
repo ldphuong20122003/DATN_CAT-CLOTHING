@@ -8,6 +8,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { View, Text } from "react-native";
 import { Entypo, MaterialIcons, Ionicons ,MaterialCommunityIcons,FontAwesome5} from "@expo/vector-icons";
+import Pay_method from "../app-views/Pay/Pay_method";
+import Pay_online from "../app-views/Pay/Pay_online";
 
 const Tab = createBottomTabNavigator();
 const screenOptions = {
@@ -69,7 +71,7 @@ export default function BottomTabBar() {
         
         <Tab.Screen
           name="Favourite"
-          component={FavouriteScreen}
+          component={Pay_online}
           options={{
             tabBarIcon: ({ focused }) => {
               return (
