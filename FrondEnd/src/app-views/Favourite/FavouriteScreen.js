@@ -3,24 +3,9 @@ import {
   View,
   SafeAreaView,
   StyleSheet,
-  Image,
-  TextInput,
   Text,
-  ScrollView,
-  TouchableOpacity,
 } from "react-native";
-
-import { SvgXml } from "react-native-svg";
-import Swiper from "react-native-swiper/src";
-import SearchSvg from "../../../assets/Svg/SearchSvg";
-import CameraSvg from "../../../assets/Svg/CameraSvg";
-import WalletSvg from "../../../assets/Svg/WalletSvg";
-import CareRightSvg from "../../../assets/Svg/CareRightSvg";
-import Voucher_Home from "../Voucher/Voucher_Home";
-import Category_Home from "../Category/Category_Home";
-
-import BackSvg from "../../../assets/Svg/BackSvg";
-import Recommend_Favou from "./Recommend_Favou";
+import Recommend_Favou from "../Product/Favourite/Recommend_Favou";
 const FavouriteScreen = ({}) => {
   return (
     <SafeAreaView style={{ flex: 0.93 }}>

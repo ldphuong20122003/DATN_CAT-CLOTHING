@@ -16,12 +16,13 @@ import Shop from "../Product/FlashSale/Shop";
 import ShopSvg from "../../../assets/Svg/ShopSvg";
 import EditSvg from "../../../assets/Svg/EditSvg";
 import OrderSvg from "../../../assets/Svg/OrderSvg";
-import LockSvg from "../../../assets/Svg/LockSvg";
 import UnlockSvg from "../../../assets/Svg/UnlockSvg";
 import CarSvg from "../../../assets/Svg/CarSvg";
 import DoneSvg from "../../../assets/Svg/DoneSvg";
 import CancelSvg from "../../../assets/Svg/CancelSvg";
 import UserSvg from "../../../assets/Svg/UserSvg";
+import ReOrder from "../Product/ReOrder/ReOder";
+
 
 const AccountScreen = ({ navigation }) => {
   const gotoLogin = () => {
@@ -188,7 +189,7 @@ const AccountScreen = ({ navigation }) => {
               <SvgXml xml={CareRightSvg("#707070")} />
             </View>
           </View>
-          <FlashSale_Home />
+          <ReOrder />
         </View>
         <View style={{ paddingHorizontal: 16 }}>
           <View

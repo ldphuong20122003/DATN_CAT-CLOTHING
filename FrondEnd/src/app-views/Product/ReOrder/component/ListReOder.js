@@ -1,6 +1,6 @@
 import React from "react";
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
-import { SvgXml } from "react-native-svg";
+
 const ListReOder = ({ data, onPress }) => {
   const pressItem = (item) => {
     onPress && onPress(item);
@@ -36,7 +36,7 @@ const ListReOder = ({ data, onPress }) => {
                   <Text style={{ fontSize:10,fontWeight:400,color:'#ef4444'}}>
                     {item.price}
                   </Text>
-                  <Image source={require("../../../../assets/ShoppingCart.png")}/>
+                  <Image source={require("../../../../../assets/ShoppingCart.png")}/>
                 </View>
                     
                 </View>

@@ -2,10 +2,10 @@ import React from "react";
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import { SvgXml } from "react-native-svg";
 
-import BackgroundFreeShip from "../../../../assets/Svg/BackgroundFreeShip";
-import AddressSvg from "../../../../assets/Svg/AddressSvg";
-import BackgroundFavourite from "../../../../assets/Svg/BackgroundFavourite";
-import FullFavouriteSvg from "../../../../assets/Svg/FullFavouriteSvg";
+import BackgroundFreeShip from "../../../../../assets/Svg/BackgroundFreeShip";
+import AddressSvg from "../../../../../assets/Svg/AddressSvg";
+import BackgroundFavourite from "../../../../../assets/Svg/BackgroundFavourite";
+import FullFavouriteSvg from "../../../../../assets/Svg/FullFavouriteSvg";
 
 const ListRecommend_Favou = ({ data, onPress }) => {
   const pressItem = (item) => {
@@ -95,9 +95,8 @@ const ListRecommend_Favou = ({ data, onPress }) => {
                   >
                     {item.price}
                   </Text>
-                  <Image
-                    source={require("../../../../assets/ShoppingCart.png")}
-                  />
+                  <Image source={require("../../../../../assets/ShoppingCart.png")}/>
+
                 </View>
               </View>
             </View>
