@@ -95,7 +95,7 @@ const Search = ({ navigation }) => {
     : [];
 
   return (
-    <SafeAreaView style={{backgroundColor:'#fff'}}>
+    <SafeAreaView >
       <View style={styles.Header}>
         <View
           style={{
@@ -188,6 +188,7 @@ const Search = ({ navigation }) => {
           </View>
         )}
         <View style={{ flex: 1 }}>
+          <Text  style={{ fontSize: 14, fontWeight: 600}}>Gợi ý dành cho bạn</Text>
           <Recommend_Search />
         </View>
       </View>
