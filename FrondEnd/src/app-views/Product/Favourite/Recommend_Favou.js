@@ -2,6 +2,7 @@ import React from "react";
 import { View } from "react-native";
 import ListRecommend_Favou from "./component/ListRecommend_Favou";
 
+
 const Recommend_Favou = () => {
   const default_data1 = [
     {

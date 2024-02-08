@@ -8,6 +8,11 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { View, Text } from "react-native";
 import { Entypo, MaterialIcons, Ionicons ,MaterialCommunityIcons,FontAwesome5} from "@expo/vector-icons";
+import Option_Account from "../app-views/Account/settings/Option_Account";
+import Trans_Account from "../app-views/Account/settings/Trans_Account";
+import Update_Account from "../app-views/Account/settings/Update_Account";
+import Update_Pass from "../app-views/Account/settings/Update_Pass";
+import AccountVoucher from "../app-views/Account/AccountVoucher";
 
 const Tab = createBottomTabNavigator();
 const screenOptions = {
