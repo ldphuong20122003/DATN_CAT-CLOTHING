@@ -11,6 +11,11 @@ import ChangeForgotPass from './src/app-views/ForgotPassword/ChangeForgotPass';
 import BottomTabBar from './src/app-navigation/BottomTabBar';
 import Search from './src/app-views/Search/Search';
 import Product_Search from './src/app-views/Product/Search/Product_Search';
+import AccountVoucher from './src/app-views/Account/AccountVoucher';
+import Option_Account from './src/app-views/Account/settings/Option_Account';
+import Update_Account from './src/app-views/Account/settings/Update_Account';
+import Update_Pass from './src/app-views/Account/settings/Update_Pass';
+import Trans_Account from './src/app-views/Account/settings/Trans_Account';
 
 const Stack = createStackNavigator();
 
@@ -27,6 +32,11 @@ export default function App() {
         <Stack.Screen name="BottomTabScreen" component={BottomTabBar} options={{ headerShown: false }} />
         <Stack.Screen name="Search" component={Search} options={{ headerShown: false }} />
         <Stack.Screen name="Product_Search" component={Product_Search} options={{ headerShown: false }} />
+        <Stack.Screen name='Account_Voucher' component={AccountVoucher}  options={{ headerShown:false }}/>
+        <Stack.Screen name='Option_Account' component={Option_Account}  options={{ headerShown:false }}/>
+        <Stack.Screen name='Update_Account' component={Update_Account}  options={{ headerShown:false }}/>
+        <Stack.Screen name='Update_Password' component={Update_Pass}  options={{ headerShown:false }}/>
+        <Stack.Screen name='Translate_Account' component={Trans_Account}  options={{ headerShown:false }}/>
 
       </Stack.Navigator>
     </NavigationContainer>

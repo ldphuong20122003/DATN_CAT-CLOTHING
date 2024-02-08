@@ -23,14 +23,22 @@ import CancelSvg from "../../../assets/Svg/CancelSvg";
 import UserSvg from "../../../assets/Svg/UserSvg";
 import ReOrder from "../Product/ReOrder/ReOder";
 
-
 const AccountScreen = ({ navigation }) => {
   const gotoLogin = () => {
     navigation.navigate("Login");
   };
+  const gotoVoucher = () => {
+    navigation.navigate("Account_Voucher");
+  };
+  const gotoOptionAccount = () => {
+    navigation.navigate("Option_Account");
+  };
+  const gotoChangeAccount = () => {
+    navigation.navigate("Update_Account");
+  };
   return (
-    <SafeAreaView style={{ flex: 0.93}}>
-      <ScrollView>
+    <SafeAreaView style={{ flex: 0.93 }}>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View>
           <View style={styles.slide}>
             <Image
@@ -46,7 +54,6 @@ const AccountScreen = ({ navigation }) => {
                   width: 60,
                   height: 60,
                   borderRadius: 100,
-                  
                 }}
               />
               <View style={{ justifyContent: "center", marginLeft: 8 }}>
@@ -76,11 +83,17 @@ const AccountScreen = ({ navigation }) => {
                 </View>
               </View>
             </View>
-            <View
-              style={{ backgroundColor: "#fff", padding: 6, borderRadius: 50 }}
-            >
-              <SvgXml xml={EditSvg()} />
-            </View>
+            <TouchableOpacity onPress={gotoChangeAccount}>
+              <View
+                style={{
+                  backgroundColor: "#fff",
+                  padding: 6,
+                  borderRadius: 50,
+                }}
+              >
+                <SvgXml xml={EditSvg()} />
+              </View>
+            </TouchableOpacity>
           </View>
         </View>
         <View style={styles.Order}>
@@ -147,7 +160,8 @@ const AccountScreen = ({ navigation }) => {
               flexDirection: "row",
               justifyContent: "space-between",
               alignItems: "center",
-              paddingVertical:12,borderBottomWidth:1,
+              paddingVertical: 12,
+              borderBottomWidth: 1,
               borderBottomColor: "#D4D4D4",
             }}
           >
@@ -192,6 +206,38 @@ const AccountScreen = ({ navigation }) => {
           <ReOrder />
         </View>
         <View style={{ paddingHorizontal: 16 }}>
+          <TouchableOpacity onPress={gotoVoucher}>
+            <View
+              style={{
+                paddingVertical: 16,
+                flexDirection: "row",
+                alignItems: "center",
+                borderBottomWidth: 1,
+                borderBottomColor: "#D4D4D4",
+                justifyContent: "space-between",
+              }}
+            >
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Image
+                  source={require("../../../assets/Voucher.png")}
+                  style={{ width: 24, height: 24 }}
+                />
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontWeight: "400",
+                    color: "black",
+                    marginLeft: 10,
+                  }}
+                >
+                  Voucher của tôi
+                </Text>
+              </View>
+              <View>
+                <SvgXml xml={CareRightSvg("black")} />
+              </View>
+            </View>
+          </TouchableOpacity>
           <View
             style={{
               paddingVertical: 16,
@@ -199,36 +245,7 @@ const AccountScreen = ({ navigation }) => {
               alignItems: "center",
               borderBottomWidth: 1,
               borderBottomColor: "#D4D4D4",
-            }}
-          >
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Image
-                source={require("../../../assets/Voucher.png")}
-                style={{ width: 24, height: 24 }}
-              />
-              <Text
-                style={{
-                  fontSize: 14,
-                  fontWeight: "400",
-                  color: "black",
-                  marginLeft: 10,
-                }}
-              >
-                Voucher của tôi
-              </Text>
-            </View>
-            <View style={{ marginLeft: 300 }}>
-              <SvgXml xml={CareRightSvg("black")} />
-            </View>
-          </View>
-
-          <View
-            style={{
-              paddingVertical: 16,
-              flexDirection: "row",
-              alignItems: "center",
-              borderBottomWidth: 1,
-              borderBottomColor: "#D4D4D4",
+              justifyContent: "space-between",
             }}
           >
             <View style={{ flexDirection: "row" }}>
@@ -249,46 +266,48 @@ const AccountScreen = ({ navigation }) => {
               </Text>
             </View>
 
-            <View style={{ marginLeft: 300 }}>
+            <View>
               <SvgXml xml={CareRightSvg("black")} />
             </View>
           </View>
-
-          <View
-            style={{
-              paddingVertical: 16,
-              flexDirection: "row",
-              alignItems: "center",
-              borderBottomWidth: 1,
-              borderBottomColor: "#D4D4D4",
-            }}
-          >
-            <View style={{ flexDirection: "row" }}>
-              <SvgXml xml={UserSvg()} />
-              <Text
-                style={{
-                  fontSize: 14,
-                  fontWeight: "400",
-                  color: "black",
-                  marginLeft: 10,
-                }}
-              >
-                Thiết lập tài khoản
-              </Text>
+          <TouchableOpacity onPress={gotoOptionAccount}>
+            <View
+              style={{
+                paddingVertical: 16,
+                flexDirection: "row",
+                alignItems: "center",
+                borderBottomWidth: 1,
+                borderBottomColor: "#D4D4D4",
+                justifyContent: "space-between",
+              }}
+            >
+              <View style={{ flexDirection: "row" }}>
+                <SvgXml xml={UserSvg()} />
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontWeight: "400",
+                    color: "black",
+                    marginLeft: 10,
+                  }}
+                >
+                  Thiết lập tài khoản
+                </Text>
+              </View>
+              <View>
+                <SvgXml xml={CareRightSvg("black")} />
+              </View>
             </View>
-            <View style={{ marginLeft: 300 }}>
-              <SvgXml xml={CareRightSvg("black")} />
-            </View>
-          </View>
+          </TouchableOpacity>
           <TouchableOpacity onPress={gotoLogin}>
-            <View style={{ padding: 16 }}>
+            <View style={{ marginTop:5,paddingVertical: 12,backgroundColor:'#FF1826',borderRadius:10 }}>
               <View style={{ alignItems: "center" }}>
                 <Text
                   style={{
-                    fontSize: 20,
+                    fontSize: 16,
                     fontWeight: "bold",
-                    color: "#FF1826",
-                    marginLeft: 10,
+                    color: "#fff",
+                  
                   }}
                 >
                   Đăng xuất
@@ -358,14 +377,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 8,
     borderRadius: 4,
-    //   shadowColor: "#000",
-    //   shadowOffset: {
-    //     width: 0,
-    //     height: 2,
-    //   },
-    //   shadowOpacity: 0.25,
-    //   shadowRadius: 3.84,
-    //   elevation: 5,
+
   },
   Category: {
     flex: 1,

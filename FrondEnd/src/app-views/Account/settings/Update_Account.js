@@ -1,186 +1,243 @@
 import React from "react";
-import { View, Text, TextInput, Checkbox, TouchableOpacity, StyleSheet, Image } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Checkbox,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+} from "react-native";
 import { Svg, SvgXml } from "react-native-svg";
-
-import CareRightSvg from "../../../../assets/Svg/CareRightSvg";
-import CareLeftSvg from "../../../../assets/Svg/CareLeftSvg";
-import UserSWsvg from "../../../../assets/Svg/UserSWsvg";
-import PassSvg from "../../../../assets/Svg/PassSvg";
-import TransSvg from "../../../../assets/Svg/TransSvg";
-import PhoneSvg from "../../../../assets/Svg/PhoneSvg";
-import LockSvg from "../../../../assets/Svg/LockSvg";
-import EyeSvg from "../../../../assets/Svg/EyeSvg";
-import EditSvg from "../../../../assets/Svg/EditSvg";
 import CameraSvg from "../../../../assets/Svg/CameraSvg";
+import BackSvg from "../../../../assets/Svg/BackSvg";
 
 const Update_Account = ({ navigation }) => {
-    const gotoHome =()=>{ navigation.navigate('BottomTabScreen')};
-    return (
-        <View style={{ flex: 1, backgroundColor: 'white' }}>
-
-            <View
-                style={{
-                    paddingVertical: 16,
-                    flexDirection: "row",
-                    alignItems: "center",
-                    width: '100%',
-                    backgroundColor: '#1890FF',
-                    padding: 10
-                }}
+  const gotoHome = () => {
+    navigation.navigate("BottomTabScreen");
+  };
+  const goBack = () => {
+    navigation.goBack();
+  };
+  return (
+    <View style={{ flex: 1, backgroundColor: "white" }}>
+      <View style={styles.Header}>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <TouchableOpacity onPress={goBack}>
+            <SvgXml xml={BackSvg()} />
+          </TouchableOpacity>
+          <View style={{ flex: 1, alignItems: "center" }}>
+            <Text
+              style={{
+                fontSize: 16,
+                color: "white",
+                marginLeft: 10,
+                fontWeight: "bold",
+              }}
             >
-                <View style={{ flexDirection: "row", alignItems: "center", paddingTop: 10 }}>
-                    <SvgXml xml={CareLeftSvg('white')} style={{ width: 24, height: 24 }} />
-                    <Text
-                        style={{
-                            fontSize: 16,
-                            color: "white",
-                            marginLeft: 10,
-                            width: 247,
-                            fontWeight: 'bold',
-                            alignItems: 'center',
-                        }}
-                    >
-                        Chỉnh sửa thông tin cá nhân
-                    </Text>
-                </View>
-            </View>
-
-            <View>
-                <View style={styles.slide}>
-                    <Image
-                        source={require("../../../../assets/banner.jpg")}
-                        style={styles.image}
-                    />
-                </View>
-
-                <View style={styles.Voucher}>
-                    <View style={{ backgroundColor: "#fff", padding: 6, borderRadius: 50, marginLeft: 380, marginTop: -70, marginBottom: 30 }}>
-                        <SvgXml xml={CameraSvg()} />
-                    </View>
-                    <View>
-                        <Image
-                            source={require("../../../../assets/anhdaidien.jpg")}
-                            style={{
-                                width: 100,
-                                height: 100,
-                                borderRadius: 100,
-                                borderWidth: 2,
-                                borderColor: 'white'
-                            }}
-                        />
-                    </View>
-                    <View style={{ backgroundColor: "#fff", padding: 6, borderRadius: 50, marginLeft: 70, marginTop: -30 }}>
-                        <SvgXml xml={CameraSvg()} />
-                    </View>
-                </View>
-
-                <View style={{ margin: 10 }}>
-                    <Text style={{ marginLeft: 16, fontSize: 16, fontWeight: 400, marginTop: 70 }}>
-                        Tên giao hàng
-                    </Text>
-                    <View
-                        style={{
-                            flexDirection: "row",
-                            paddingHorizontal: 16,
-                            paddingVertical: 10,
-                            marginTop: 7,
-                            borderWidth: 1,
-                            borderRadius: 8,
-                            alignItems: "center",
-                        }}
-                    >
-                        <TextInput
-                            style={{ marginLeft: 8 }}
-                            placeholder="Nhập tên"
-                        />
-                    </View>
-                </View>
-
-                <View style={{ margin: 10 }}>
-                    <Text style={{ marginLeft: 16, fontSize: 16, fontWeight: 400 }}>
-                        Địa chỉ
-                    </Text>
-                    <View
-                        style={{
-                            flexDirection: "row",
-                            paddingHorizontal: 16,
-                            paddingVertical: 10,
-                            marginTop: 7,
-                            borderWidth: 1,
-                            borderRadius: 8,
-                            alignItems: "center",
-                        }}
-                    >
-                        <TextInput
-                            style={{ marginLeft: 8 }}
-                            placeholder="Nhập địa chỉ"
-                        />
-                    </View>
-                </View>
-
-                <View style={{ margin: 10 }}>
-                    <Text style={{ marginLeft: 16, fontSize: 16, fontWeight: 400 }}>
-                        Hotline
-                    </Text>
-                    <View
-                        style={{
-                            flexDirection: "row",
-                            paddingHorizontal: 16,
-                            paddingVertical: 10,
-                            marginTop: 7,
-                            borderWidth: 1,
-                            borderRadius: 8,
-                            alignItems: "center",
-                        }}
-                    >
-                        <TextInput
-                            style={{ marginLeft: 8 }}
-                            placeholder="Nhập SĐT"
-                        />
-                    </View>
-                </View>
-
-                <TouchableOpacity onPress={gotoHome}>
-                    <View
-                        style={{
-                            marginTop: 10,
-                            backgroundColor: "#1890FF",
-                            alignItems: "center",
-                            paddingHorizontal: 12,
-                            paddingVertical: 10,
-                            marginHorizontal: 8,
-                            borderRadius: 6,
-                        }}
-                    >
-                        <Text style={{ color: "#fff", fontSize: 16, fontWeight: 500 }}>
-                            Lưu thay đổi
-                        </Text>
-                    </View>
-                </TouchableOpacity>
-
-            </View>
-
+              Chỉnh sửa thông tin cá nhân
+            </Text>
+          </View>
         </View>
-    )
-}
+      </View>
+
+      <View style={styles.Content}>
+        <View style={styles.Banner}>
+          <View style={styles.slide}>
+            <Image
+              source={require("../../../../assets/banner.jpg")}
+              style={styles.image}
+            />
+          </View>
+          <View
+            style={{
+              position: "absolute",
+              top: 8,
+              right: 8,
+              backgroundColor: "#fff",
+              padding: 4,
+              borderRadius: 20,
+            }}
+          >
+            <SvgXml xml={CameraSvg()} />
+          </View>
+          <View
+            style={{ position: "absolute", top: 102, left: 160, right: 160 }}
+          >
+            <Image
+              source={require("../../../../assets/anhdaidien.jpg")}
+              style={{
+                width: 80,
+                height: 80,
+                borderRadius: 40,
+                borderWidth: 1,
+                borderColor: "#fff",
+              }}
+            />
+            <View
+              style={{
+                position: "absolute",
+                bottom: 0,
+                right: 0,
+                backgroundColor: "#fff",
+                borderRadius: 20,
+                padding: 4,
+              }}
+            >
+              <SvgXml xml={CameraSvg()} />
+            </View>
+          </View>
+        </View>
+        <View style={styles.Infor}>
+          <View>
+            <Text
+              style={{
+                fontSize: 14,
+                fontWeight: "bold",
+              }}
+            >
+              Tên người dùng
+            </Text>
+            <View
+              style={{
+                padding: 12,
+                marginTop: 8,
+                borderWidth: 1,
+                borderRadius: 8,
+              }}
+            >
+              <TextInput placeholder="Nhập tên" />
+            </View>
+          </View>
+
+          <View style={{ marginTop: 8 }}>
+            <Text
+              style={{
+                fontSize: 14,
+                fontWeight: "bold",
+              }}
+            >
+              Ngày sinh
+            </Text>
+            <View
+              style={{
+                padding: 12,
+                marginTop: 8,
+                borderWidth: 1,
+                borderRadius: 8,
+              }}
+            >
+              <TextInput placeholder="Nhập ngày sinh" />
+            </View>
+          </View>
+
+          <View style={{ marginTop: 8 }}>
+            <Text
+              style={{
+                fontSize: 14,
+                fontWeight: "bold",
+              }}
+            >
+              Email
+            </Text>
+            <View
+              style={{
+                padding: 12,
+                marginTop: 8,
+                borderWidth: 1,
+                borderRadius: 8,
+              }}
+            >
+              <TextInput placeholder="Nhập Email" />
+            </View>
+          </View>
+          <View style={{ marginTop: 8 }}>
+            <Text
+              style={{
+                fontSize: 14,
+                fontWeight: "bold",
+              }}
+            >
+              Địa chỉ
+            </Text>
+            <View
+              style={{
+                padding: 12,
+                marginTop: 8,
+                borderWidth: 1,
+                borderRadius: 8,
+              }}
+            >
+              <TextInput placeholder="Nhập địa chỉ" />
+            </View>
+          </View>
+          <View style={{ marginTop: 8 }}>
+            <Text
+              style={{
+                fontSize: 14,
+                fontWeight: "bold",
+              }}
+            >
+              Số điện thoại
+            </Text>
+            <View
+              style={{
+                padding: 12,
+                marginTop: 8,
+                borderWidth: 1,
+                borderRadius: 8,
+              }}
+            >
+              <TextInput placeholder="Nhập số điện thoại" />
+            </View>
+          </View>
+        </View>
+
+        <TouchableOpacity onPress={gotoHome}>
+          <View
+            style={{
+              marginTop: 10,
+              backgroundColor: "#1890FF",
+              alignItems: "center",
+              paddingVertical: 12,
+              marginHorizontal: 16,
+              borderRadius: 6,
+            }}
+          >
+            <Text style={{ color: "#fff", fontSize: 16, fontWeight: 500 }}>
+              Lưu thay đổi
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+};
 export default Update_Account;
 const styles = StyleSheet.create({
-    slide: {},
-    image: {
-        width: "100%",
-        height: 137,
-    },
-    image: {
-        width: "100%",
-        height: 137,
-    },
-    Voucher: {
-        width: "90%",
-        position: "absolute",
-        top: 90,
-        left: 18,
-        alignItems: "center",
-        borderRadius: 4,
-        justifyContent: "space-between",
-    },
+  Header: {
+    paddingHorizontal: 16,
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#1890FF",
+    paddingTop: 30,
+    paddingBottom: 12,
+  },
+  Content: {},
+  image: {
+    width: "100%",
+    height: 137,
+  },
+  image: {
+    width: "100%",
+    height: 137,
+  },
+  Voucher: {
+    position: "absolute",
+    borderRadius: 4,
+  },
+  Infor: {
+    marginTop: 42,
+    padding: 16,
+  },
 });

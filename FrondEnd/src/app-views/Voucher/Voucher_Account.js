@@ -27,7 +27,7 @@ const Voucher_Account = () => {
         
     ];
     return (
-        <View style={{ marginTop: 10 }}>
+        <View >
             <ListVoucher_Account data={default_data} />
         </View>
     );

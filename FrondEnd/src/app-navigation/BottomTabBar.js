@@ -94,7 +94,7 @@ export default function BottomTabBar() {
         />
           <Tab.Screen
           name="Account"
-          component={AccountVoucher}
+          component={AccountScreen}
           options={{
             tabBarIcon: ({ focused }) => {
               return (
