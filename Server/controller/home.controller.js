@@ -50,6 +50,7 @@ exports.addSTAFF= async(req,res,next)=>{
         try {
 
             const collectionRef = admin.firestore().collection('Staff');
+            const Id = collectionRef.doc().id;
             const emailToCheck = req.body.Email; // Email cần kiểm tra
 
 // Kiểm tra xem email đã tồn tại hay chưa
@@ -58,12 +59,13 @@ exports.addSTAFF= async(req,res,next)=>{
                 .then(async (snapshot) => {
                     if (snapshot.empty) {
                         let data2 = {
-                            id: collectionRef.doc().id,
+                            id: Id,
                             Email: req.body.Email,
                             Fullname: req.body.Fullname,
                             Password: req.body.Password,
                         }
-                        await collectionRef.add(
+                        const docID = Id ? collectionRef.doc(Id) : collectionRef.doc();
+                         docID.set(
                             data2)
                             .then(() => {
                                 res.redirect('/');

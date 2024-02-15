@@ -6,6 +6,7 @@ const multer = require('multer');
 //Đường dẫn tới products.controller.js 
 var productCtrl = require('../../controller/productController');
 
+
 //Vào trang product theo địa chỉ '/products/'
 router.get('/',productCtrl.listProducts);
 
