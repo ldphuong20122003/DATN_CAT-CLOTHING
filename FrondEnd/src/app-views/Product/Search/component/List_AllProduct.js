@@ -14,7 +14,7 @@ const List_AllProduct = ({ data, onPress }) => {
         <TouchableOpacity onPress={pressItem} style={{ alignItems: "center" }}>
           <View
             style={{
-              width: 178,
+              width: 190,
               justifyContent: "center",
               marginTop: 14,
               borderRadius: 1,
@@ -31,7 +31,7 @@ const List_AllProduct = ({ data, onPress }) => {
                     source={{ uri: item.image }}
                     style={{
                       height: 178,
-                      width: 178,
+                      width: 190,
                     }}
                   />
                 )}
