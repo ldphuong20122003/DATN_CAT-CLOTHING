@@ -16,6 +16,7 @@ import Option_Account from './src/app-views/Account/settings/Option_Account';
 import Update_Account from './src/app-views/Account/settings/Update_Account';
 import Update_Pass from './src/app-views/Account/settings/Update_Pass';
 import Trans_Account from './src/app-views/Account/settings/Trans_Account';
+import CartScreen from './src/app-views/Cart/CartScreen';
 
 const Stack = createStackNavigator();
 
@@ -37,6 +38,7 @@ export default function App() {
         <Stack.Screen name='Update_Account' component={Update_Account}  options={{ headerShown:false }}/>
         <Stack.Screen name='Update_Password' component={Update_Pass}  options={{ headerShown:false }}/>
         <Stack.Screen name='Translate_Account' component={Trans_Account}  options={{ headerShown:false }}/>
+        <Stack.Screen name="Cart" component={CartScreen}  options={{ headerShown:false }}/>
 
       </Stack.Navigator>
     </NavigationContainer>

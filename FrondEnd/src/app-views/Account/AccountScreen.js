@@ -300,14 +300,20 @@ const AccountScreen = ({ navigation }) => {
             </View>
           </TouchableOpacity>
           <TouchableOpacity onPress={gotoLogin}>
-            <View style={{ marginTop:5,paddingVertical: 12,backgroundColor:'#FF1826',borderRadius:10 }}>
+            <View
+              style={{
+                marginTop: 15,
+                paddingVertical: 12,
+                backgroundColor: "#FF1826",
+                borderRadius: 10,
+              }}
+            >
               <View style={{ alignItems: "center" }}>
                 <Text
                   style={{
                     fontSize: 16,
                     fontWeight: "bold",
                     color: "#fff",
-                  
                   }}
                 >
                   Đăng xuất
@@ -377,7 +383,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 8,
     borderRadius: 4,
-
   },
   Category: {
     flex: 1,

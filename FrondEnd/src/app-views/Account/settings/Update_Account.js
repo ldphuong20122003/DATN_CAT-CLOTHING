@@ -11,6 +11,8 @@ import {
 import { Svg, SvgXml } from "react-native-svg";
 import CameraSvg from "../../../../assets/Svg/CameraSvg";
 import BackSvg from "../../../../assets/Svg/BackSvg";
+import ModalPopups from "../../Modal/ModalPopup";
+import TickSvg from "../../../../assets/Svg/TickSvg";
 
 const Update_Account = ({ navigation }) => {
   const gotoHome = () => {
@@ -19,6 +21,7 @@ const Update_Account = ({ navigation }) => {
   const goBack = () => {
     navigation.goBack();
   };
+  const [visible, setVisible] = React.useState(false);
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
       <View style={styles.Header}>
@@ -193,7 +196,7 @@ const Update_Account = ({ navigation }) => {
           </View>
         </View>
 
-        <TouchableOpacity onPress={gotoHome}>
+        <TouchableOpacity onPress={setVisible}>
           <View
             style={{
               marginTop: 10,
@@ -209,6 +212,19 @@ const Update_Account = ({ navigation }) => {
             </Text>
           </View>
         </TouchableOpacity>
+        <ModalPopups visible={visible}>
+          <View style={{alignItems:'center'}}>
+         
+              <SvgXml xml={TickSvg()}/>
+           <Text style={{color:'#6AC259',fontSize:16,fontWeight:600}}>Thay đổi thông tin thành công</Text>
+           <Text style={{fontSize:12,fontWeight:400,color:'#707070'}}>Chuyển tới màn hình chính trong vài giây nữa</Text>
+           <TouchableOpacity onPress={gotoHome}>
+           <View style={{width:130,padding:15,backgroundColor:'#1890FF',alignItems:'center',marginTop:30,borderRadius:6}}>
+            <Text style={{color:'#fff',fontSize:14,fontWeight:600}}>Đi tới trang chủ</Text>
+           </View>
+           </TouchableOpacity>
+          </View>
+        </ModalPopups>
       </View>
     </View>
   );

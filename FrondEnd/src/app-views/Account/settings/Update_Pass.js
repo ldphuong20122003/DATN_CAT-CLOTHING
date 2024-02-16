@@ -3,24 +3,21 @@ import {
   View,
   Text,
   TextInput,
-  Checkbox,
   TouchableOpacity,
   StyleSheet,
-  Image,
 } from "react-native";
-import { Svg, SvgXml } from "react-native-svg";
-
-import CareLeftSvg from "../../../../assets/Svg/CareLeftSvg";
+import { SvgXml } from "react-native-svg";
 import Hide_pass from "../../../../assets/Svg/Hide_pass";
 import BackSvg from "../../../../assets/Svg/BackSvg";
+import ModalPopups from "../../Modal/ModalPopup";
+import TickSvg from "../../../../assets/Svg/TickSvg";
 
 const Update_Pass = ({ navigation }) => {
-  const gotoHome = () => {
-    navigation.navigate("BottomTabScreen");
-  };
   const goBack = () => {
     navigation.goBack();
   };
+  const gotoLogin =()=>navigation.navigate('Login');
+  const [visible, setVisible] = React.useState(false);
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
       <View style={styles.Header}>
@@ -104,7 +101,7 @@ const Update_Pass = ({ navigation }) => {
             <SvgXml xml={Hide_pass()} />
           </View>
         </View>
-        <TouchableOpacity onPress={gotoHome}>
+        <TouchableOpacity onPress={setVisible}>
           <View
             style={{
               marginTop: 16,
@@ -121,6 +118,19 @@ const Update_Pass = ({ navigation }) => {
             </Text>
           </View>
         </TouchableOpacity>
+        <ModalPopups visible={visible}>
+          <View style={{alignItems:'center'}}>
+         
+              <SvgXml xml={TickSvg()}/>
+           <Text style={{color:'#6AC259',fontSize:16,fontWeight:600}}>Đổi mật khẩu thành công</Text>
+           <Text style={{fontSize:12,fontWeight:400,color:'#707070'}}>Chuyển tới trang đăng nhập trong vài giây nữa</Text>
+           <TouchableOpacity onPress={gotoLogin}>
+           <View style={{width:180,padding:15,backgroundColor:'#1890FF',alignItems:'center',marginTop:30,borderRadius:6}}>
+            <Text style={{color:'#fff',fontSize:14,fontWeight:600}}>Đi tới trang đăng nhập</Text>
+           </View>
+           </TouchableOpacity>
+          </View>
+        </ModalPopups>
       </View>
     </View>
   );

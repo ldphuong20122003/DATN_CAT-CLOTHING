@@ -11,7 +11,6 @@ import {
 } from "react-native";
 import { SvgXml } from "react-native-svg";
 import Swiper from "react-native-swiper/src";
-import PhoneSvg from "../../../assets/Svg/PhoneSvg";
 import SearchSvg from "../../../assets/Svg/SearchSvg";
 import CameraSvg from "../../../assets/Svg/CameraSvg";
 import HeaderCart from "./component/HeaderCart";
@@ -25,6 +24,10 @@ import Recommend_Home from "../Product/Recommend/Recommend_Home";
 
 const HomeScreen = ({navigation}) => {
   const gotoSearch =()=>{navigation.navigate('Search')};
+  const gotoCart = () => {
+    navigation.navigate('Cart');
+  };
+  
   return (
     <SafeAreaView style={{ flex: 0.93}}>
      <ScrollView>
@@ -71,7 +74,7 @@ const HomeScreen = ({navigation}) => {
               }}
             >
             
-              <View style={{ flexDirection: "row" }}>
+              <View style={{ flexDirection: "row",alignItems:'center' }}>
                 <SvgXml xml={SearchSvg()} />
                 <TextInput
                   style={{ marginLeft: 8 }}
@@ -83,7 +86,9 @@ const HomeScreen = ({navigation}) => {
             </View>
             </TouchableOpacity>
             <HeaderChat />
+            <TouchableOpacity onPress={gotoCart}>
             <HeaderCart />
+            </TouchableOpacity>
           </View>
         </View>
         <View style={styles.Voucher}>
