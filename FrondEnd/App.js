@@ -17,6 +17,8 @@ import Update_Account from './src/app-views/Account/settings/Update_Account';
 import Update_Pass from './src/app-views/Account/settings/Update_Pass';
 import Trans_Account from './src/app-views/Account/settings/Trans_Account';
 import CartScreen from './src/app-views/Cart/CartScreen';
+import Detail_Product from './src/app-views/Product/DetailProduct';
+
 
 const Stack = createStackNavigator();
 
@@ -39,8 +41,8 @@ export default function App() {
         <Stack.Screen name='Update_Password' component={Update_Pass}  options={{ headerShown:false }}/>
         <Stack.Screen name='Translate_Account' component={Trans_Account}  options={{ headerShown:false }}/>
         <Stack.Screen name="Cart" component={CartScreen}  options={{ headerShown:false }}/>
-
-      </Stack.Navigator>
+        <Stack.Screen name="Detail_Product" component={Detail_Product}  options={{ headerShown:false }}/>
+         </Stack.Navigator>
     </NavigationContainer>
   );
 }

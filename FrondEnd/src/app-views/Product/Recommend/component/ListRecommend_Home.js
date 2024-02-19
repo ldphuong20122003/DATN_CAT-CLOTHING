@@ -4,10 +4,14 @@ import { SvgXml } from "react-native-svg";
 import BackgroundFreeShip from "../../../../../assets/Svg/BackgroundFreeShip";
 import BackgroundFavourite from "../../../../../assets/Svg/BackgroundFavourite";
 import AddressSvg from "../../../../../assets/Svg/AddressSvg";
+import { useNavigation } from "@react-navigation/native";
 const ListRecommend_Home = ({ data, onPress }) => {
+  const navigation = useNavigation(); 
+
   const pressItem = (item) => {
-    onPress && onPress(item);
+    navigation.navigate("Detail_Product");
   };
+
   const _renderItem = ({ item, index }) => {
     return (
       <View>

@@ -18,7 +18,7 @@ const ModalFilter = ({ visible, children }) => {
           <View
             style={{
                position:'absolute',
-               height:'70%',
+             
               width: "100%",
               backgroundColor: "#fff",
               paddingHorizontal: 20,
