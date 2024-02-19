@@ -4,10 +4,14 @@ import { SvgXml } from "react-native-svg";
 import BackgroundFreeShip from "../../../../../assets/Svg/BackgroundFreeShip";
 import BackgroundFavourite from "../../../../../assets/Svg/BackgroundFavourite";
 import AddressSvg from "../../../../../assets/Svg/AddressSvg";
+import { useNavigation } from "@react-navigation/native";
 const ListRecommend_Home = ({ data, onPress }) => {
+  const navigation = useNavigation(); 
+
   const pressItem = (item) => {
-    onPress && onPress(item);
+    navigation.navigate("Detail_Product");
   };
+
   const _renderItem = ({ item, index }) => {
     return (
       <View>
@@ -18,12 +22,13 @@ const ListRecommend_Home = ({ data, onPress }) => {
               justifyContent: "center",
               marginTop: 14,
               borderRadius: 1,
-              marginRight: 25,
+           
               backgroundColor: "#fff",
-            borderRadius:4
+            borderRadius:4,
+          
             }}
           >
-            <View>
+            <View style={{}}>
               <View>
                 {item.image && (
                   <Image
@@ -135,7 +140,7 @@ const ListRecommend_Home = ({ data, onPress }) => {
   };
   return (
     <FlatList
-      horizontal={true}
+      scrollEnabled={false}
       data={data}
       renderItem={_renderItem}
       keyExtractor={(item, index) => index.toString()}

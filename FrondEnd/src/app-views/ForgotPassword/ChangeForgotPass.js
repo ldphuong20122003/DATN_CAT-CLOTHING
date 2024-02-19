@@ -18,38 +18,9 @@ import FacebookSvg from "../../../assets/Svg/FacebookSvg";
 import EyeSvg from "../../../assets/Svg/EyeSvg";
 import ForgotPass from "../ForgotPassword/ForgotPass";
 import TickSvg from "../../../assets/Svg/TickSvg";
+import ModalPopups from "../Modal/ModalPopup";
 
-const ModalPopups = ({ visible, children }) => {
-  const [showModal, setShowModal] = React.useState(visible);
-  React.useEffect(()=>{
-    toggleModal();
-  },[visible]);
-  const toggleModal=()=>{
-    if(visible){
-      setShowModal(true)
-    }else{
-      setShowModal(false)
-    }
-  }
-  return (
-    <Modal transparent visible={showModal}>
-      <View style={styles.modalBackground}>
-        <View
-          style={{
-            width: "80%",
-            backgroundColor: "#fff",
-            paddingHorizontal: 20,
-            paddingVertical: 30,
-            borderRadius: 20,
-            elevation: 20,
-          }}
-        >
-          {children}
-        </View>
-      </View>
-    </Modal>
-  );
-};
+
 const ChangeForgotPass = ({navigation}) => {
   const [visible, setVisible] = React.useState(false);
   const [isChecked, setChecked] = useState(false);

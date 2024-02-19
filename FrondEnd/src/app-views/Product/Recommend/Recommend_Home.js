@@ -45,10 +45,10 @@ const Recommend_Home = () => {
   ];
   return (
     <>
-      <View >
+      <View  style={ {flex:1,width:'100%',flexDirection:'row',justifyContent:'space-between'}}>
         <View
           style={{
-         
+            width:'50%',
             borderBottomWidth: 0.5,
             borderColor: "#fff",
             paddingBottom: 7,
@@ -58,7 +58,7 @@ const Recommend_Home = () => {
         </View>
         <View
           style={{
-           
+            width:'50%',
             borderBottomWidth: 0.5,
             borderColor: "#fff",
             paddingBottom: 7,

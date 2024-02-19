@@ -11,8 +11,17 @@ const ListFlashSale_Home = ({ data, onPress }) => {
       <View style={{ marginRight:8 }}>
         <TouchableOpacity onPress={() => pressItem(item)}>
         <View 
-        style={{width:126,justifyContent:'center',marginTop:14}}>
-              <View style={{width:126,justifyContent:'center'}}>
+        style={{width:126,justifyContent:'center',marginTop:14, shadowColor: "#000",
+        borderRadius: 4,
+        backgroundColor: "#fff",
+        shadowOffset: {
+          width: 0,
+          height: 4,
+        },
+        shadowOpacity: 0.2,
+        shadowRadius: 2,
+        elevation: 4, }}>
+              <View style={{width:126,justifyContent:'center',}}>
                 <View>
                   {item.image && (
                     <Image
