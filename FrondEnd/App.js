@@ -20,6 +20,7 @@ import CartScreen from './src/app-views/Cart/CartScreen';
 import Detail_Product from './src/app-views/Product/DetailProduct';
 import TransportMethod from './src/app-views/Payment/component/TransportMethod';
 import PaymentMethod from './src/app-views/Payment/component/PaymentMethod';
+import Payment from './src/app-views/Payment/Payment';
 
 
 const Stack = createStackNavigator();
@@ -46,6 +47,7 @@ export default function App() {
         <Stack.Screen name="Detail_Product" component={Detail_Product}  options={{ headerShown:false }}/>
         <Stack.Screen name="Transport_Method" component={TransportMethod}  options={{ headerShown:false }}/>
         <Stack.Screen name="Payment_Method" component={PaymentMethod}  options={{ headerShown:false }}/>
+        <Stack.Screen name="Payment" component={Payment}  options={{ headerShown:false }}/>
          </Stack.Navigator>
     </NavigationContainer>
   );
