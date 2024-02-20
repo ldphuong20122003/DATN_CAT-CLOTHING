@@ -8,16 +8,11 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { View, Text } from "react-native";
 import { Entypo, MaterialIcons, Ionicons ,MaterialCommunityIcons,FontAwesome5} from "@expo/vector-icons";
-<<<<<<< HEAD
-import Pay_method from "../app-views/Pay/Pay_method";
-import Pay_online from "../app-views/Pay/Pay_online";
-=======
 import Option_Account from "../app-views/Account/settings/Option_Account";
 import Trans_Account from "../app-views/Account/settings/Trans_Account";
 import Update_Account from "../app-views/Account/settings/Update_Account";
 import Update_Pass from "../app-views/Account/settings/Update_Pass";
 import AccountVoucher from "../app-views/Account/AccountVoucher";
->>>>>>> AppMobile
 
 const Tab = createBottomTabNavigator();
 const screenOptions = {
@@ -80,7 +75,7 @@ export default function BottomTabBar() {
         
         <Tab.Screen
           name="Favourite"
-          component={Pay_online}
+          component={FavouriteScreen}
           options={{
             tabBarIcon: ({ focused }) => {
               return (
