@@ -36,6 +36,9 @@ const AccountScreen = ({ navigation }) => {
   const gotoChangeAccount = () => {
     navigation.navigate("Update_Account");
   };
+  const gotoTransportMethod = () => {
+    navigation.navigate("Transport_Method");
+  };
   return (
     <SafeAreaView style={{ flex: 0.93 }}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -238,6 +241,7 @@ const AccountScreen = ({ navigation }) => {
               </View>
             </View>
           </TouchableOpacity>
+          <TouchableOpacity onPress={gotoTransportMethod}>
           <View
             style={{
               paddingVertical: 16,
@@ -270,6 +274,7 @@ const AccountScreen = ({ navigation }) => {
               <SvgXml xml={CareRightSvg("black")} />
             </View>
           </View>
+          </TouchableOpacity>
           <TouchableOpacity onPress={gotoOptionAccount}>
             <View
               style={{
