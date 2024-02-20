@@ -32,6 +32,9 @@ const Detail_Product = ({ navigation }) => {
   const gotoBack = () => {
     navigation.goBack();
   };
+  const gotoPayment=()=>{
+    navigation.navigate("Payment")
+  }
   const [visibleAddtoCart, setVisibleAddtoCart] = React.useState(false);
   const [visibleBuy, setVisibleBuy] = React.useState(false);
   return (
@@ -634,9 +637,11 @@ const Detail_Product = ({ navigation }) => {
             </View>
           </View>
         </View>
+        <TouchableOpacity onPress={gotoPayment}>
         <View style={{paddingVertical:10,backgroundColor:'#1890ff',alignItems:'center',borderRadius:8}}>
           <Text style={{color:'#fff',fontWeight:600}}>Mua ngay</Text>
         </View>
+        </TouchableOpacity>
         
       </ModalFilter>
       <View style={styles.Footer}>

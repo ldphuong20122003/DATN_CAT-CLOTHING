@@ -25,7 +25,7 @@ const FavouriteScreen = ({}) => {
           <Text style={{ color: "white", fontSize: 25, fontWeight: 400 }}>
             Yêu thích
           </Text>
-        </View>
+        </View> 
       </View>
       <View style={{ marginTop: 10, paddingHorizontal: 16 }}>
         <Recommend_Favou />
