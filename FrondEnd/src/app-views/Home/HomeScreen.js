@@ -27,6 +27,9 @@ const HomeScreen = ({navigation}) => {
   const gotoCart = () => {
     navigation.navigate('Cart');
   };
+  const gotoChat=()=>{
+    navigation.navigate('Chat')
+  }
   
   return (
     <SafeAreaView style={{ flex: 0.93}}>
@@ -85,7 +88,9 @@ const HomeScreen = ({navigation}) => {
               <SvgXml xml={CameraSvg()} />
             </View>
             </TouchableOpacity>
+            <TouchableOpacity onPress={gotoChat}>
             <HeaderChat />
+            </TouchableOpacity>
             <TouchableOpacity onPress={gotoCart}>
             <HeaderCart />
             </TouchableOpacity>
