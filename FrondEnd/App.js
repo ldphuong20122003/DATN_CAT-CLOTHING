@@ -22,6 +22,7 @@ import TransportMethod from './src/app-views/Payment/component/TransportMethod';
 import PaymentMethod from './src/app-views/Payment/component/PaymentMethod';
 import Payment from './src/app-views/Payment/Payment';
 import ChooseAddress from './src/app-views/Address/ChooseAddress';
+import AddAddress from './src/app-views/Address/AddAddress';
 
 
 const Stack = createStackNavigator();
@@ -50,6 +51,8 @@ export default function App() {
         <Stack.Screen name="Payment_Method" component={PaymentMethod}  options={{ headerShown:false }}/>
         <Stack.Screen name="Payment" component={Payment}  options={{ headerShown:false }}/>
         <Stack.Screen name="ChooseAddress" component={ChooseAddress}  options={{ headerShown:false }}/>
+        <Stack.Screen name="AddAddress" component={AddAddress}  options={{ headerShown:false }}/>
+
          </Stack.Navigator>
     </NavigationContainer>
   );
