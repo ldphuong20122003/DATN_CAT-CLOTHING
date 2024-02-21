@@ -20,6 +20,9 @@ const Payment = ({navigation}) => {
   const gotoTransportMethod =()=>{
     navigation.navigate("Transport_Method")
   }
+  const gotoChooseAddress=()=>{
+    navigation.navigate('ChooseAddress')
+  }
   return (
     <View style={styles.Container}>
       <View style={styles.Header}>
@@ -66,9 +69,11 @@ const Payment = ({navigation}) => {
               123 Sông Hồng , Hai Bà Trưng , Hà Nội
             </Text>
           </View>
+          <TouchableOpacity onPress={gotoChooseAddress}>
           <Text style={{ fontSize: 12, color: "#1890ff", marginTop: 4 }}>
             Thay đổi
           </Text>
+          </TouchableOpacity>
         </View>
         <Payment_Product />
         <View style={{ borderBottomWidth: 10, borderBottomColor: "#DADADA" }}>
