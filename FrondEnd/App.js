@@ -24,6 +24,7 @@ import Payment from './src/app-views/Payment/Payment';
 import ChooseAddress from './src/app-views/Address/ChooseAddress';
 import AddAddress from './src/app-views/Address/AddAddress';
 import Chat from './src/app-views/Chat/Chat';
+import InformationOder from './src/app-views/Oder/InformationOder';
 
 
 const Stack = createStackNavigator();
@@ -54,6 +55,7 @@ export default function App() {
         <Stack.Screen name="ChooseAddress" component={ChooseAddress}  options={{ headerShown:false }}/>
         <Stack.Screen name="AddAddress" component={AddAddress}  options={{ headerShown:false }}/>
         <Stack.Screen name="Chat" component={Chat}  options={{ headerShown:false }}/>
+        <Stack.Screen name="Information_Oder" component={InformationOder}  options={{ headerShown:false }}/>
 
 
          </Stack.Navigator>
