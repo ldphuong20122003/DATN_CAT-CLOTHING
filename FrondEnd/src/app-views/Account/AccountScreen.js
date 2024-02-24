@@ -39,6 +39,9 @@ const AccountScreen = ({ navigation }) => {
   const gotoTransportMethod = () => {
     navigation.navigate("Transport_Method");
   };
+  const gotoHisOrder = () => {
+    navigation.navigate("History_Order");
+  };
   return (
     <SafeAreaView style={{ flex: 0.93 }}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -116,12 +119,14 @@ const AccountScreen = ({ navigation }) => {
                 Đơn mua
               </Text>
             </View>
+            <TouchableOpacity onPress={gotoHisOrder}>
             <View style={{ flexDirection: "row" }}>
               <Text style={{ fontSize: 12, fontWeight: 400, color: "#707070" }}>
                 Xem lịch sử
               </Text>
               <SvgXml xml={CareRightSvg("#707070")} />
             </View>
+            </TouchableOpacity>
           </View>
           <View
             style={{
