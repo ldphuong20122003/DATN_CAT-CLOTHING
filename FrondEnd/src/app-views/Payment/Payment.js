@@ -35,7 +35,7 @@ const Payment = ({ navigation }) => {
     navigation.navigate("BottomTabScreen");
   };
   const gotoInforOder = () => {
-    navigation.navigate("Information_Oder");
+    navigation.navigate("Information_Order");
   };
   const [visible, setVisible] = React.useState(false);
   return (
@@ -311,5 +311,6 @@ const styles = StyleSheet.create({
 
     backgroundColor: "#1890ff",
     borderRadius: 8,
+    marginVertical:16
   },
 });

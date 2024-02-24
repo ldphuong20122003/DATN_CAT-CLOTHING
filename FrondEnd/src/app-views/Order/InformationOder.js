@@ -17,7 +17,7 @@ import CarSvg from "../../../assets/Svg/CarSvg";
 import OrderSvg from "../../../assets/Svg/OrderSvg";
 import ChatSvg from "../../../assets/Svg/ChatSvg";
 
-const InformationOder = ({ navigation }) => {
+const InformationOrder = ({ navigation }) => {
   const gotoBack = () => {
     navigation.goBack();
   };
@@ -230,7 +230,7 @@ const InformationOder = ({ navigation }) => {
     </View>
   );
 };
-export default InformationOder;
+export default InformationOrder;
 const styles = StyleSheet.create({
   Container: { flex: 1 },
   Header: {

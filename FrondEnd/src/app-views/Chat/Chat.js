@@ -12,7 +12,7 @@ import BackSvg from "../../../assets/Svg/BackSvg";
 import SearchSvg from "../../../assets/Svg/SearchSvg";
 import ListChat from "./component/ListChat";
 
-const Chat = () => {
+const Chat = ({navigation}) => {
   const gotoBack = () => {
     navigation.goBack();
   };
