@@ -15,29 +15,13 @@ import iconPaymentMethod from "../../../assets/Svg/iconPaymentMethod";
 import CareRightSvg from "../../../assets/Svg/CareRightSvg";
 import CarSvg from "../../../assets/Svg/CarSvg";
 import OrderSvg from "../../../assets/Svg/OrderSvg";
-import ModalPopups from "../Modal/ModalPopup";
-import TickSvg from "../../../assets/Svg/TickSvg";
+import ChatSvg from "../../../assets/Svg/ChatSvg";
 
-const Payment = ({ navigation }) => {
+const InformationOrder = ({ navigation }) => {
   const gotoBack = () => {
     navigation.goBack();
   };
-  const gotoPaymentMethod = () => {
-    navigation.navigate("Payment_Method");
-  };
-  const gotoTransportMethod = () => {
-    navigation.navigate("Transport_Method");
-  };
-  const gotoChooseAddress = () => {
-    navigation.navigate("ChooseAddress");
-  };
-  const gotoHome = () => {
-    navigation.navigate("BottomTabScreen");
-  };
-  const gotoInforOder = () => {
-    navigation.navigate("Information_Order");
-  };
-  const [visible, setVisible] = React.useState(false);
+
   return (
     <View style={styles.Container}>
       <View style={styles.Header}>
@@ -55,7 +39,7 @@ const Payment = ({ navigation }) => {
                 alignItems: "center",
               }}
             >
-              Thanh toán
+              Thông tin đơn hàng
             </Text>
           </View>
         </View>
@@ -84,11 +68,6 @@ const Payment = ({ navigation }) => {
                 123 Sông Hồng , Hai Bà Trưng , Hà Nội
               </Text>
             </View>
-            <TouchableOpacity onPress={gotoChooseAddress}>
-              <Text style={{ fontSize: 12, color: "#1890ff", marginTop: 4 }}>
-                Thay đổi
-              </Text>
-            </TouchableOpacity>
           </View>
           <Payment_Product />
           <View style={{ borderBottomWidth: 10, borderBottomColor: "#DADADA" }}>
@@ -109,14 +88,6 @@ const Payment = ({ navigation }) => {
                   Phương thức thanh toán
                 </Text>
               </View>
-              <TouchableOpacity onPress={gotoPaymentMethod}>
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                  <Text style={{ fontSize: 12, color: "#1890ff" }}>
-                    Thay đổi
-                  </Text>
-                  <SvgXml xml={CareRightSvg("#1890ff")} />
-                </View>
-              </TouchableOpacity>
             </View>
             <View style={{ padding: 16 }}>
               <Text style={{ fontSize: 12, color: "#707070" }}>
@@ -142,14 +113,6 @@ const Payment = ({ navigation }) => {
                   Phương thức vận chuyển
                 </Text>
               </View>
-              <TouchableOpacity onPress={gotoTransportMethod}>
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                  <Text style={{ fontSize: 12, color: "#1890ff" }}>
-                    Thay đổi
-                  </Text>
-                  <SvgXml xml={CareRightSvg("#1890ff")} />
-                </View>
-              </TouchableOpacity>
             </View>
             <View style={{ padding: 16 }}>
               <Text>Hỏa tốc</Text>
@@ -176,10 +139,36 @@ const Payment = ({ navigation }) => {
                   Chi tiết thanh toán
                 </Text>
               </View>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Text style={{ fontSize: 12, color: "#1890ff" }}>Thay đổi</Text>
-                <SvgXml xml={CareRightSvg("#1890ff")} />
-              </View>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                paddingVertical: 8,
+                paddingHorizontal: 16,
+                justifyContent: "space-between",
+              }}
+            >
+              <Text style={{ fontSize: 12, color: "#707070" }}>
+                Mã đơn hàng
+              </Text>
+              <Text style={{ fontSize: 12, color: "#707070" }}>
+                234JDKFJELJ
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                paddingVertical: 8,
+                paddingHorizontal: 16,
+                justifyContent: "space-between",
+              }}
+            >
+              <Text style={{ fontSize: 12, color: "#707070" }}>
+                Thời gian đặt hàng
+              </Text>
+              <Text style={{ fontSize: 12, color: "#707070" }}>27-12-2023</Text>
             </View>
             <View
               style={{
@@ -225,74 +214,23 @@ const Payment = ({ navigation }) => {
             </View>
           </View>
         </View>
+        <View style={styles.Button}>
+          <SvgXml xml={ChatSvg("#1890ff")} />
+          <Text style={{ fontSize: 14, fontWeight: 600, marginLeft: 8 }}>
+            Liên hệ shop
+          </Text>
+        </View>
+        <View style={styles.Button}>
+        
+          <Text style={{ fontSize: 14, fontWeight: 600, marginLeft: 8 ,color:"#1890ff"}}>
+          Hủy đơn hàng
+          </Text>
+        </View>
       </ScrollView>
-      <TouchableOpacity onPress={() => setVisible(true)}>
-        <View style={styles.Footer}>
-          <Text style={{ color: "#fff", fontWeight: 600 }}>Thanh toán</Text>
-        </View>
-      </TouchableOpacity>
-      <ModalPopups visible={visible}>
-        <View style={{ alignItems: "center" }}>
-          <SvgXml xml={TickSvg()} />
-          <Text style={{ color: "#6AC259", fontSize: 16, fontWeight: 600 }}>
-            Đặt hàng thành công
-          </Text>
-          <Text style={{ fontSize: 12, fontWeight: 400, color: "#707070" }}>
-            Quay trở lại trang chủ để tiếp tục mua hàng
-          </Text>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              width: "90%",
-            }}
-          >
-            <TouchableOpacity onPress={gotoHome}>
-              <View
-                style={{
-                  width: 120,
-                  paddingHorizontal: 14,
-                  paddingVertical: 12,
-                  borderColor: "#1890FF",
-                  alignItems: "center",
-                  marginTop: 30,
-                  borderRadius: 6,
-                  borderWidth: 1,
-                }}
-              >
-                <Text
-                  style={{ color: "#1890ff", fontSize: 14, fontWeight: 600 }}
-                >
-                  Trang chủ
-                </Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={gotoInforOder}>
-              <View
-                style={{
-                  width: 130,
-                  paddingHorizontal: 14,
-                  paddingVertical: 12,
-                  backgroundColor: "#1890FF",
-                  alignItems: "center",
-                  marginTop: 30,
-                  borderRadius: 6,
-                  borderWidth: 1,
-                  borderColor: "#1890ff",
-                }}
-              >
-                <Text style={{ color: "#fff", fontSize: 14, fontWeight: 600 }}>
-                  Xem đơn hàng
-                </Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </ModalPopups>
     </View>
   );
 };
-export default Payment;
+export default InformationOrder;
 const styles = StyleSheet.create({
   Container: { flex: 1 },
   Header: {
@@ -304,13 +242,16 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
   },
   Content: {},
-  Footer: {
+  Footer: {},
+  Button: {
+    marginTop: 16,
     marginHorizontal: 16,
-    paddingVertical: 10,
     alignItems: "center",
-
-    backgroundColor: "#1890ff",
+    flexDirection: "row",
+    justifyContent: "center",
+    borderWidth: 1,
+    paddingVertical: 10,
+    borderColor: "#1890ff",
     borderRadius: 8,
-    marginVertical:16
   },
 });
