@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+const admin = require('firebase-admin');
 const db = require('../../model/firebaseConfig'); 
 /* GET users listing. */
 router.get('/', async(req, res, next) =>{
@@ -23,11 +24,30 @@ router.get('/', async(req, res, next) =>{
   router.post('/add',async(req,res,next)=>{
     try {
       const data = req.body; // Dữ liệu từ request body
-  
+      const collectionRef = admin.firestore().collection('Users');
+            const Id = collectionRef.doc().id;
+            const docID = Id ? collectionRef.doc(Id) : collectionRef.doc();
+      const data2={
+        id:Id,
+        Address: req.body.Address,
+Phone:  req.body.Phone,
+FullName: req.body.FullName,
+Avatar:req.body.Avatar,
+Email: req.body.Email,
+Password: req.body.Password
+      }
+      
       // Thêm dữ liệu vào collection cụ thể (ví dụ: 'your-collection-name')
-      const docRef = await db.collection('Users').add(data);
-  
-      res.status(201).send(`Document created with ID: ${docRef.id}`);
+      // const docRef = await db.collection('Users').add(data2);
+      // res.status(201).send(`Document created with ID: ${docRef.id}`);
+       docID.set(data2).then(() => {
+        res.status(200).send(`Document with ID: add successfully`);
+        return collectionRef.doc().id;
+    })
+    .catch(error => {
+        console.error('Lỗi khi thêm tài liệu:', error);
+        res.status(500).json({message: 'Lỗi khi thêm tài liệu'});
+    });;
     } catch (error) {
       console.error('Error adding data:', error);
       res.status(500).send('Error adding data to Firestore');

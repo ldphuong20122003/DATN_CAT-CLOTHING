@@ -31,14 +31,14 @@
    <table style="width: 1480px; margin: 22px;" class="table table-hover table-bordered mt-2" id="resultTable">
     <thead>
      <tr class="text-center">
-        <th scope="col">Id</th> 
+
         <th scope="col">Img</th> <th scope="col">UserName</th> <th scope="col">Email</th> <th scope="col">Password</th> <th scope="col">Phone</th> <th scope="col">Address</th> <th></th>
      </tr>
     </thead>
     <tbody id="tableBody">
          <% listUser.forEach((item)=>{ %>
  <tr class="align-middle">
-      <td><%= item.id %></td>
+      
       <td><img src="<%= item.Avatar  %>" style="width: 100px; height: 100px;" alt=""></td>
        <td  ><%= item.FullName %></td>
         <td><%= item.Email %></td>
@@ -46,7 +46,6 @@
         <td><%= item.Phone %></td>
         <td><%= item.Address %></td>
         <td>
-        <!-- <a href="/users/edit/<%= item._id  %> " ><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Sua</button></a>  -->
          <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-item-id="<%= item.id %>">Xóa</button>
         </td>
  </tr>
