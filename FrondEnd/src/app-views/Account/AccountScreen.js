@@ -42,6 +42,9 @@ const AccountScreen = ({ navigation }) => {
   const gotoHisOrder = () => {
     navigation.navigate("History_Order");
   };
+  const gotoReview = () => {
+    navigation.navigate("Review");
+  };
   return (
     <SafeAreaView style={{ flex: 0.93 }}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -246,7 +249,7 @@ const AccountScreen = ({ navigation }) => {
               </View>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={gotoTransportMethod}>
+          <TouchableOpacity onPress={gotoReview}>
           <View
             style={{
               paddingVertical: 16,

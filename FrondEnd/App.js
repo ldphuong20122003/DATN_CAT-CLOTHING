@@ -24,8 +24,9 @@ import Payment from './src/app-views/Payment/Payment';
 import ChooseAddress from './src/app-views/Address/ChooseAddress';
 import AddAddress from './src/app-views/Address/AddAddress';
 import Chat from './src/app-views/Chat/Chat';
-import InformationOder from './src/app-views/Oder/InformationOder';
-import HistoryOrder from './src/app-views/Oder/HistoryOrder';
+import InformationOrder from './src/app-views/Order/InformationOrder';
+import HistoryOrder from './src/app-views/Order/HistoryOrder';
+import Review from './src/app-views/Review/Review';
 
 
 const Stack = createStackNavigator();
@@ -56,8 +57,9 @@ export default function App() {
         <Stack.Screen name="ChooseAddress" component={ChooseAddress}  options={{ headerShown:false }}/>
         <Stack.Screen name="AddAddress" component={AddAddress}  options={{ headerShown:false }}/>
         <Stack.Screen name="Chat" component={Chat}  options={{ headerShown:false }}/>
-        <Stack.Screen name="Information_Oder" component={InformationOder}  options={{ headerShown:false }}/>
+        <Stack.Screen name="Information_Order" component={InformationOrder}  options={{ headerShown:false }}/>
         <Stack.Screen name="History_Order" component={HistoryOrder}  options={{ headerShown:false }}/>
+        <Stack.Screen name="Review" component={Review}  options={{ headerShown:false }}/>
 
 
          </Stack.Navigator>
