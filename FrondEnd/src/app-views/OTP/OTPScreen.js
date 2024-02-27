@@ -1,4 +1,4 @@
-import React, { useRef} from "react";
+import React, { useRef, useState } from "react";
 import {
   Text,
   TextInput,
@@ -6,32 +6,83 @@ import {
   StyleSheet,
   TouchableOpacity,
   Modal,
+  Alert,
 } from "react-native";
 import { SvgXml } from "react-native-svg";
 import TickSvg from "../../../assets/Svg/TickSvg";
 import ModalPopups from "../Modal/ModalPopup";
+import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
+import { firebaseConfig } from "../../config";
+import firebase from "firebase/compat/app";
+import "firebase/auth";
+import axios from "axios";
 
-
-const OTPScreen = ({navigation}) => {
+const IP = "192.168.40.130";
+const OTPScreen = ({ navigation, route }) => {
   const inputRefs = Array.from({ length: 6 }, () => useRef(null));
-const gotoLogin =()=>navigation.navigate('Login');
-  const handleOTPChange = (index, value) => {
-    if (index < 6 && value !== "") {
-      inputRefs[index + 1].current.focus();
-    }
-    if (index > 0 && value === "") {
-      // Nếu người dùng xoá giá trị từ ô hiện tại và ô hiện tại không phải là ô đầu tiên
-      inputRefs[index - 1].current.focus();
-    }
+  const gotoLogin = () => navigation.navigate("Login");
+  const [code, setCode] = useState(["", "", "", "", "", ""]); // Mảng lưu mã OTP
+  const { phoneNumber } = route.params;
+  const { fullname } = route.params;
+  const { email } = route.params;
+  const { password } = route.params;
+  const { verificationId } = route.params;
+  const handleRegister = () => {
+    // Do something with the registration data
+    let formData = {
+      FullName: fullname,
+      Email: email,
+      Phone: phoneNumber,
+      Password: password,
+      Avatar: "",
+      Address: "",
+    };
+    axios
+      .post(`http://${IP}:3000/API/users/add`, formData)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
   };
-  const handleLastOTPChange = (value) => {
-    // Xử lý khi người dùng nhập giá trị vào ô cuối cùng
-    console.log("OTP is:", value);
+  const handleChange = (index, value) => {
+    const newCode = [...code]; // Sao chép mảng code
+    newCode[index] = value; // Cập nhật giá trị tại index
+    setCode(newCode); // Cập nhật mảng code mới
   };
-  const [visible, setVisible] = React.useState(false);
+  const hideMiddleDigits = (phoneNumber) => {
+    const visibleLength = 2; // Số lượng chữ số hiển thị ở mỗi đầu
+    const hiddenLength = phoneNumber.length - visibleLength * 2; // Số lượng chữ số ẩn
+    const hiddenDigits = "*".repeat(hiddenLength); // Tạo chuỗi dấu *
+    const visibleStart = phoneNumber.slice(0, visibleLength); // Lấy chuỗi số ở đầu
+    const visibleEnd = phoneNumber.slice(-visibleLength); // Lấy chuỗi số ở cuối
+    return visibleStart + hiddenDigits + visibleEnd; // Kết hợp chuỗi số ở đầu, chuỗi số ẩn và chuỗi số ở cuối
+  };
+  const hiddenPhoneNumber = hideMiddleDigits(phoneNumber);
 
+  const recaptchaVertifier = useRef(null);
+  const [visible, setVisible] = React.useState(false);
+  const confirmCode = () => {
+    const credential = firebase.auth.PhoneAuthProvider.credential(
+      verificationId,
+      code.join("")
+    );
+    firebase
+      .auth()
+      .signInWithCredential(credential)
+      .then(() => {
+        setCode("");
+        setVisible(true);
+        handleRegister();
+        console.log("Thành công");
+      })
+      .catch((error) => {
+        Alert.alert('Mã xác thực không hợp lệ');
+      });
+  };
   return (
     <View style={{ flex: 1, width: "100%", backgroundColor: "#fff" }}>
+      <FirebaseRecaptchaVerifierModal
+        ref={recaptchaVertifier}
+        firebaseConfig={firebaseConfig}
+      />
       <View
         style={{
           flexDirection: "row",
@@ -43,7 +94,7 @@ const gotoLogin =()=>navigation.navigate('Login');
           Mã xác thực OTP được gửi quá SĐT
         </Text>
         <Text style={{ fontSize: 14, fontWeight: 700, marginLeft: 5 }}>
-          0987*****321
+          {hiddenPhoneNumber}
         </Text>
       </View>
       <View
@@ -63,11 +114,32 @@ const gotoLogin =()=>navigation.navigate('Login');
             textAlign="center"
             keyboardType="number-pad"
             maxLength={1}
-            onChangeText={(text) =>
-              index === 5
-                ? handleLastOTPChange(text)
-                : handleOTPChange(index, text)
-            }
+            value={code[index]}
+            onFocus={() => {
+              if (inputRefs[index].current) {
+                inputRefs[index].current.setNativeProps({
+                  selection: { start: 0, end: 0 },
+                });
+              }
+            }}
+            onKeyPress={({ nativeEvent }) => {
+              if (nativeEvent.key === "Backspace" && code[index] === "") {
+                if (index > 0 && inputRefs[index - 1].current) {
+                  inputRefs[index - 1].current.focus();
+                }
+              } else if (
+                code[index].length === 1 &&
+                index < inputRefs.length - 1
+              ) {
+                inputRefs[index + 1].current.focus();
+              }
+            }}
+            onChangeText={(text) => {
+              if (text !== "" && index < inputRefs.length - 1) {
+                inputRefs[index + 1].current.focus();
+              }
+              handleChange(index, text);
+            }}
           />
         ))}
       </View>
@@ -94,7 +166,7 @@ const gotoLogin =()=>navigation.navigate('Login');
           </Text>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity onPress={() => setVisible(true)}>
+      <TouchableOpacity onPress={confirmCode}>
         <View
           style={{
             marginTop: 24,
@@ -110,21 +182,34 @@ const gotoLogin =()=>navigation.navigate('Login');
           </Text>
         </View>
       </TouchableOpacity>
-      
-        <ModalPopups visible={visible}>
-          <View style={{alignItems:'center'}}>
-         
-              <SvgXml xml={TickSvg()}/>
-           <Text style={{color:'#6AC259',fontSize:16,fontWeight:600}}>Đăng ký tài khoản thành công</Text>
-           <Text style={{fontSize:12,fontWeight:400,color:'#707070'}}>Chuyển tới trang đăng nhập trong vài giây nữa</Text>
-           <TouchableOpacity onPress={gotoLogin}>
-           <View style={{width:180,padding:15,backgroundColor:'#1890FF',alignItems:'center',marginTop:30,borderRadius:6}}>
-            <Text style={{color:'#fff',fontSize:14,fontWeight:600}}>Đi tới trang đăng nhập</Text>
-           </View>
-           </TouchableOpacity>
-          </View>
-        </ModalPopups>
-      
+
+      <ModalPopups visible={visible}>
+        <View style={{ alignItems: "center" }}>
+          <SvgXml xml={TickSvg()} />
+          <Text style={{ color: "#6AC259", fontSize: 16, fontWeight: 600 }}>
+            Đăng ký tài khoản thành công
+          </Text>
+          <Text style={{ fontSize: 12, fontWeight: 400, color: "#707070" }}>
+            Chuyển tới trang đăng nhập trong vài giây nữa
+          </Text>
+          <TouchableOpacity onPress={gotoLogin}>
+            <View
+              style={{
+                width: 180,
+                padding: 15,
+                backgroundColor: "#1890FF",
+                alignItems: "center",
+                marginTop: 30,
+                borderRadius: 6,
+              }}
+            >
+              <Text style={{ color: "#fff", fontSize: 14, fontWeight: 600 }}>
+                Đi tới trang đăng nhập
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      </ModalPopups>
     </View>
   );
 };
@@ -150,5 +235,4 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-
 });

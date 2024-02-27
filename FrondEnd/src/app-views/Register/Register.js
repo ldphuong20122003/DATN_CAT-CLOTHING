@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { SvgXml } from "react-native-svg";
 import BannerSvg from "../../../assets/Svg/BannerSvg";
 import {
@@ -7,6 +7,7 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import LogoCat from "../../../assets/Svg/LogoCat";
 import PhoneSvg from "../../../assets/Svg/PhoneSvg";
@@ -14,158 +15,233 @@ import LockSvg from "../../../assets/Svg/LockSvg";
 import EyeSvg from "../../../assets/Svg/EyeSvg";
 import UserSvg from "../../../assets/Svg/UserSvg";
 import EmailSvg from "../../../assets/Svg/EmailSvg";
+import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
+import { firebaseConfig } from "../../config";
+import firebase from "firebase/compat/app";
 
-const Register = ({navigation}) => {
-  const [isChecked, setChecked] = useState(false);
+const Register = ({ navigation }) => {
+  const [fullname, setFullname] = useState("");
+  const [email, setEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false); // State cho loading
+  const recaptchaVerifierRef = useRef(null);
+  const validateForm = () => {
+    const emailRegex = /^\S+@\S+\.\S+$/;
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    if (!fullname || !email || !phoneNumber || !password) {
+      alert("Vui lòng điền đầy đủ thông tin");
+      return false;
+    }
+    if (phoneNumber.length !== 10) {
+      alert("Số điện thoại phải có 10 chữ số");
+      return false;
+    }
+    if (!emailRegex.test(email)) {
+      alert("Email không hợp lệ");
+      return false;
+    }
+    if (!passwordRegex.test(password)) {
+      alert(
+        "Mật khẩu phải chứa ít nhất 1 chữ và 1 số, độ dài tối thiểu 8 ký tự"
+      );
+      return false;
+    }
+    return true;
+  };
+  const sendVerification = async () => {
+    if (!validateForm()) {
+      return;
+    }
+    setLoading(true); // Bắt đầu loading
+    const fullPhoneNumber = `+84${phoneNumber.substring(1)}`; // Thêm mã quốc gia Việt Nam (+84)
+    const phoneProvider = new firebase.auth.PhoneAuthProvider();
+    try {
+      const verificationId = await phoneProvider.verifyPhoneNumber(
+        fullPhoneNumber,
+        recaptchaVerifierRef.current
+      );
+      navigation.navigate("OTPScreen", {
+        fullname,
+        email,
+        phoneNumber,
+        password,
+        verificationId,
+      });
+    } catch (error) {
+      console.log("Error sending verification code: ", error);
+    }
+    setLoading(false); // Kết thúc loading
+    setPhoneNumber("");
+  };
+
   const gotoLogin = () => {
-    navigation.navigate('Login');
+    navigation.navigate("Login");
   };
-  const gotoOTP = () => {
-    navigation.navigate('OTPScreen');
-  };
-  return (
-    <View style={{ flex: 1, width: "100%" ,backgroundColor:'#fff'}}>
-      <View style={{ alignItems: "center" }}>
-        <SvgXml xml={BannerSvg()} />
-        <SvgXml style={{ marginTop: 10 }} xml={LogoCat()} />
-        <Text style={{ fontSize: 32, fontWeight: 400, marginTop: 9 }}>
-          Đăng ký
-        </Text>
-      </View>
-      <View style={{ paddingHorizontal: 8, marginTop: 10 }}>
-        <Text style={{ marginLeft: 16, fontSize: 16, fontWeight: 400 }}>
-          Fullname
-        </Text>
-        <View
-          style={{
-            flexDirection: "row",
-            paddingHorizontal: 16,
-            paddingVertical: 10,
-            marginTop: 7,
-            borderWidth: 1,
-            borderRadius: 8,
-            alignItems: "center",
-          }}
-        >
-          <SvgXml xml={UserSvg()} />
-          <TextInput
-            style={{ marginLeft: 8 }}
-            placeholder="Fullname"
-          ></TextInput>
-        </View>
-      </View>
-      <View style={{ paddingHorizontal: 8, marginTop: 7 }}>
-        <Text style={{ marginLeft: 16, fontSize: 16, fontWeight: 400 }}>
-          Email
-        </Text>
-        <View
-          style={{
-            flexDirection: "row",
-            paddingHorizontal: 16,
-            paddingVertical: 10,
-            marginTop: 7,
-            borderWidth: 1,
-            borderRadius: 8,
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <SvgXml xml={EmailSvg()} />
-            <TextInput
-              style={{ marginLeft: 8 }}
-              placeholder="Email"
-            ></TextInput>
-          </View>
-        </View>
-      </View>
-      <View style={{ paddingHorizontal: 8, marginTop: 7 }}>
-        <Text style={{ marginLeft: 16, fontSize: 16, fontWeight: 400 }}>
-          Phone
-        </Text>
-        <View
-          style={{
-            flexDirection: "row",
-            paddingHorizontal: 16,
-            paddingVertical: 10,
-            marginTop: 7,
-            borderWidth: 1,
-            borderRadius: 8,
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <SvgXml xml={PhoneSvg()} />
-            <TextInput
-              style={{ marginLeft: 8 }}
-              placeholder="Phone Number"
-              keyboardType="numeric"
-            ></TextInput>
-          </View>
-        </View>
-      </View>
-      <View style={{ paddingHorizontal: 8, marginTop: 7 }}>
-        <Text style={{ marginLeft: 16, fontSize: 16, fontWeight: 400 }}>
-          Password
-        </Text>
-        <View
-          style={{
-            flexDirection: "row",
-            paddingHorizontal: 16,
-            paddingVertical: 10,
-            marginTop: 7,
-            borderWidth: 1,
-            borderRadius: 8,
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <SvgXml xml={LockSvg()} />
-            <TextInput
-              style={{ marginLeft: 8 }}
-              placeholder="Password"
-              secureTextEntry={true}
-            ></TextInput>
-          </View>
-          <SvgXml xml={EyeSvg()} />
-        </View>
-      </View>
 
-      <TouchableOpacity onPress={gotoOTP}>
-        <View
-          style={{
-            marginTop: 30,
-            backgroundColor: "#1890FF",
-            alignItems: "center",
-            paddingHorizontal: 12,
-            paddingVertical: 10,
-            marginHorizontal: 8,
-            borderRadius: 6,
-          }}
-        >
-          <Text style={{ color: "#fff", fontSize: 16, fontWeight: 500 }}>
+  return (
+    <>
+      <View style={{ flex: 1, width: "100%", backgroundColor: "#fff" }}>
+        <View style={{ alignItems: "center" }}>
+          <SvgXml xml={BannerSvg()} />
+          <SvgXml style={{ marginTop: 10 }} xml={LogoCat()} />
+          <Text style={{ fontSize: 32, fontWeight: 400, marginTop: 9 }}>
             Đăng ký
           </Text>
         </View>
-      </TouchableOpacity>
+        <View style={{ paddingHorizontal: 8, marginTop: 10 }}>
+          <Text style={{ marginLeft: 16, fontSize: 16, fontWeight: 400 }}>
+            Fullname
+          </Text>
+          <View
+            style={{
+              flexDirection: "row",
+              paddingHorizontal: 16,
+              paddingVertical: 10,
+              marginTop: 7,
+              borderWidth: 1,
+              borderRadius: 8,
+              alignItems: "center",
+            }}
+          >
+            <SvgXml xml={UserSvg()} />
+            <TextInput
+              style={{ marginLeft: 8 }}
+              placeholder="Fullname"
+              value={fullname}
+              onChangeText={(text) => setFullname(text)}
+            ></TextInput>
+          </View>
+        </View>
+        <View style={{ paddingHorizontal: 8, marginTop: 7 }}>
+          <Text style={{ marginLeft: 16, fontSize: 16, fontWeight: 400 }}>
+            Email
+          </Text>
+          <View
+            style={{
+              flexDirection: "row",
+              paddingHorizontal: 16,
+              paddingVertical: 10,
+              marginTop: 7,
+              borderWidth: 1,
+              borderRadius: 8,
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <SvgXml xml={EmailSvg()} />
+              <TextInput
+                style={{ marginLeft: 8 }}
+                placeholder="Email"
+                value={email}
+                onChangeText={(text) => setEmail(text)}
+              ></TextInput>
+            </View>
+          </View>
+        </View>
+        <View style={{ paddingHorizontal: 8, marginTop: 7 }}>
+          <Text style={{ marginLeft: 16, fontSize: 16, fontWeight: 400 }}>
+            Phone
+          </Text>
+          <View
+            style={{
+              flexDirection: "row",
+              paddingHorizontal: 16,
+              paddingVertical: 10,
+              marginTop: 7,
+              borderWidth: 1,
+              borderRadius: 8,
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <SvgXml xml={PhoneSvg()} />
+              <TextInput
+                style={{ marginLeft: 8 }}
+                placeholder="Phone Number"
+                keyboardType="numeric"
+                value={phoneNumber}
+                onChangeText={(text) => setPhoneNumber(text)}
+              ></TextInput>
+            </View>
+          </View>
+        </View>
+        <View style={{ paddingHorizontal: 8, marginTop: 7 }}>
+          <Text style={{ marginLeft: 16, fontSize: 16, fontWeight: 400 }}>
+            Password
+          </Text>
+          <View
+            style={{
+              flexDirection: "row",
+              paddingHorizontal: 16,
+              paddingVertical: 10,
+              marginTop: 7,
+              borderWidth: 1,
+              borderRadius: 8,
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <SvgXml xml={LockSvg()} />
+              <TextInput
+                style={{ marginLeft: 8 }}
+                placeholder="Password"
+                secureTextEntry={true}
+                value={password}
+                onChangeText={(text) => setPassword(text)}
+              ></TextInput>
+            </View>
+            <SvgXml xml={EyeSvg()} />
+          </View>
+        </View>
 
-      <View
-        style={{
-          flex: 1,
-          flexDirection: "row",
-          justifyContent: "center",
-          alignItems: "flex-end",
-          marginBottom: 30,
-        }}
-      >
-        <Text>Bạn đã có tài khoản ?</Text>
-        <TouchableOpacity onPress={gotoLogin}>
-        <Text style={{ color: "#1890FF", marginLeft: 5 }}>Đăng nhập ngay</Text>
+        <TouchableOpacity onPress={sendVerification}>
+          <View
+            style={{
+              marginTop: 30,
+              backgroundColor: "#1890FF",
+              alignItems: "center",
+              paddingHorizontal: 12,
+              paddingVertical: 10,
+              marginHorizontal: 8,
+              borderRadius: 6,
+            }}
+          >
+            {loading ? ( // Kiểm tra trạng thái loading để hiển thị hoặc ẩn đi phần tử
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text style={{ color: "#fff", fontSize: 16, fontWeight: 500 }}>
+                Đăng ký
+              </Text>
+            )}
+          </View>
         </TouchableOpacity>
+
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "flex-end",
+            marginBottom: 30,
+          }}
+        >
+          <Text>Bạn đã có tài khoản ?</Text>
+          <TouchableOpacity onPress={gotoLogin}>
+            <Text style={{ color: "#1890FF", marginLeft: 5 }}>
+              Đăng nhập ngay
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <FirebaseRecaptchaVerifierModal
+          ref={recaptchaVerifierRef}
+          firebaseConfig={firebaseConfig}
+        />
       </View>
-    </View>
+    </>
   );
 };
 export default Register;
