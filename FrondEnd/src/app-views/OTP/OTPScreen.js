@@ -17,7 +17,7 @@ import firebase from "firebase/compat/app";
 import "firebase/auth";
 import axios from "axios";
 
-const IP = "192.168.40.130";
+const IP = "10.10.3.79";
 const OTPScreen = ({ navigation, route }) => {
   const inputRefs = Array.from({ length: 6 }, () => useRef(null));
   const gotoLogin = () => navigation.navigate("Login");
