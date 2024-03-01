@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Modal,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import { SvgXml } from "react-native-svg";
 import TickSvg from "../../../assets/Svg/TickSvg";
@@ -21,6 +22,7 @@ const IP = "192.168.40.130";
 const OTPScreen = ({ navigation, route }) => {
   const inputRefs = Array.from({ length: 6 }, () => useRef(null));
   const gotoLogin = () => navigation.navigate("Login");
+  const [loading, setLoading] = useState(false); // State cho loading
   const [code, setCode] = useState(["", "", "", "", "", ""]); // Mảng lưu mã OTP
   const { phoneNumber } = route.params;
   const { fullname } = route.params;
@@ -59,7 +61,15 @@ const OTPScreen = ({ navigation, route }) => {
 
   const recaptchaVertifier = useRef(null);
   const [visible, setVisible] = React.useState(false);
+  const resendOTP = async () => {
+    
+  };
   const confirmCode = () => {
+    setLoading(true);
+    if(!code){
+      Alert.alert('Error','Vui lòng nhập mã OTP để tiếp tục');
+      return true;
+    }
     const credential = firebase.auth.PhoneAuthProvider.credential(
       verificationId,
       code.join("")
@@ -72,6 +82,7 @@ const OTPScreen = ({ navigation, route }) => {
         setVisible(true);
         handleRegister();
         console.log("Thành công");
+        setLoading(false);
       })
       .catch((error) => {
         Alert.alert('Mã xác thực không hợp lệ');
@@ -153,7 +164,7 @@ const OTPScreen = ({ navigation, route }) => {
         <Text style={{ fontSize: 14, fontWeight: 400 }}>
           Bạn chưa nhận được mã?
         </Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={resendOTP}>
           <Text
             style={{
               fontSize: 14,
@@ -177,9 +188,13 @@ const OTPScreen = ({ navigation, route }) => {
             borderRadius: 6,
           }}
         >
+           {loading ? ( // Kiểm tra trạng thái loading để hiển thị hoặc ẩn đi phần tử
+              <ActivityIndicator color="#fff" />
+            ) : (
           <Text style={{ color: "white", fontSize: 14, fontWeight: 600 }}>
             Xác nhận
           </Text>
+            )}
         </View>
       </TouchableOpacity>
 
