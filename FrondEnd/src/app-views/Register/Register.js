@@ -25,6 +25,10 @@ const Register = ({ navigation }) => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false); // State cho loading
+  const [showPassword, setShowPassword] = useState(false);
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
   const recaptchaVerifierRef = useRef(null);
   const validateForm = () => {
     const emailRegex = /^\S+@\S+\.\S+$/;
@@ -189,12 +193,14 @@ const Register = ({ navigation }) => {
               <TextInput
                 style={{ marginLeft: 8 }}
                 placeholder="Password"
-                secureTextEntry={true}
+                secureTextEntry={!showPassword}
                 value={password}
                 onChangeText={(text) => setPassword(text)}
               ></TextInput>
             </View>
-            <SvgXml xml={EyeSvg()} />
+            <TouchableOpacity onPress={toggleShowPassword}>
+              <SvgXml xml={EyeSvg()} />
+            </TouchableOpacity>
           </View>
         </View>
 
