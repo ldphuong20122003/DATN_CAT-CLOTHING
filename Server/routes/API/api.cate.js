@@ -3,22 +3,44 @@ var router = express.Router();
 const db1 = require('../../model/firebaseConfig'); 
 
 router.get('/', async(req, res, next) =>{
-    try {
-        const snapshot = await db1.collection('Category').get();
-        const data = [];
+  try {
+    const Name = req.query.Name;
+    if (!Name) {
+      // Nếu không có tham số truy vấn 'name', trả về tất cả người dùng
+      const snapshot = await db.collection('Category').get();
+    const data = [];
+
+    snapshot.forEach(doc => {
+      data.push({
+        id: doc.id,
+        ...doc.data(),
+        
+      });
+      
+    });
+    res.status(200).json(data);
+    }else{
+      const snapshot = await db.collection('Category').where('Name', '==', req.query.Name).get();
+    const data = [];
+
+    snapshot.forEach(doc => {
+      data.push({
+        id: doc.id,
+        ...doc.data()
+      });
+    });
+
+    res.status(200).json(data);
+    }
+
     
-        snapshot.forEach((doc) => {
-          data.push({
-            id: doc.id,
-            ...doc.data()
-          });
-        });
     
-        res.status(200).json(data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        res.status(500).send('Error fetching data from Firestore');
-      }
+
+    
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    res.status(500).send('Error fetching data from Firestore');
+  }
 });
 
     router.post('/add',async(req,res,next)=>{
