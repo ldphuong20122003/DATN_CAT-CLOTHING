@@ -7,7 +7,7 @@ router.get('/', async(req, res, next) =>{
     const Name = req.query.Name;
     if (!Name) {
       // Nếu không có tham số truy vấn 'name', trả về tất cả người dùng
-      const snapshot = await db.collection('Category').get();
+      const snapshot = await db1.collection('Category').get();
     const data = [];
 
     snapshot.forEach(doc => {
@@ -20,7 +20,7 @@ router.get('/', async(req, res, next) =>{
     });
     res.status(200).json(data);
     }else{
-      const snapshot = await db.collection('Category').where('Name', '==', req.query.Name).get();
+      const snapshot = await db1.collection('Category').where('Name', '==', req.query.Name).get();
     const data = [];
 
     snapshot.forEach(doc => {
