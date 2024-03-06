@@ -11,6 +11,7 @@ var homeRouter = require('./routes/WebServer/home');
 var productRouter = require('./routes/WebServer/product');
 var userRouter = require('./routes/WebServer/user');
 var staffRouter = require('./routes/WebServer/staff');
+var ordersRouter = require('./routes/WebServer/donhang');
 
 //API ROuter
 var indexRouter = require('./routes/API/index');
@@ -48,6 +49,8 @@ app.use('/', homeRouter);
 app.use('/products',productRouter);
 app.use('/users',userRouter);
 app.use('/staffs',staffRouter);
+app.use('/Orders',ordersRouter);
+
 //API
 app.use('/API/product', indexRouter);
 app.use('/API/users', usersRouter);
