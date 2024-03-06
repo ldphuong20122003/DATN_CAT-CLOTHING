@@ -23,16 +23,10 @@ import PaymentMethod from './src/app-views/Payment/component/PaymentMethod';
 import Payment from './src/app-views/Payment/Payment';
 import ChooseAddress from './src/app-views/Address/ChooseAddress';
 import AddAddress from './src/app-views/Address/AddAddress';
-<<<<<<< HEAD
 import Chat from './src/app-views/Chat/Chat';
 import InformationOrder from './src/app-views/Order/InformationOrder';
 import HistoryOrder from './src/app-views/Order/HistoryOrder';
 import Review from './src/app-views/Review/Review';
-=======
-import Chat from './src/app-views/Chat/Chat'
-import InformationOrder from './src/app-views/Order/InformationOder';
-import HistoryOrder from './src/app-views/Order/HistoryOrder';
->>>>>>> AppMobile
 
 
 const Stack = createStackNavigator();
