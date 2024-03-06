@@ -15,7 +15,7 @@ import BackSvg from "../../../../assets/Svg/BackSvg";
 import ModalPopups from "../../Modal/ModalPopup";
 import TickSvg from "../../../../assets/Svg/TickSvg";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-const IP = "192.168.138.2";
+const IP = "192.168.1.8";
 const Update_Account = ({ navigation }) => {
   const gotoHome = () => {
     navigation.navigate("BottomTabScreen");

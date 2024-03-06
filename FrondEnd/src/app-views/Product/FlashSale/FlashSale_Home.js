@@ -4,7 +4,7 @@ import ListFlashSale_Home from "./component/ListFlashSale_Home";
 import ListReOder from "../ReOrder/component/ListReOder";
 
 const FlashSale_Home = () => {
-  const IP = "192.168.0.103";
+  const IP = "192.168.1.8";
   const [data, setData] = useState([]);
   const getAPI = () => {
     return fetch(`http://${IP}:3000/API/product`)
