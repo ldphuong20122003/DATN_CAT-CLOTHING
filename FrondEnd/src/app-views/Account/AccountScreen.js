@@ -1,4 +1,5 @@
-import React from "react";
+
+import React, { useEffect, useState } from "react";
 import {
   View,
   SafeAreaView,
@@ -10,7 +11,6 @@ import {
 } from "react-native";
 import { SvgXml } from "react-native-svg";
 import CareRightSvg from "../../../assets/Svg/CareRightSvg";
-import FlashSale_Home from "../Product/FlashSale/FlashSale_Home";
 import Shop from "../Product/FlashSale/Shop";
 
 import ShopSvg from "../../../assets/Svg/ShopSvg";
@@ -22,8 +22,49 @@ import DoneSvg from "../../../assets/Svg/DoneSvg";
 import CancelSvg from "../../../assets/Svg/CancelSvg";
 import UserSvg from "../../../assets/Svg/UserSvg";
 import ReOrder from "../Product/ReOrder/ReOder";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useIsFocused } from "@react-navigation/native";
+const IP = "192.168.1.8";
 const AccountScreen = ({ navigation }) => {
+  const isFocused = useIsFocused();
+  const [userId, setUserId] = useState("");
+  const [data_User, setData_User] = useState([]);
+  const getUserId = async () => {
+    try {
+      const userIdValue = await AsyncStorage.getItem("UserId");
+      if (userIdValue !== null) {
+        setUserId(userIdValue);
+        return fetch(`http://${IP}:3000/API/users/getbyid?id=` + userId)
+          .then((res) => res.json())
+          .then((data) => setData_User(data))
+          .catch((err) => console.log(err));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const reloadUserData = async () => {
+    try {
+      const userIdValue = await AsyncStorage.getItem("UserId");
+      if (userIdValue !== null) {
+        setUserId(userIdValue);
+        return fetch(`http://${IP}:3000/API/users/getbyid?id=` + userId)
+          .then((res) => res.json())
+          .then((data) => setData_User(data))
+          .catch((err) => console.log(err));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getUserId();
+  }, [userId]);
+  useEffect(() => {
+    if (isFocused) {
+      reloadUserData();
+    }
+  }, [isFocused]);
   const gotoLogin = () => {
     navigation.navigate("Login");
   };
@@ -53,7 +94,7 @@ const AccountScreen = ({ navigation }) => {
             <Image
               source={require("../../../assets/banner.jpg")}
               style={styles.image}
-            />
+/>
           </View>
           <View style={styles.Voucher}>
             <View style={{ flexDirection: "row" }}>
@@ -69,7 +110,7 @@ const AccountScreen = ({ navigation }) => {
                 <Text
                   style={{ fontSize: 16, fontWeight: "bold", color: "white" }}
                 >
-                  Lê Hồng Nghinh
+                  {data_User.length > 0 ? data_User[0].FullName : ""}
                 </Text>
                 <View
                   style={{
@@ -123,12 +164,14 @@ const AccountScreen = ({ navigation }) => {
               </Text>
             </View>
             <TouchableOpacity onPress={gotoHisOrder}>
-            <View style={{ flexDirection: "row" }}>
-              <Text style={{ fontSize: 12, fontWeight: 400, color: "#707070" }}>
-                Xem lịch sử
-              </Text>
-              <SvgXml xml={CareRightSvg("#707070")} />
-            </View>
+              <View style={{ flexDirection: "row" }}>
+                <Text
+                  style={{ fontSize: 12, fontWeight: 400, color: "#707070" }}
+                >
+                  Xem lịch sử
+                </Text>
+                <SvgXml xml={CareRightSvg("#707070")} />
+              </View>
             </TouchableOpacity>
           </View>
           <View
@@ -140,7 +183,7 @@ const AccountScreen = ({ navigation }) => {
           >
             <View style={{ alignItems: "center" }}>
               <SvgXml xml={UnlockSvg()} />
-              <Text style={{ fontSize: 12, fontWeight: 400, marginTop: 8 }}>
+<Text style={{ fontSize: 12, fontWeight: 400, marginTop: 8 }}>
                 Chờ xác nhận
               </Text>
             </View>
@@ -228,7 +271,7 @@ const AccountScreen = ({ navigation }) => {
                 justifyContent: "space-between",
               }}
             >
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
+<View style={{ flexDirection: "row", alignItems: "center" }}>
                 <Image
                   source={require("../../../assets/Voucher.png")}
                   style={{ width: 24, height: 24 }}
@@ -249,6 +292,7 @@ const AccountScreen = ({ navigation }) => {
               </View>
             </View>
           </TouchableOpacity>
+<<<<<<< HEAD
           <TouchableOpacity onPress={gotoReview}>
           <View
             style={{
@@ -265,23 +309,41 @@ const AccountScreen = ({ navigation }) => {
                 source={require("../../../assets/Star.png")}
                 style={{ width: 24, height: 24 }}
               />
+=======
+          <TouchableOpacity onPress={gotoTransportMethod}>
+            <View
+              style={{
+                paddingVertical: 16,
+                flexDirection: "row",
+                alignItems: "center",
+                borderBottomWidth: 1,
+                borderBottomColor: "#D4D4D4",
+                justifyContent: "space-between",
+              }}
+            >
+              <View style={{ flexDirection: "row" }}>
+                <Image
+                  source={require("../../../assets/Star.png")}
+                  style={{ width: 24, height: 24 }}
+                />
+>>>>>>> dev_phuong
 
-              <Text
-                style={{
-                  fontSize: 14,
-                  fontWeight: "400",
-                  color: "black",
-                  marginLeft: 10,
-                }}
-              >
-                Đánh giá của tôi
-              </Text>
-            </View>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontWeight: "400",
+                    color: "black",
+                    marginLeft: 10,
+                  }}
+                >
+                  Đánh giá của tôi
+                </Text>
+              </View>
 
-            <View>
-              <SvgXml xml={CareRightSvg("black")} />
+              <View>
+                <SvgXml xml={CareRightSvg("black")} />
+              </View>
             </View>
-          </View>
           </TouchableOpacity>
           <TouchableOpacity onPress={gotoOptionAccount}>
             <View
@@ -321,7 +383,7 @@ const AccountScreen = ({ navigation }) => {
                 borderRadius: 10,
               }}
             >
-              <View style={{ alignItems: "center" }}>
+<View style={{ alignItems: "center" }}>
                 <Text
                   style={{
                     fontSize: 16,

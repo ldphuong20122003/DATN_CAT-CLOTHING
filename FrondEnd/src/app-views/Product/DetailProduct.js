@@ -34,7 +34,7 @@ const Detail_Product = ({ navigation }) => {
     navigation.goBack();
   };
   const route = useRoute();
-  const IP = "192.168.138.2";
+  const IP = "192.168.1.8";
   const { productId } = route.params;
   const [data_Product, setData_Product] = useState([]);
   const getAPI = () => {

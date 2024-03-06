@@ -4,7 +4,7 @@ import ListRecommend_Home from "./component/ListRecommend_Home";
 
 const Recommend_Home = () => {
   
-  const IP = "192.168.138.2";
+  const IP = "192.168.1.8";
   const [data,setData]=useState([]);
   const getAPI=()=>{
     return fetch(`http://${IP}:3000/API/product`)
