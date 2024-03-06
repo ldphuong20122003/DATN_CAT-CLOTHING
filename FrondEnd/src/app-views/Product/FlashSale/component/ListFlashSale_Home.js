@@ -7,61 +7,85 @@ const ListFlashSale_Home = ({ data, onPress }) => {
     onPress && onPress(item);
   };
   const _renderItem = ({ item, index }) => {
+    const PriceSale = item.Price - item.Sale;
     return (
-      <View style={{ marginRight:8 }}>
+      <View style={{ marginRight: 8 }}>
         <TouchableOpacity onPress={() => pressItem(item)}>
-        <View 
-        style={{width:126,justifyContent:'center',marginTop:14, shadowColor: "#000",
-        borderRadius: 4,
-        backgroundColor: "#fff",
-        shadowOffset: {
-          width: 0,
-          height: 4,
-        },
-        shadowOpacity: 0.2,
-        shadowRadius: 2,
-        elevation: 4, }}>
-              <View style={{width:126,justifyContent:'center',}}>
-                <View>
-                  {item.image && (
-                    <Image
-                      source={{uri: item.image}}
-                      style={{
-                        height: 140,
-                        width: 126,
-                        justifyContent: 'center',
-                      }}
-                    />
-                  )}
-                </View>
-
-                <View alignItems={'center'}>
-                  <Text style={{ fontSize:12,fontWeight:400,color:'#ef4444'}}>
-                    {item.price}
-                  </Text>
-                </View>
+          <View
+            style={{
+              width: 126,
+              justifyContent: "center",
+              marginTop: 14,
+              shadowColor: "#000",
+              borderRadius: 4,
+              backgroundColor: "#fff",
+              shadowOffset: {
+                width: 0,
+                height: 4,
+              },
+              shadowOpacity: 0.2,
+              shadowRadius: 2,
+              elevation: 4,
+            }}
+          >
+            <View style={{ width: 126, justifyContent: "center" }}>
+              <View>
+                {item.Img && (
+                  <Image
+                    source={{ uri: item.Img }}
+                    style={{
+                      height: 140,
+                      width: 126,
+                      justifyContent: "center",
+                    }}
+                  />
+                )}
               </View>
 
-              <View
-                style={{paddingHorizontal: 4, paddingVertical: 4,flexDirection:'row'}}>
-                <View style={{alignItems:'center'}}>
-                  <SvgXml
-                    xml={BackgroundButtonFlashSale()}
-                  />
-                  <Text
-                    style={{fontSize:10,fontWeight:400,color:'#fff',position:'absolute'}} >
-                    Săn ngay
-                  </Text>
-                </View>
-
-                <View style={{marginLeft:'auto',flexDirection:'row'}}>
-                  <Text style={{fontSize:10,fontWeight:400,color:'#707070'}}>Đã bán {''}</Text>
-                  <Text style={{fontSize:10,fontWeight:400,color:'#707070'}}>
-                    {item.sold}
-                  </Text>
-                </View>
+              <View alignItems={"center"}>
+                <Text
+                  style={{ fontSize: 12, fontWeight: 400, color: "#707070" }}
+                >
+                  {item.Name}
+                </Text>
               </View>
             </View>
+
+            <View
+              style={{
+                paddingHorizontal: 4,
+                paddingVertical: 4,
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              <View style={{ flexDirection: "row" }}>
+                <Text
+                  style={{ fontSize: 10, fontWeight: 400, color: "#707070" }}
+                >
+                  Giá:{" "}
+                </Text>
+                <Text
+                  style={{ fontSize: 10, fontWeight: 400, color: "#ef4444" }}
+                >
+                  {PriceSale.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}đ
+                </Text>
+              </View>
+              <View style={{ alignItems: "center" }}>
+                <SvgXml xml={BackgroundButtonFlashSale()} />
+                <Text
+                  style={{
+                    fontSize: 10,
+                    fontWeight: 400,
+                    color: "#fff",
+                    position: "absolute",
+                  }}
+                >
+                  Săn ngay
+                </Text>
+              </View>
+            </View>
+          </View>
         </TouchableOpacity>
       </View>
     );

@@ -1,33 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 
 const ListCategory_Filter = ({ data, onPress }) => {
     const pressItem = (item) => {
       onPress && onPress(item);
     };
-  const default_data = [
-    {
-      title: "Áo Hoodie",
-    },
-    {
-      title: "Áo phông",
-    },
-    {
-      title: "Sơ mi",
-    },
-    {
-      title: "Quần short",
-    },
-    {
-      title: "Quần bò",
-    },
-    {
-      title: "Áo phao",
-    },
-    {
-      title: "Bomber",
-    },
-  ];
+    const IP = "192.168.138.2";
+    const [dataCate,setDataCate]=useState([]);
+    const getAPI=()=>{
+      return fetch(`http://${IP}:3000/API/Cate`)
+      .then((res)=>res.json())
+      .then((data)=>setDataCate(data))
+      .catch((err)=>console.log(err))
+    }
+  
+    useEffect(()=>{
+      getAPI();
+    },[]);
   
   const _renderItem = ({ item, index }) => {
     return (
@@ -50,7 +39,7 @@ const ListCategory_Filter = ({ data, onPress }) => {
                
               }}
             >
-              {item.title}
+              {item.Name}
             </Text>
           </View>
         </TouchableOpacity>
@@ -60,7 +49,7 @@ const ListCategory_Filter = ({ data, onPress }) => {
   return (
     <FlatList 
     horizontal={true}
-      data={default_data}
+      data={dataCate}
       renderItem={_renderItem}
       keyExtractor={(item, index) => index.toString()}
       showsHorizontalScrollIndicator={false}
