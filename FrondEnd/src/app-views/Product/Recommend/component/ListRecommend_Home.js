@@ -1,137 +1,149 @@
-import React from "react";
+import React, { useState } from "react";
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import { SvgXml } from "react-native-svg";
 import BackgroundFreeShip from "../../../../../assets/Svg/BackgroundFreeShip";
 import BackgroundFavourite from "../../../../../assets/Svg/BackgroundFavourite";
 import AddressSvg from "../../../../../assets/Svg/AddressSvg";
 import { useNavigation } from "@react-navigation/native";
+import ModalLoading from "../../../Modal/ModalLoading";
 const ListRecommend_Home = ({ data, onPress }) => {
-  const navigation = useNavigation(); 
+  const navigation = useNavigation();
+  const [loading, setLoading] = useState(false);
+  const [numColumns, setNumColumns] = useState(2);
+  const [loaded, setLoaded] = useState(false); // Giá trị ban đầu của numColumns là 2
 
-  const pressItem = (item) => {
-    navigation.navigate("Detail_Product");
+  const handleNumColumnsChange = (newNumColumns) => {
+    setNumColumns(newNumColumns); // Cập nhật giá trị của numColumns khi thay đổi
   };
 
   const _renderItem = ({ item, index }) => {
+    const PriceSale = item.Price - item.Sale;
+    const pressItem = async () => {
+ 
+      await navigation.navigate("Detail_Product", {
+        productId: item.id,
+      });
+ 
+    };
     return (
-      <View>
+      <View style={{ marginRight: 10 }}>
         <TouchableOpacity onPress={pressItem} style={{ alignItems: "center" }}>
           <View
             style={{
-              width: 178,
+              width: 185,
               justifyContent: "center",
               marginTop: 14,
               borderRadius: 1,
-           
               backgroundColor: "#fff",
-            borderRadius:4,
-          
+              borderRadius: 4,
             }}
           >
             <View style={{}}>
               <View>
-                {item.image && (
+                {item.Img && (
                   <Image
-                    source={{ uri: item.image }}
+                    source={{ uri: item.Img }}
                     style={{
-                      height: 178,
-                      width: 178,
+                      height: 185,
+                      width: 185,
                     }}
                   />
                 )}
               </View>
-              <View style={{paddingHorizontal:6}}>
-              <View ml={2}>
-                <Text
-                  style={{ color: "#5a5a5a", fontSize: 12, fontWeight: 400 }}
-                >
-                  {item.title}
-                </Text>
-              </View>
-              <View ml={2} flexDirection={"row"}>
-                <Text
-                  style={{
-                    width: "50%",
-                    color: "#F90D0D",
-                    fontSize: 14,
-                    fontWeight: 400,
-                  }}
-                >
-                  {item.pricesale}
-                </Text>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    marginLeft: 40,
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <SvgXml xml={AddressSvg()} />
+              <View style={{ paddingHorizontal: 6 }}>
+                <View ml={2} marginTop={5}>
                   <Text
-                    style={{ fontSize: 10, fontWeight: 400, color: "#707070" }}
+                    style={{ color: "#5a5a5a", fontSize: 12, fontWeight: 400 }}
                   >
-                    {item.address}
+                    {item.Name}
                   </Text>
                 </View>
-              </View>
-              <View style={{ marginLeft: 2, flexDirection: "row" }}>
-                <Text
-                  style={{
-                    width: "50%",
-                    fontSize: 10,
-                    fontWeight: 400,
-                    color: "#707070",
-                  }}
-                >
-                  {item.price}
-                </Text>
-                <View style={{ flexDirection: "row", marginLeft: 30 }}>
+                <View ml={2} flexDirection={"row"}>
                   <Text
-                    style={{ fontSize: 10, fontWeight: 400, color: "#707070" }}
+                    style={{
+                      width: "50%",
+                      color: "#F90D0D",
+                      fontSize: 14,
+                      fontWeight: 400,
+                    }}
                   >
-                    {item.sold}
+                    {PriceSale.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
+                    đ
                   </Text>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      marginLeft: 40,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <SvgXml xml={AddressSvg()} />
+                    <Text
+                      style={{
+                        fontSize: 10,
+                        fontWeight: 400,
+                        color: "#707070",
+                      }}
+                    >
+                      Hà Nội
+                    </Text>
+                  </View>
                 </View>
+                {item.Sale !== "0" ? (
+                  <Text
+                    style={{
+                      fontSize: 10,
+                      fontWeight: 400,
+                      color: "#707070",
+                      textDecorationLine: "line-through",
+                    }}
+                  >
+                    {item.Price.toString().replace(
+                      /\B(?=(\d{3})+(?!\d))/g,
+                      "."
+                    )}
+                    đ
+                  </Text>
+                ) : null}
               </View>
-            </View>
 
-            <View
-              style={{
-                flexDirection: "row",
-                paddingHorizontal: 4,
-                paddingVertical: 4,
-                alignItems: "center",
-              }}
-            >
-              <View style={{paddingHorizontal:6}}>
-                <SvgXml xml={BackgroundFreeShip()} />
-                <Text
-                  style={{
-                    fontSize: 10,
-                    fontWeight: 400,
-                    color: "#ffff",
-                    position: "absolute",
-                    marginLeft:6
-                  }}
-                >
-                  Freeship
-                </Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  paddingHorizontal: 4,
+                  paddingVertical: 4,
+                  alignItems: "center",
+                }}
+              >
+                <View style={{ paddingHorizontal: 6 }}>
+                  <SvgXml xml={BackgroundFreeShip()} />
+                  <Text
+                    style={{
+                      fontSize: 10,
+                      fontWeight: 400,
+                      color: "#ffff",
+                      position: "absolute",
+                      marginLeft: 6,
+                    }}
+                  >
+                    Freeship
+                  </Text>
+                </View>
+                <View style={{ alignItems: "center", marginLeft: 8 }}>
+                  <SvgXml xml={BackgroundFavourite()} />
+                  <Text
+                    style={{
+                      fontSize: 8,
+                      fontWeight: 400,
+                      color: "#ffff",
+                      position: "absolute",
+                    }}
+                  >
+                    Yêu thích
+                  </Text>
+                </View>
               </View>
-              <View style={{ alignItems: "center", marginLeft: 8 }}>
-                <SvgXml xml={BackgroundFavourite()} />
-                <Text
-                  style={{
-                    fontSize: 8,
-                    fontWeight: 400,
-                    color: "#ffff",
-                    position: "absolute",
-                  }}
-                >
-                  Yêu thích
-                </Text>
-              </View>
-            </View>
             </View>
           </View>
         </TouchableOpacity>
@@ -139,15 +151,19 @@ const ListRecommend_Home = ({ data, onPress }) => {
     );
   };
   return (
-    <FlatList
-      scrollEnabled={false}
-      data={data}
-      renderItem={_renderItem}
-      keyExtractor={(item, index) => index.toString()}
-      showsHorizontalScrollIndicator={false}
-      showsVerticalScrollIndicator={false}
-      style={{}}
-    />
+    <View>
+      <FlatList
+        scrollEnabled={false}
+        numColumns={numColumns}
+        data={data}
+        renderItem={_renderItem}
+        keyExtractor={(item, index) => index.toString()}
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+        key={numColumns.toString()} // Sử dụng giá trị của numColumns làm giá trị key
+      />
+      <ModalLoading visible={loading} />
+    </View>
   );
 };
 export default ListRecommend_Home;

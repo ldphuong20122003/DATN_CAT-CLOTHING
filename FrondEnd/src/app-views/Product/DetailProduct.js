@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Image,
   ScrollView,
@@ -27,16 +27,37 @@ import Recommend_Home from "./Recommend/Recommend_Home";
 import FourStarSvg from "../../../assets/Svg/FourStarSvg";
 import ModalFilter from "../Modal/ModalFilter";
 import DeleteSvg from "../../../assets/Svg/DeleteSvg";
+import { useRoute } from "@react-navigation/native";
 
 const Detail_Product = ({ navigation }) => {
   const gotoBack = () => {
     navigation.goBack();
   };
-  const gotoPayment=()=>{
-    navigation.navigate("Payment")
-  }
+  const route = useRoute();
+  const IP = "192.168.138.2";
+  const { productId } = route.params;
+  const [data_Product, setData_Product] = useState([]);
+  const getAPI = () => {
+    return fetch(`http://${IP}:3000/API/product/getbyid?id=` + productId)
+      .then((res) => res.json())
+      .then((data) => setData_Product(data))
+      .catch((err) => console.log(err));
+  };
+  useEffect(() => {
+    getAPI();
+  }, [productId]);
+
+  useEffect(() => {}, [data_Product]); // data_Product là dependency
+
+  const gotoPayment = () => {
+    navigation.navigate("Payment");
+  };
   const [visibleAddtoCart, setVisibleAddtoCart] = React.useState(false);
   const [visibleBuy, setVisibleBuy] = React.useState(false);
+  const PriceSale =
+    data_Product.length > 0 && data_Product[0].Price && data_Product[0].Sale
+      ? parseInt(data_Product[0].Price) - parseInt(data_Product[0].Sale)
+      : 0;
   return (
     <View style={styles.Container}>
       <ScrollView style={{ marginBottom: 50 }}>
@@ -94,21 +115,43 @@ const Detail_Product = ({ navigation }) => {
               <Text
                 style={{
                   width: 300,
-                  fontSize: 14,
+                  fontSize: 18,
                   color: "#2D2D2D",
                   fontWeight: 500,
                 }}
               >
-                Bộ quần áo thun phối 3 màu Cotton Việt Nam
+                {data_Product.length > 0 ? data_Product[0].Name : ""}
               </Text>
               <Text style={{ fontSize: 14, color: "#EF4444", fontWeight: 600 }}>
-                145.000đ
+                {PriceSale.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} đ
               </Text>
             </View>
-            <View style={{ marginTop: 8 }}>
-              <Text style={{ fontSize: 14, color: "#5A5A5A" }}>
-                Thương hiệu : Zara{" "}
+            <View
+              style={{
+                marginTop: 4,
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              <Text style={{ fontSize: 12, color: "#5A5A5A" }}>
+                Số lượng:{" "}
+                {data_Product.length > 0 ? data_Product[0].Amount : ""}
               </Text>
+              {data_Product.length > 0 && data_Product[0].Sale !== "0" && (
+                <Text
+                  style={{
+                    fontSize: 12,
+                    color: "#5A5A5A",
+                    textDecorationLine: "line-through",
+                  }}
+                >
+                  {data_Product[0].Price.toString().replace(
+                    /\B(?=(\d{3})+(?!\d))/g,
+                    "."
+                  )}{" "}
+                  đ
+                </Text>
+              )}
             </View>
             <View
               style={{
@@ -157,25 +200,7 @@ const Detail_Product = ({ navigation }) => {
               </View>
             </View>
           </View>
-          <View
-            style={{
-              paddingHorizontal: 16,
-              borderBottomWidth: 10,
-              borderBottomColor: "#DADADA",
-              paddingVertical: 10,
-            }}
-          >
-            <View
-              style={{ flexDirection: "row", justifyContent: "space-between" }}
-            >
-              <Text style={{ fontWeight: 500 }}>Các sản phẩm khác</Text>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Text style={{ fontSize: 12, color: "#1890ff" }}>Xem thêm</Text>
-                <SvgXml xml={CareRightSvg("#1980ff")} />
-              </View>
-            </View>
-            <OtherProduct />
-          </View>
+
           <View
             style={{
               borderBottomWidth: 10,
@@ -200,14 +225,7 @@ const Detail_Product = ({ navigation }) => {
             <View style={{ paddingHorizontal: 16, marginVertical: 12 }}>
               <Text style={{ fontSize: 12 }}>CHI TIẾT SẢN PHẨM</Text>
               <Text style={{ fontSize: 12 }}>
-                Áo Sơ Mi Họa Tiết Lông Vũ {"\n"} - Được thiết kế bởi Team TOPGU.{" "}
-                {"\n"}- Chất liệu: Vải Lụa cao cấp không nhăn, co giãn 4 chiều,
-                mặt vải mịn mát và thấm hút tốt. Giúp người mặc thoáng mát,
-                không gò bó hay hầm bí. Cam kết không ra màu không nhàu vải, giữ
-                bền form áo.{"\n"}- Dáng áo suông vừa form regular, lên form
-                thoải mái nhưng vẫn vừa vặn với người mặc.{"\n"}- Thiết kế, trẻ
-                trung, dễ dàng kết hợp cùng quần Jeans, Kaki hoặc Short. Đi
-                tiệc, du lịch hay dạo phố cùng bạn bè đều phù hợp.
+                - {data_Product.length > 0 ? data_Product[0].Content : ""}
               </Text>
             </View>
           </View>
@@ -432,7 +450,6 @@ const Detail_Product = ({ navigation }) => {
                 marginRight: 8,
               }}
             >
-            
               <Text style={{ fontSize: 12, marginLeft: 4 }}>S</Text>
             </View>
             <View
@@ -445,7 +462,6 @@ const Detail_Product = ({ navigation }) => {
                 borderRadius: 6,
               }}
             >
-              
               <Text style={{ fontSize: 12, marginLeft: 4 }}>M</Text>
             </View>
             <View
@@ -458,15 +474,22 @@ const Detail_Product = ({ navigation }) => {
                 borderRadius: 6,
               }}
             >
-              
               <Text style={{ fontSize: 12, marginLeft: 4 }}>L</Text>
             </View>
           </View>
         </View>
-        <View style={{paddingVertical:10,backgroundColor:'#1890ff',alignItems:'center',borderRadius:8}}>
-          <Text style={{color:'#fff',fontWeight:600}}>Thêm vào giỏ hàng</Text>
+        <View
+          style={{
+            paddingVertical: 10,
+            backgroundColor: "#1890ff",
+            alignItems: "center",
+            borderRadius: 8,
+          }}
+        >
+          <Text style={{ color: "#fff", fontWeight: 600 }}>
+            Thêm vào giỏ hàng
+          </Text>
         </View>
-        
       </ModalFilter>
       <ModalFilter visible={visibleBuy}>
         <View
@@ -606,7 +629,6 @@ const Detail_Product = ({ navigation }) => {
                 marginRight: 8,
               }}
             >
-            
               <Text style={{ fontSize: 12, marginLeft: 4 }}>S</Text>
             </View>
             <View
@@ -619,7 +641,6 @@ const Detail_Product = ({ navigation }) => {
                 borderRadius: 6,
               }}
             >
-              
               <Text style={{ fontSize: 12, marginLeft: 4 }}>M</Text>
             </View>
             <View
@@ -632,17 +653,22 @@ const Detail_Product = ({ navigation }) => {
                 borderRadius: 6,
               }}
             >
-              
               <Text style={{ fontSize: 12, marginLeft: 4 }}>L</Text>
             </View>
           </View>
         </View>
         <TouchableOpacity onPress={gotoPayment}>
-        <View style={{paddingVertical:10,backgroundColor:'#1890ff',alignItems:'center',borderRadius:8}}>
-          <Text style={{color:'#fff',fontWeight:600}}>Mua ngay</Text>
-        </View>
+          <View
+            style={{
+              paddingVertical: 10,
+              backgroundColor: "#1890ff",
+              alignItems: "center",
+              borderRadius: 8,
+            }}
+          >
+            <Text style={{ color: "#fff", fontWeight: 600 }}>Mua ngay</Text>
+          </View>
         </TouchableOpacity>
-        
       </ModalFilter>
       <View style={styles.Footer}>
         <View
@@ -679,22 +705,25 @@ const Detail_Product = ({ navigation }) => {
             </Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity style={{ flex: 1,}} onPress={()=>setVisibleBuy(true)}>
-        <View
-          style={{
-            marginLeft: 16,
-           
-            alignItems: "center",
-            backgroundColor: "#1890ff",
-            height: "100%",
-            justifyContent: "center",
-            borderRadius: 8,
-          }}
+        <TouchableOpacity
+          style={{ flex: 1 }}
+          onPress={() => setVisibleBuy(true)}
         >
-          <Text style={{ color: "#fff", fontSize: 12, fontWeight: 600 }}>
-            Mua ngay
-          </Text>
-        </View>
+          <View
+            style={{
+              marginLeft: 16,
+
+              alignItems: "center",
+              backgroundColor: "#1890ff",
+              height: "100%",
+              justifyContent: "center",
+              borderRadius: 8,
+            }}
+          >
+            <Text style={{ color: "#fff", fontSize: 12, fontWeight: 600 }}>
+              Mua ngay
+            </Text>
+          </View>
         </TouchableOpacity>
       </View>
     </View>

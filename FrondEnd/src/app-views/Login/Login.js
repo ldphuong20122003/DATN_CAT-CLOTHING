@@ -20,7 +20,7 @@ import EyeSvg from "../../../assets/Svg/EyeSvg";
 import ForgotPass from "../ForgotPassword/ForgotPass";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const IP = "10.10.3.79";
+const IP = "192.168.138.2";
 const Login = ({ navigation }) => {
   const [isChecked, setChecked] = useState(false);
   const [loading, setLoading] = useState(false); // State cho loading
@@ -69,6 +69,8 @@ const Login = ({ navigation }) => {
             return;
           } else {
             try {
+              await AsyncStorage.setItem("UserId",objU.id);
+             
               await AsyncStorage.setItem("InforLogin", JSON.stringify(objU));
               gotoHome();
             } catch (error) {
@@ -136,7 +138,7 @@ const Login = ({ navigation }) => {
             />
           </View>
           <TouchableOpacity onPress={toggleShowPassword}>
-          <SvgXml xml={EyeSvg()} />
+            <SvgXml xml={EyeSvg()} />
           </TouchableOpacity>
         </View>
       </View>
