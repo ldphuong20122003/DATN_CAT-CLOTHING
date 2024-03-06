@@ -20,7 +20,7 @@ import EyeSvg from "../../../assets/Svg/EyeSvg";
 import ForgotPass from "../ForgotPassword/ForgotPass";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const IP = "192.168.1.9";
+const IP = "192.168.138.2";
 const Login = ({ navigation }) => {
   const [isChecked, setChecked] = useState(false);
   const [loading, setLoading] = useState(false); // State cho loading
@@ -69,6 +69,8 @@ const Login = ({ navigation }) => {
             return;
           } else {
             try {
+              await AsyncStorage.setItem("UserId",objU.id);
+             
               await AsyncStorage.setItem("InforLogin", JSON.stringify(objU));
               gotoHome();
             } catch (error) {
