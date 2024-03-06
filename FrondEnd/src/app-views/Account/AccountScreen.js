@@ -292,24 +292,6 @@ const AccountScreen = ({ navigation }) => {
               </View>
             </View>
           </TouchableOpacity>
-<<<<<<< HEAD
-          <TouchableOpacity onPress={gotoReview}>
-          <View
-            style={{
-              paddingVertical: 16,
-              flexDirection: "row",
-              alignItems: "center",
-              borderBottomWidth: 1,
-              borderBottomColor: "#D4D4D4",
-              justifyContent: "space-between",
-            }}
-          >
-            <View style={{ flexDirection: "row" }}>
-              <Image
-                source={require("../../../assets/Star.png")}
-                style={{ width: 24, height: 24 }}
-              />
-=======
           <TouchableOpacity onPress={gotoTransportMethod}>
             <View
               style={{
@@ -326,7 +308,6 @@ const AccountScreen = ({ navigation }) => {
                   source={require("../../../assets/Star.png")}
                   style={{ width: 24, height: 24 }}
                 />
->>>>>>> dev_phuong
 
                 <Text
                   style={{
