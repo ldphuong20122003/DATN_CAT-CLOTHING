@@ -5,7 +5,7 @@ const ListCategory_Filter = ({ data, onPress }) => {
     const pressItem = (item) => {
       onPress && onPress(item);
     };
-    const IP = "192.168.138.2";
+    const IP = "192.168.0.103";
     const [dataCate,setDataCate]=useState([]);
     const getAPI=()=>{
       return fetch(`http://${IP}:3000/API/Cate`)
