@@ -1,23 +1,102 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  Alert,
 } from "react-native";
 import { SvgXml } from "react-native-svg";
 import Hide_pass from "../../../../assets/Svg/Hide_pass";
 import BackSvg from "../../../../assets/Svg/BackSvg";
 import ModalPopups from "../../Modal/ModalPopup";
 import TickSvg from "../../../../assets/Svg/TickSvg";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
+const IP = "192.168.1.8";
 const Update_Pass = ({ navigation }) => {
+  const [userId, setUserId] = useState("");
+  const [data_User, setData_User] = useState([]);
+  const [pass_old, setPass_old] = useState("");
+  const [pass_new, setPass_new] = useState("");
+  const [repass, setRepass] = useState("");
+  const [visible, setVisible] = React.useState(false);
+  const [passwordMatch, setPasswordMatch] = useState(true);
+ 
+  const checkPasswordMatch = () => {
+    // Giả sử mật khẩu được lưu trong đối tượng data_User lấy từ API
+    if (data_User && data_User[0].Password !== pass_old) {
+      setPasswordMatch(false);
+      return false;
+     
+    }
+    setPasswordMatch(true);
+    return true;
+  };
+  const getUserId = async () => {
+    try {
+      const userIdValue = await AsyncStorage.getItem("UserId");
+      if (userIdValue !== null) {
+        setUserId(userIdValue);
+        return fetch(`http://${IP}:3000/API/users/getbyid?id=` + userId)
+          .then((res) => res.json())
+          .then((data) => setData_User(data))
+          .catch((err) => console.log(err));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const updatePass = async () => {
+    if (!pass_old) {
+      Alert.alert('Error', 'Vui lòng nhập mật khẩu cũ');
+      return;
+    }
+    if (!pass_new) {
+      Alert.alert('Error', 'Vui lòng nhập mật khẩu mới');
+      return;
+    }
+    if (!repass) {
+      Alert.alert('Error', 'Vui lòng nhập lại mật khẩu');
+      return;
+    }
+    if (!checkPasswordMatch()) {
+      Alert.alert('Error', "Mật khẩu cũ của bạn không khớp.");
+      return;
+    }
+    if (repass !== pass_new) {
+      Alert.alert('Error', 'Hai mật khẩu hiện không khớp nhau');
+      return;
+    }
+  
+    try {
+      const response = await fetch(
+        `http://${IP}:3000/API/users/update/` + userId,
+        {
+          method: "PUT",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: userId,
+            Password: pass_new,
+          }),
+        }
+      );
+      setVisible(true);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  
+  useEffect(() => {
+    getUserId();
+  }, [userId]);
+  const gotoLogin =()=>navigation.navigate('Login');
   const goBack = () => {
     navigation.goBack();
   };
-  const gotoLogin =()=>navigation.navigate('Login');
-  const [visible, setVisible] = React.useState(false);
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
       <View style={styles.Header}>
@@ -57,7 +136,8 @@ const Update_Pass = ({ navigation }) => {
               justifyContent: "space-between",
             }}
           >
-            <TextInput placeholder="Nhập mật khẩu hiện tại" />
+            <TextInput placeholder="Nhập mật khẩu hiện tại"   onChangeText={(text) => setPass_old(text)}
+/>
             <SvgXml xml={Hide_pass()} />
           </View>
         </View>
@@ -76,7 +156,8 @@ const Update_Pass = ({ navigation }) => {
               justifyContent: "space-between",
             }}
           >
-            <TextInput placeholder="Nhập mật khẩu mới" />
+            <TextInput placeholder="Nhập mật khẩu mới"   onChangeText={(text) => setPass_new(text)}
+/>
             <SvgXml xml={Hide_pass()} />
           </View>
         </View>
@@ -97,11 +178,12 @@ const Update_Pass = ({ navigation }) => {
               justifyContent: "space-between",
             }}
           >
-            <TextInput placeholder="Nhập lại mật khẩu mới" />
+            <TextInput placeholder="Nhập lại mật khẩu mới"   onChangeText={(text) => setRepass(text)}
+/>
             <SvgXml xml={Hide_pass()} />
           </View>
         </View>
-        <TouchableOpacity onPress={setVisible}>
+        <TouchableOpacity onPress={updatePass}>
           <View
             style={{
               marginTop: 16,
