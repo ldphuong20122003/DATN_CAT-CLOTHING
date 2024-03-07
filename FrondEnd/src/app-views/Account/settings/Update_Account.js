@@ -15,7 +15,9 @@ import BackSvg from "../../../../assets/Svg/BackSvg";
 import ModalPopups from "../../Modal/ModalPopup";
 import TickSvg from "../../../../assets/Svg/TickSvg";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-const IP = "192.168.1.8";
+import config from "../../../../config";
+const IP = config.IP;
+
 const Update_Account = ({ navigation }) => {
   const gotoHome = () => {
     navigation.navigate("BottomTabScreen");
@@ -96,7 +98,7 @@ const Update_Account = ({ navigation }) => {
           <TouchableOpacity onPress={goBack}>
             <SvgXml xml={BackSvg()} />
           </TouchableOpacity>
-<View style={{ flex: 1, alignItems: "center" }}>
+          <View style={{ flex: 1, alignItems: "center" }}>
             <Text
               style={{
                 fontSize: 16,
@@ -205,7 +207,7 @@ const Update_Account = ({ navigation }) => {
             </Text>
             <View style={{ ...styles.Input }}>
               <TextInput
-placeholder="Nhập địa chỉ"
+                placeholder="Nhập địa chỉ"
                 defaultValue={address}
                 onChangeText={setAddress}
               />

@@ -24,7 +24,8 @@ import UserSvg from "../../../assets/Svg/UserSvg";
 import ReOrder from "../Product/ReOrder/ReOder";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useIsFocused } from "@react-navigation/native";
-const IP = "192.168.1.8";
+import config from "../../../config";
+const IP=config.IP;
 const AccountScreen = ({ navigation }) => {
   const isFocused = useIsFocused();
   const [userId, setUserId] = useState("");

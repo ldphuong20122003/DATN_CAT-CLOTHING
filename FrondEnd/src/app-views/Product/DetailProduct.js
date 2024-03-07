@@ -28,13 +28,16 @@ import FourStarSvg from "../../../assets/Svg/FourStarSvg";
 import ModalFilter from "../Modal/ModalFilter";
 import DeleteSvg from "../../../assets/Svg/DeleteSvg";
 import { useRoute } from "@react-navigation/native";
+import config from "../../../config";
+
 
 const Detail_Product = ({ navigation }) => {
   const gotoBack = () => {
     navigation.goBack();
   };
   const route = useRoute();
-  const IP = "192.168.1.8";
+  const IP=config.IP;
+
   const { productId } = route.params;
   const [data_Product, setData_Product] = useState([]);
   const getAPI = () => {
