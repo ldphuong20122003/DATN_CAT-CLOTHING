@@ -84,6 +84,9 @@ const AccountScreen = ({ navigation }) => {
   const gotoHisOrder = () => {
     navigation.navigate("History_Order");
   };
+  const gotoReview = () => {
+    navigation.navigate("Review");
+  };
   return (
     <SafeAreaView style={{ flex: 0.93 }}>
       <ScrollView showsVerticalScrollIndicator={false}>
