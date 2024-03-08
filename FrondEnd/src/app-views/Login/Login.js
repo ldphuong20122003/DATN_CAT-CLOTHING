@@ -19,9 +19,13 @@ import FacebookSvg from "../../../assets/Svg/FacebookSvg";
 import EyeSvg from "../../../assets/Svg/EyeSvg";
 import ForgotPass from "../ForgotPassword/ForgotPass";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Hide_pass from "../../../assets/Svg/Hide_pass";
+import config from "../../../config";
 
-const IP = "192.168.1.15";
+const IP = config.IP;
 const Login = ({ navigation }) => {
+  const [phoneNumber, setPhoneNumber] = useState("0826930839");
+  const [password, setPassword] = useState("Phuong2012");
   const [isChecked, setChecked] = useState(false);
   const [loading, setLoading] = useState(false); // State cho loading
   const [showPassword, setShowPassword] = useState(false);
@@ -37,8 +41,6 @@ const Login = ({ navigation }) => {
   const gotoHome = () => {
     navigation.navigate("BottomTabScreen");
   };
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [password, setPassword] = useState("");
   const handleLogin = () => {
     if (!phoneNumber || !password) {
       alert("Vui lòng điền đầy đủ thông tin");
@@ -80,6 +82,7 @@ const Login = ({ navigation }) => {
         }
       });
   };
+  
   return (
     <View style={{ flex: 1, width: "100%", backgroundColor: "#fff" }}>
       <View style={{ alignItems: "center" }}>
@@ -107,6 +110,7 @@ const Login = ({ navigation }) => {
           <SvgXml xml={PhoneSvg()} />
           <TextInput
             style={{ marginLeft: 8 }}
+            value={phoneNumber}
             placeholder="Phone Number"
             onChangeText={(text) => setPhoneNumber(text)}
           />
@@ -132,13 +136,15 @@ const Login = ({ navigation }) => {
             <SvgXml xml={LockSvg()} />
             <TextInput
               style={{ marginLeft: 8 }}
+              value={password}
               placeholder="Password"
               secureTextEntry={!showPassword}
               onChangeText={(text) => setPassword(text)}
             />
           </View>
           <TouchableOpacity onPress={toggleShowPassword}>
-            <SvgXml xml={EyeSvg()} />
+            {showPassword? <SvgXml xml={Hide_pass()}/>:<SvgXml xml={EyeSvg()}/>}
+         
           </TouchableOpacity>
         </View>
       </View>

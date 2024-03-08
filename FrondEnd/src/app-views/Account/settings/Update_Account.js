@@ -25,6 +25,9 @@ const Update_Account = ({ navigation }) => {
   const goBack = () => {
     navigation.goBack();
   };
+  const gotoChooseAddresses = () => {
+    navigation.navigate('ChooseAddress');
+  }
   const [userId, setUserId] = useState("");
   const [data_User, setData_User] = useState([]);
   const getUserId = async () => {
@@ -205,13 +208,16 @@ const Update_Account = ({ navigation }) => {
             >
               Địa chỉ
             </Text>
+            <TouchableOpacity onPress={gotoChooseAddresses}>
             <View style={{ ...styles.Input }}>
               <TextInput
                 placeholder="Nhập địa chỉ"
                 defaultValue={address}
                 onChangeText={setAddress}
+                editable={false}
               />
             </View>
+            </TouchableOpacity>
           </View>
           <View style={{ marginTop: 8 }}>
             <Text

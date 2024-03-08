@@ -42,13 +42,13 @@ const Product_Search = ({ navigation }) => {
   const renderScene = ({ route }) => {
     switch (route.key) {
       case '1':
-        return <All_Products />;
+        return <All_Products keyword={keyword}/>;
       case '2':
-        return <All_Products />;
+        return <All_Products keyword={keyword}/>;
       case '3':
-        return <All_Products />;
+        return <All_Products keyword={keyword}/>;
       case '4':
-        return <All_Products />;
+        return <All_Products keyword={keyword}/>;
       default:
         return null;
     }

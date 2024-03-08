@@ -23,8 +23,8 @@ import Payment from "./src/app-views/Payment/Payment";
 import ChooseAddress from "./src/app-views/Address/ChooseAddress";
 import AddAddress from "./src/app-views/Address/AddAddress";
 import Chat from "./src/app-views/Chat/Chat";
-import InformationOrder from "./src/app-views/Order/InformationOder";
 import HistoryOrder from "./src/app-views/Order/HistoryOrder";
+import InformationOrder from "./src/app-views/Order/InformationOrder";
 
 const Stack = createStackNavigator();
 
