@@ -7,7 +7,25 @@ const { log } = require('debug/src/browser');
 /* GET home page. */
 router.get('/', async(req, res, next) =>{
   try {
-    const snapshot = await db.collection('products').get();
+    const Id = req.query.id;
+    
+    if (!Id) {
+      // Nếu không có tham số truy vấn 'name', trả về tất cả người dùng
+      const snapshot = await db.collection('products').get();
+      
+    const data = [];
+
+    snapshot.forEach(doc => {
+      data.push({
+        id: doc.id,
+        ...doc.data(),
+        
+      });
+      
+    });
+    res.status(200).json(data);
+    }else{
+      const snapshot = await db.collection('products').where('id', '==', req.query.id).get();
     const data = [];
 
     snapshot.forEach(doc => {
@@ -18,6 +36,12 @@ router.get('/', async(req, res, next) =>{
     });
 
     res.status(200).json(data);
+    }
+
+    
+    
+
+    
   } catch (error) {
     console.error('Error fetching data:', error);
     res.status(500).send('Error fetching data from Firestore');
