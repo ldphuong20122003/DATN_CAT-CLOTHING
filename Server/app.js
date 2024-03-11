@@ -23,7 +23,7 @@ var apiHoaDon=require('./routes/API/api.hoaDon');
 var apiRating=require('./routes/API/api.Rating');
 var apiNotification=require('./routes/API/api.notification');
 var apiFVR=require('./routes/API/api.FVR');
-
+var apiAddress=require('./routes/API/api.addres');
 
 const bodyParser = require('body-parser');
 var app = express();
@@ -61,6 +61,7 @@ app.use('/API/hoaDon',apiHoaDon);
 app.use('/API/Rating',apiRating);
 app.use('/API/ntf',apiNotification);
 app.use('/API/fvr',apiFVR);
+app.use('/API/Address', apiAddress);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
