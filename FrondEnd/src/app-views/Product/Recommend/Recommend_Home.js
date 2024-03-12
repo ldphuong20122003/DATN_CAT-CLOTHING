@@ -3,9 +3,8 @@ import { View } from "react-native";
 import ListRecommend_Home from "./component/ListRecommend_Home";
 import config from "../../../../config";
 
-
 const Recommend_Home = () => {
-  const IP=config.IP;
+  const IP = config.IP;
 
   const [data, setData] = useState([]);
   const getAPI = () => {

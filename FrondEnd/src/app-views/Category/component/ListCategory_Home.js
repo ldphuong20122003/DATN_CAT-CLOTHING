@@ -10,8 +10,12 @@ import iconJacketSvg from "../../../../assets/Svg/iconJacketSvg";
 import iconShirtSvg from "../../../../assets/Svg/iconShirtSvg";
 
 const ListCategory_Home = ({ data, onPress }) => {
-  const pressItem = (item) => {
-    onPress && onPress(item);
+  const pressItem = async () => {
+ 
+    await navigation.navigate("Detail_Product", {
+      productId: item.Name,
+    });
+
   };
   const _renderItem = ({ item, index }) => {
     let iconCate= iconTeeSvg;

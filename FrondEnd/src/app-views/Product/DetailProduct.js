@@ -4,6 +4,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -41,37 +42,50 @@ const Detail_Product = ({ navigation }) => {
   const [selectedSize, setSelectedSize] = useState(""); // State lưu kích cỡ được chọn
   const [selectedSizeAmount, setSelectedSizeAmount] = useState(0); // State lưu số lượng tương ứng với kích cỡ được chọn
   const [defaultAmount, setDefaultAmount] = useState(0); // State lưu số lượng mặc định
+  const [quantity, setQuantity] = useState(1);
+  const handleIncrement = () => {
+    setQuantity((prevQuantity) => prevQuantity + 1);
+  };
+  const handleDecrement = () => {
+    if (quantity > 1) {
+      setQuantity((prevQuantity) => prevQuantity - 1);
+    }
+  };
   const handleSizeSelection = (size, amount) => {
     setSelectedSize(size);
     setSelectedSizeAmount(amount);
   };
   const calculateTotalAmount = () => {
     let total = 0;
-    data_Product[0]?.Size.forEach((sizeObj) => {
-      total += parseInt(sizeObj.Amount);
-    });
+    if (data_Product.length > 0 && data_Product[0]?.Size) {
+      Object.values(data_Product[0]?.Size).forEach((sizeAmount) => {
+        total += parseInt(sizeAmount);
+      });
+    }
     return total;
   };
   const getAPI = () => {
-    return fetch(`http://${IP}:3000/API/product/getbyid?id=` + productId)
+    return fetch(`http://${IP}:3000/API/product/?id=` + productId)
       .then((res) => res.json())
       .then((data) => setData_Product(data))
       .catch((err) => console.log(err));
   };
+
   useEffect(() => {
     getAPI();
   }, [productId]);
+
   useEffect(() => {
     setDefaultAmount(calculateTotalAmount());
   }, [data_Product]);
 
-  useEffect(() => {}, [data_Product]); // data_Product là dependency
-
   const gotoPayment = () => {
     navigation.navigate("Payment");
   };
-  const [visibleAddtoCart, setVisibleAddtoCart] = React.useState(false);
-  const [visibleBuy, setVisibleBuy] = React.useState(false);
+
+  const [visibleAddtoCart, setVisibleAddtoCart] = useState(false);
+  const [visibleBuy, setVisibleBuy] = useState(false);
+
   const PriceSale =
     data_Product.length > 0 && data_Product[0].Price && data_Product[0].Sale
       ? parseInt(data_Product[0].Price) - parseInt(data_Product[0].Sale)
@@ -371,17 +385,87 @@ const Detail_Product = ({ navigation }) => {
         >
           <Text>Kích cỡ</Text>
           <View style={{ flexDirection: "row", marginTop: 8 }}>
-            {data_Product[0]?.Size.map((sizeObj, index) => (
-              <TouchableOpacity
-                key={index}
-                onPress={() =>
-                  handleSizeSelection(sizeObj["Name 1"], sizeObj.Amount)
-                }
-                style={{ ...styles.itemSize,backgroundColor:selectedSize=== sizeObj["Name 1"]?'#1890ff' :'#f6f6f6' }}
-              >
-                <Text style={{ fontSize: 12,color:selectedSize=== sizeObj["Name 1"]?'#fff' :'#000'  }}> {sizeObj["Name 1"]}</Text>
+            {data_Product.length > 0 &&
+              data_Product[0]?.Size &&
+              Object.keys(data_Product[0]?.Size).map((size, index) => (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() =>
+                    handleSizeSelection(size, data_Product[0]?.Size[size])
+                  }
+                  style={{
+                    ...styles.itemSize,
+                    backgroundColor:
+                      selectedSize === size ? "#1890ff" : "#f6f6f6",
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      color: selectedSize === size ? "#fff" : "#000",
+                    }}
+                  >
+                    {size}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+          </View>
+        </View>
+        <View
+          style={{
+            paddingHorizontal: 16,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginVertical: 16,
+          }}
+        >
+          <Text>Số lượng</Text>
+          <View>
+            <View
+              style={{ flexDirection: "row", paddingVertical: 4, marginTop: 5 }}
+            >
+              <TouchableOpacity onPress={handleDecrement}>
+                <Text
+                  style={{
+                    borderWidth: 0.5,
+                    paddingHorizontal: 6,
+                    borderColor: "#707070",
+                  }}
+                >
+                  -
+                </Text>
               </TouchableOpacity>
-            ))}
+              <TextInput
+                placeholder="1"
+                value={quantity.toString()}
+                style={{
+                  borderTopWidth: 0.5,
+                  borderBottomWidth: 0.5,
+                  width: 40,
+                  height: 20,
+                  fontSize: 12,
+                  textAlign: "center",
+                  borderColor: "#707070",
+                }}
+                keyboardType="numeric"
+                onChangeText={(value) => {
+                  if (!isNaN(value) && value !== "") {
+                    setQuantity(parseInt(value));
+                  }
+                }}
+              />
+              <TouchableOpacity onPress={handleIncrement}>
+                <Text
+                  style={{
+                    borderWidth: 0.5,
+                    paddingHorizontal: 6,
+                    borderColor: "#707070",
+                  }}
+                >
+                  +
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
         <View
@@ -447,23 +531,88 @@ const Detail_Product = ({ navigation }) => {
         >
           <Text>Kích cỡ</Text>
           <View style={{ flexDirection: "row", marginTop: 8 }}>
-            {data_Product[0]?.Size.map((sizeObj, index) => (
-              <TouchableOpacity
-                key={index}
-                onPress={() =>
-                  handleSizeSelection(sizeObj["Name 1"], sizeObj.Amount)
-                }
-                style={{ ...styles.itemSize,backgroundColor:selectedSize=== sizeObj["Name 1"]?'#1890ff' :'#f6f6f6' }}
+            {data_Product.length > 0 &&
+              data_Product[0]?.Size &&
+              Object.keys(data_Product[0]?.Size).map((size, index) => (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() =>
+                    handleSizeSelection(size, data_Product[0]?.Size[size])
+                  }
+                  style={{
+                    ...styles.itemSize,
+                    backgroundColor:
+                      selectedSize === size ? "#1890ff" : "#f6f6f6",
+                  }}
                 >
-                  <Text style={{ fontSize: 12,color:selectedSize=== sizeObj["Name 1"]?'#fff' :'#000'  }}> {sizeObj["Name 1"]}</Text>
-              </TouchableOpacity>
-            ))}
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      color: selectedSize === size ? "#fff" : "#000",
+                    }}
+                  >
+                    {size}
+                  </Text>
+                </TouchableOpacity>
+              ))}
           </View>
         </View>
-        <View style={{paddingHorizontal:16,flexDirection:'row',justifyContent:'space-between',marginVertical:16}}>
+
+        <View
+          style={{
+            paddingHorizontal: 16,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginVertical: 16,
+          }}
+        >
           <Text>Số lượng</Text>
           <View>
-          
+            <View
+              style={{ flexDirection: "row", paddingVertical: 4, marginTop: 5 }}
+            >
+              <TouchableOpacity onPress={handleDecrement}>
+                <Text
+                  style={{
+                    borderWidth: 0.5,
+                    paddingHorizontal: 6,
+                    borderColor: "#707070",
+                  }}
+                >
+                  -
+                </Text>
+              </TouchableOpacity>
+              <TextInput
+                placeholder="1"
+                value={quantity.toString()}
+                style={{
+                  borderTopWidth: 0.5,
+                  borderBottomWidth: 0.5,
+                  width: 40,
+                  height: 20,
+                  fontSize: 12,
+                  textAlign: "center",
+                  borderColor: "#707070",
+                }}
+                keyboardType="numeric"
+                onChangeText={(value) => {
+                  if (!isNaN(value) && value !== "") {
+                    setQuantity(parseInt(value));
+                  }
+                }}
+              />
+              <TouchableOpacity onPress={handleIncrement}>
+                <Text
+                  style={{
+                    borderWidth: 0.5,
+                    paddingHorizontal: 6,
+                    borderColor: "#707070",
+                  }}
+                >
+                  +
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
         <TouchableOpacity onPress={gotoPayment}>
@@ -587,7 +736,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 4,
     alignItems: "center",
-    
+
     borderRadius: 6,
     marginRight: 8,
   },

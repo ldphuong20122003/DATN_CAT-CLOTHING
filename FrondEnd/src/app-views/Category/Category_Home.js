@@ -5,7 +5,7 @@ import config from "../../../config";
 const IP=config.IP;
 
 const Category_Home = () => {
-
+   
   const [data,setData]=useState([]);
   const getAPI=()=>{
     return fetch(`http://${IP}:3000/API/Cate`)
