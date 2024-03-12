@@ -4,6 +4,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -28,32 +29,63 @@ import FourStarSvg from "../../../assets/Svg/FourStarSvg";
 import ModalFilter from "../Modal/ModalFilter";
 import DeleteSvg from "../../../assets/Svg/DeleteSvg";
 import { useRoute } from "@react-navigation/native";
+import config from "../../../config";
 
 const Detail_Product = ({ navigation }) => {
   const gotoBack = () => {
     navigation.goBack();
   };
   const route = useRoute();
-  const IP = "192.168.138.2";
+  const IP = config.IP;
   const { productId } = route.params;
   const [data_Product, setData_Product] = useState([]);
+  const [selectedSize, setSelectedSize] = useState(""); // State lưu kích cỡ được chọn
+  const [selectedSizeAmount, setSelectedSizeAmount] = useState(0); // State lưu số lượng tương ứng với kích cỡ được chọn
+  const [defaultAmount, setDefaultAmount] = useState(0); // State lưu số lượng mặc định
+  const [quantity, setQuantity] = useState(1);
+  const handleIncrement = () => {
+    setQuantity((prevQuantity) => prevQuantity + 1);
+  };
+  const handleDecrement = () => {
+    if (quantity > 1) {
+      setQuantity((prevQuantity) => prevQuantity - 1);
+    }
+  };
+  const handleSizeSelection = (size, amount) => {
+    setSelectedSize(size);
+    setSelectedSizeAmount(amount);
+  };
+  const calculateTotalAmount = () => {
+    let total = 0;
+    if (data_Product.length > 0 && data_Product[0]?.Size) {
+      Object.values(data_Product[0]?.Size).forEach((sizeAmount) => {
+        total += parseInt(sizeAmount);
+      });
+    }
+    return total;
+  };
   const getAPI = () => {
-    return fetch(`http://${IP}:3000/API/product/getbyid?id=` + productId)
+    return fetch(`http://${IP}:3000/API/product/?id=` + productId)
       .then((res) => res.json())
       .then((data) => setData_Product(data))
       .catch((err) => console.log(err));
   };
+
   useEffect(() => {
     getAPI();
   }, [productId]);
 
-  useEffect(() => {}, [data_Product]); // data_Product là dependency
+  useEffect(() => {
+    setDefaultAmount(calculateTotalAmount());
+  }, [data_Product]);
 
   const gotoPayment = () => {
     navigation.navigate("Payment");
   };
-  const [visibleAddtoCart, setVisibleAddtoCart] = React.useState(false);
-  const [visibleBuy, setVisibleBuy] = React.useState(false);
+
+  const [visibleAddtoCart, setVisibleAddtoCart] = useState(false);
+  const [visibleBuy, setVisibleBuy] = useState(false);
+
   const PriceSale =
     data_Product.length > 0 && data_Product[0].Price && data_Product[0].Sale
       ? parseInt(data_Product[0].Price) - parseInt(data_Product[0].Sale)
@@ -65,19 +97,9 @@ const Detail_Product = ({ navigation }) => {
           <Swiper style={styles.wrapper} activeDotColor="#FFFFFF">
             <View style={styles.slide}>
               <Image
-                source={require("../../../assets/Banner1.png")}
-                style={styles.image}
-              />
-            </View>
-            <View style={styles.slide}>
-              <Image
-                source={require("../../../assets/Banner2.png")}
-                style={styles.image}
-              />
-            </View>
-            <View style={styles.slide}>
-              <Image
-                source={require("../../../assets/Banner3.png")}
+                source={{
+                  uri: data_Product.length > 0 ? data_Product[0].Img : "null",
+                }}
                 style={styles.image}
               />
             </View>
@@ -85,7 +107,9 @@ const Detail_Product = ({ navigation }) => {
         </View>
         <View style={styles.Header}>
           <TouchableOpacity onPress={gotoBack}>
-            <SvgXml xml={BackSvg()} />
+            <View>
+              <SvgXml xml={BackSvg("#fff")} />
+            </View>
           </TouchableOpacity>
           <Text style={{ color: "#fff", fontSize: 16, fontWeight: 600 }}>
             Chi tiết sản phẩm
@@ -134,8 +158,7 @@ const Detail_Product = ({ navigation }) => {
               }}
             >
               <Text style={{ fontSize: 12, color: "#5A5A5A" }}>
-                Số lượng:{" "}
-                {data_Product.length > 0 ? data_Product[0].Amount : ""}
+                Số lượng: {defaultAmount}
               </Text>
               {data_Product.length > 0 && data_Product[0].Sale !== "0" && (
                 <Text
@@ -324,12 +347,14 @@ const Detail_Product = ({ navigation }) => {
         >
           <View style={{ flexDirection: "row" }}>
             <Image
-              source={require("../../../assets/anhdaidien.jpg")}
+              source={{
+                uri: data_Product.length > 0 ? data_Product[0].Img : "null",
+              }}
               style={{ width: 100, height: 100 }}
             />
             <View style={{ width: 100, marginLeft: 8, marginTop: 40 }}>
-              <Text style={{ fontSize: 10 }}>
-                Bộ quần áo thun 3 màu chất cotton
+              <Text style={{ fontSize: 14 }}>
+                {data_Product.length > 0 ? data_Product[0].Name : ""}
               </Text>
               <Text
                 style={{
@@ -339,10 +364,10 @@ const Detail_Product = ({ navigation }) => {
                   fontWeight: 500,
                 }}
               >
-                160.000đ
+                {PriceSale.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} đ
               </Text>
               <Text style={{ fontSize: 10, marginTop: 2, fontWeight: 400 }}>
-                Đã bán 172
+                Số lượng: {selectedSize ? selectedSizeAmount : defaultAmount}
               </Text>
             </View>
           </View>
@@ -350,73 +375,7 @@ const Detail_Product = ({ navigation }) => {
             <SvgXml xml={DeleteSvg()} />
           </TouchableOpacity>
         </View>
-        <View
-          style={{
-            padding: 16,
-            borderBottomWidth: 0.5,
-            borderBottomColor: "#E2E2E2",
-          }}
-        >
-          <Text>Màu sắc</Text>
-          <View style={{ flexDirection: "row", marginTop: 8 }}>
-            <View
-              style={{
-                flexDirection: "row",
-                paddingHorizontal: 8,
-                paddingVertical: 4,
-                alignItems: "center",
-                backgroundColor: "#F6F6F6",
-                borderRadius: 6,
-                marginRight: 8,
-              }}
-            >
-              <Image
-                source={{
-                  uri: "data:image/webp;base64,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",
-                }}
-                style={{ width: 24, height: 24 }}
-              />
-              <Text style={{ fontSize: 12, marginLeft: 4 }}>Đen</Text>
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                paddingHorizontal: 8,
-                paddingVertical: 4,
-                alignItems: "center",
-                backgroundColor: "#F6F6F6",
-                borderRadius: 6,
-                marginRight: 8,
-              }}
-            >
-              <Image
-                source={{
-                  uri: "data:image/webp;base64,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",
-                }}
-                style={{ width: 24, height: 24 }}
-              />
-              <Text style={{ fontSize: 12, marginLeft: 4 }}>Đen</Text>
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                paddingHorizontal: 8,
-                paddingVertical: 4,
-                alignItems: "center",
-                backgroundColor: "#F6F6F6",
-                borderRadius: 6,
-              }}
-            >
-              <Image
-                source={{
-                  uri: "data:image/webp;base64,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",
-                }}
-                style={{ width: 24, height: 24 }}
-              />
-              <Text style={{ fontSize: 12, marginLeft: 4 }}>Đen</Text>
-            </View>
-          </View>
-        </View>
+
         <View
           style={{
             padding: 16,
@@ -426,55 +385,86 @@ const Detail_Product = ({ navigation }) => {
         >
           <Text>Kích cỡ</Text>
           <View style={{ flexDirection: "row", marginTop: 8 }}>
+            {data_Product.length > 0 &&
+              data_Product[0]?.Size &&
+              Object.keys(data_Product[0]?.Size).map((size, index) => (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() =>
+                    handleSizeSelection(size, data_Product[0]?.Size[size])
+                  }
+                  style={{
+                    ...styles.itemSize,
+                    backgroundColor:
+                      selectedSize === size ? "#1890ff" : "#f6f6f6",
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      color: selectedSize === size ? "#fff" : "#000",
+                    }}
+                  >
+                    {size}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+          </View>
+        </View>
+        <View
+          style={{
+            paddingHorizontal: 16,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginVertical: 16,
+          }}
+        >
+          <Text>Số lượng</Text>
+          <View>
             <View
-              style={{
-                flexDirection: "row",
-                paddingHorizontal: 8,
-                paddingVertical: 4,
-                alignItems: "center",
-                backgroundColor: "#F6F6F6",
-                borderRadius: 6,
-                marginRight: 8,
-              }}
+              style={{ flexDirection: "row", paddingVertical: 4, marginTop: 5 }}
             >
-              <Text style={{ fontSize: 12, marginLeft: 4 }}>XS</Text>
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                paddingHorizontal: 8,
-                paddingVertical: 4,
-                alignItems: "center",
-                backgroundColor: "#F6F6F6",
-                borderRadius: 6,
-                marginRight: 8,
-              }}
-            >
-              <Text style={{ fontSize: 12, marginLeft: 4 }}>S</Text>
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                paddingHorizontal: 8,
-                paddingVertical: 4,
-                alignItems: "center",
-                backgroundColor: "#F6F6F6",
-                borderRadius: 6,
-              }}
-            >
-              <Text style={{ fontSize: 12, marginLeft: 4 }}>M</Text>
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                paddingHorizontal: 8,
-                paddingVertical: 4,
-                alignItems: "center",
-                backgroundColor: "#F6F6F6",
-                borderRadius: 6,
-              }}
-            >
-              <Text style={{ fontSize: 12, marginLeft: 4 }}>L</Text>
+              <TouchableOpacity onPress={handleDecrement}>
+                <Text
+                  style={{
+                    borderWidth: 0.5,
+                    paddingHorizontal: 6,
+                    borderColor: "#707070",
+                  }}
+                >
+                  -
+                </Text>
+              </TouchableOpacity>
+              <TextInput
+                placeholder="1"
+                value={quantity.toString()}
+                style={{
+                  borderTopWidth: 0.5,
+                  borderBottomWidth: 0.5,
+                  width: 40,
+                  height: 20,
+                  fontSize: 12,
+                  textAlign: "center",
+                  borderColor: "#707070",
+                }}
+                keyboardType="numeric"
+                onChangeText={(value) => {
+                  if (!isNaN(value) && value !== "") {
+                    setQuantity(parseInt(value));
+                  }
+                }}
+              />
+              <TouchableOpacity onPress={handleIncrement}>
+                <Text
+                  style={{
+                    borderWidth: 0.5,
+                    paddingHorizontal: 6,
+                    borderColor: "#707070",
+                  }}
+                >
+                  +
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -503,12 +493,14 @@ const Detail_Product = ({ navigation }) => {
         >
           <View style={{ flexDirection: "row" }}>
             <Image
-              source={require("../../../assets/anhdaidien.jpg")}
+              source={{
+                uri: data_Product.length > 0 ? data_Product[0].Img : "null",
+              }}
               style={{ width: 100, height: 100 }}
             />
             <View style={{ width: 100, marginLeft: 8, marginTop: 40 }}>
-              <Text style={{ fontSize: 10 }}>
-                Bộ quần áo thun 3 màu chất cotton
+              <Text style={{ fontSize: 14 }}>
+                {data_Product.length > 0 ? data_Product[0].Name : ""}
               </Text>
               <Text
                 style={{
@@ -518,10 +510,10 @@ const Detail_Product = ({ navigation }) => {
                   fontWeight: 500,
                 }}
               >
-                160.000đ
+                {PriceSale.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} đ
               </Text>
               <Text style={{ fontSize: 10, marginTop: 2, fontWeight: 400 }}>
-                Đã bán 172
+                Số lượng: {selectedSize ? selectedSizeAmount : defaultAmount}
               </Text>
             </View>
           </View>
@@ -529,73 +521,7 @@ const Detail_Product = ({ navigation }) => {
             <SvgXml xml={DeleteSvg()} />
           </TouchableOpacity>
         </View>
-        <View
-          style={{
-            padding: 16,
-            borderBottomWidth: 0.5,
-            borderBottomColor: "#E2E2E2",
-          }}
-        >
-          <Text>Màu sắc</Text>
-          <View style={{ flexDirection: "row", marginTop: 8 }}>
-            <View
-              style={{
-                flexDirection: "row",
-                paddingHorizontal: 8,
-                paddingVertical: 4,
-                alignItems: "center",
-                backgroundColor: "#F6F6F6",
-                borderRadius: 6,
-                marginRight: 8,
-              }}
-            >
-              <Image
-                source={{
-                  uri: "data:image/webp;base64,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",
-                }}
-                style={{ width: 24, height: 24 }}
-              />
-              <Text style={{ fontSize: 12, marginLeft: 4 }}>Đen</Text>
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                paddingHorizontal: 8,
-                paddingVertical: 4,
-                alignItems: "center",
-                backgroundColor: "#F6F6F6",
-                borderRadius: 6,
-                marginRight: 8,
-              }}
-            >
-              <Image
-                source={{
-                  uri: "data:image/webp;base64,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",
-                }}
-                style={{ width: 24, height: 24 }}
-              />
-              <Text style={{ fontSize: 12, marginLeft: 4 }}>Đen</Text>
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                paddingHorizontal: 8,
-                paddingVertical: 4,
-                alignItems: "center",
-                backgroundColor: "#F6F6F6",
-                borderRadius: 6,
-              }}
-            >
-              <Image
-                source={{
-                  uri: "data:image/webp;base64,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",
-                }}
-                style={{ width: 24, height: 24 }}
-              />
-              <Text style={{ fontSize: 12, marginLeft: 4 }}>Đen</Text>
-            </View>
-          </View>
-        </View>
+
         <View
           style={{
             padding: 16,
@@ -605,55 +531,87 @@ const Detail_Product = ({ navigation }) => {
         >
           <Text>Kích cỡ</Text>
           <View style={{ flexDirection: "row", marginTop: 8 }}>
+            {data_Product.length > 0 &&
+              data_Product[0]?.Size &&
+              Object.keys(data_Product[0]?.Size).map((size, index) => (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() =>
+                    handleSizeSelection(size, data_Product[0]?.Size[size])
+                  }
+                  style={{
+                    ...styles.itemSize,
+                    backgroundColor:
+                      selectedSize === size ? "#1890ff" : "#f6f6f6",
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      color: selectedSize === size ? "#fff" : "#000",
+                    }}
+                  >
+                    {size}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+          </View>
+        </View>
+
+        <View
+          style={{
+            paddingHorizontal: 16,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginVertical: 16,
+          }}
+        >
+          <Text>Số lượng</Text>
+          <View>
             <View
-              style={{
-                flexDirection: "row",
-                paddingHorizontal: 8,
-                paddingVertical: 4,
-                alignItems: "center",
-                backgroundColor: "#F6F6F6",
-                borderRadius: 6,
-                marginRight: 8,
-              }}
+              style={{ flexDirection: "row", paddingVertical: 4, marginTop: 5 }}
             >
-              <Text style={{ fontSize: 12, marginLeft: 4 }}>XS</Text>
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                paddingHorizontal: 8,
-                paddingVertical: 4,
-                alignItems: "center",
-                backgroundColor: "#F6F6F6",
-                borderRadius: 6,
-                marginRight: 8,
-              }}
-            >
-              <Text style={{ fontSize: 12, marginLeft: 4 }}>S</Text>
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                paddingHorizontal: 8,
-                paddingVertical: 4,
-                alignItems: "center",
-                backgroundColor: "#F6F6F6",
-                borderRadius: 6,
-              }}
-            >
-              <Text style={{ fontSize: 12, marginLeft: 4 }}>M</Text>
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                paddingHorizontal: 8,
-                paddingVertical: 4,
-                alignItems: "center",
-                backgroundColor: "#F6F6F6",
-                borderRadius: 6,
-              }}
-            >
-              <Text style={{ fontSize: 12, marginLeft: 4 }}>L</Text>
+              <TouchableOpacity onPress={handleDecrement}>
+                <Text
+                  style={{
+                    borderWidth: 0.5,
+                    paddingHorizontal: 6,
+                    borderColor: "#707070",
+                  }}
+                >
+                  -
+                </Text>
+              </TouchableOpacity>
+              <TextInput
+                placeholder="1"
+                value={quantity.toString()}
+                style={{
+                  borderTopWidth: 0.5,
+                  borderBottomWidth: 0.5,
+                  width: 40,
+                  height: 20,
+                  fontSize: 12,
+                  textAlign: "center",
+                  borderColor: "#707070",
+                }}
+                keyboardType="numeric"
+                onChangeText={(value) => {
+                  if (!isNaN(value) && value !== "") {
+                    setQuantity(parseInt(value));
+                  }
+                }}
+              />
+              <TouchableOpacity onPress={handleIncrement}>
+                <Text
+                  style={{
+                    borderWidth: 0.5,
+                    paddingHorizontal: 6,
+                    borderColor: "#707070",
+                  }}
+                >
+                  +
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -773,4 +731,13 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   Content: {},
+  itemSize: {
+    flexDirection: "row",
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    alignItems: "center",
+
+    borderRadius: 6,
+    marginRight: 8,
+  },
 });

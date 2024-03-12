@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
+import config from "../../../../config";
+
 
 const ListCategory_Filter = ({ data, onPress }) => {
-    const pressItem = (item) => {
+  const IP=config.IP;
+
+  const pressItem = (item) => {
       onPress && onPress(item);
     };
-    const IP = "192.168.138.2";
     const [dataCate,setDataCate]=useState([]);
     const getAPI=()=>{
       return fetch(`http://${IP}:3000/API/Cate`)

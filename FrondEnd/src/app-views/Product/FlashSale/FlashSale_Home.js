@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import { View } from "react-native";
 import ListFlashSale_Home from "./component/ListFlashSale_Home";
 import ListReOder from "../ReOrder/component/ListReOder";
+import config from "../../../../config";
 
 const FlashSale_Home = () => {
-  const IP = "192.168.138.2";
+  const IP=config.IP;
+
   const [data, setData] = useState([]);
   const getAPI = () => {
     return fetch(`http://${IP}:3000/API/product`)

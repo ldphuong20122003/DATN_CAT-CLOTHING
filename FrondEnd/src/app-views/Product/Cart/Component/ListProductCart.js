@@ -1,10 +1,26 @@
 import Checkbox from "expo-checkbox";
 import React, { useState } from "react";
-import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
+import {
+  FlatList,
+  Image,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { SvgXml } from "react-native-svg";
 import DownSvg from "../../../../../assets/Svg/DownSvg";
 const ListProductCart = ({ data, onPress }) => {
   const [isChecked, setChecked] = useState(false);
+  const [quantity, setQuantity] = useState(1);
+  const handleIncrement = () => {
+    setQuantity((prevQuantity) => prevQuantity + 1);
+  };
+  const handleDecrement = () => {
+    if (quantity > 1) {
+      setQuantity((prevQuantity) => prevQuantity - 1);
+    }
+  };
   const pressItem = (item) => {
     onPress && onPress(item);
   };
@@ -37,7 +53,13 @@ const ListProductCart = ({ data, onPress }) => {
                 />
               )}
             </View>
-            <View style={{flex:1, marginLeft: 8 ,justifyContent:'space-between'}}>
+            <View
+              style={{
+                flex: 1,
+                marginLeft: 8,
+                justifyContent: "space-between",
+              }}
+            >
               <Text style={{ fontSize: 14, fontWeight: 400, color: "#2d2d2d" }}>
                 {item.name}
               </Text>
@@ -50,7 +72,7 @@ const ListProductCart = ({ data, onPress }) => {
                   backgroundColor: "#D4D4D4",
                   paddingHorizontal: 4,
                   justifyContent: "space-between",
-                  marginTop:5
+                  marginTop: 5,
                 }}
               >
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -61,16 +83,63 @@ const ListProductCart = ({ data, onPress }) => {
                 </View>
                 <SvgXml xml={DownSvg()} />
               </View>
-              <Text style={{ fontSize: 12, fontWeight: 600, color: "#EF4444",marginTop:5 }}>
+              <Text
+                style={{
+                  fontSize: 12,
+                  fontWeight: 600,
+                  color: "#EF4444",
+                  marginTop: 5,
+                }}
+              >
                 {item.price}
               </Text>
-              <View style={{flexDirection:'row',paddingVertical:4,marginTop:5}}>
-                <TouchableOpacity>
-                <Text style={{borderWidth:0.5 ,paddingHorizontal:4,borderColor:'#707070'}}>-</Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  paddingVertical: 4,
+                  marginTop: 5,
+                }}
+              >
+                <TouchableOpacity onPress={handleDecrement}>
+                  <Text
+                    style={{
+                      borderWidth: 0.5,
+                      paddingHorizontal: 6,
+                      borderColor: "#707070",
+                    }}
+                  >
+                    -
+                  </Text>
                 </TouchableOpacity>
-                <Text style={{paddingHorizontal:8 ,borderTopWidth:0.5,borderBottomWidth:0.5,borderColor:'#707070'}}>{item.number}</Text>
-                <TouchableOpacity>
-                <Text style={{borderWidth:0.5,paddingHorizontal:4,borderColor:'#707070'}}>+</Text>
+                <TextInput
+                  placeholder="1"
+                  value={quantity.toString()}
+                  style={{
+                    borderTopWidth: 0.5,
+                    borderBottomWidth: 0.5,
+                    width: 40,
+                    height: 20,
+                    fontSize: 12,
+                    textAlign: "center",
+                    borderColor: "#707070",
+                  }}
+                  keyboardType="numeric"
+                  onChangeText={(value) => {
+                    if (!isNaN(value) && value !== "") {
+                      setQuantity(parseInt(value));
+                    }
+                  }}
+                />
+                <TouchableOpacity onPress={handleIncrement}>
+                  <Text
+                    style={{
+                      borderWidth: 0.5,
+                      paddingHorizontal: 6,
+                      borderColor: "#707070",
+                    }}
+                  >
+                    +
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>

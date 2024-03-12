@@ -18,6 +18,7 @@ import EmailSvg from "../../../assets/Svg/EmailSvg";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import { firebaseConfig } from "../../config";
 import firebase from "firebase/compat/app";
+import Hide_pass from "../../../assets/Svg/Hide_pass";
 
 const Register = ({ navigation }) => {
   const [fullname, setFullname] = useState("");
@@ -199,7 +200,7 @@ const Register = ({ navigation }) => {
               ></TextInput>
             </View>
             <TouchableOpacity onPress={toggleShowPassword}>
-              <SvgXml xml={EyeSvg()} />
+            {showPassword? <SvgXml xml={Hide_pass()}/>:<SvgXml xml={EyeSvg()}/>}
             </TouchableOpacity>
           </View>
         </View>

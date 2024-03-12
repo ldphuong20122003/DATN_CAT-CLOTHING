@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { View } from "react-native";
 import ListCategory_Home from "./component/ListCategory_Home";
+import config from "../../../config";
+const IP=config.IP;
 
 const Category_Home = () => {
-  const IP = "192.168.138.2";
+   
   const [data,setData]=useState([]);
   const getAPI=()=>{
     return fetch(`http://${IP}:3000/API/Cate`)

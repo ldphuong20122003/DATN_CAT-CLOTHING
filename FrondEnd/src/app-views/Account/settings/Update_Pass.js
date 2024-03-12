@@ -1,23 +1,123 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  Alert,
 } from "react-native";
 import { SvgXml } from "react-native-svg";
 import Hide_pass from "../../../../assets/Svg/Hide_pass";
 import BackSvg from "../../../../assets/Svg/BackSvg";
 import ModalPopups from "../../Modal/ModalPopup";
 import TickSvg from "../../../../assets/Svg/TickSvg";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import config from "../../../../config";
+import EyeSvg from "../../../../assets/Svg/EyeSvg";
+const IP = config.IP;
 const Update_Pass = ({ navigation }) => {
+  const [userId, setUserId] = useState("");
+  const [data_User, setData_User] = useState([]);
+  const [pass_old, setPass_old] = useState("");
+  const [pass_new, setPass_new] = useState("");
+  const [repass, setRepass] = useState("");
+  const [visible, setVisible] = React.useState(false);
+  const [passwordMatch, setPasswordMatch] = useState(true);
+  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+  const [showPassword, setShowPassword] = useState({
+    oldPassword: false,
+    newPassword: false,
+    rePassword: false,
+  });
+  const toggleShowPassword = (field) => {
+    setShowPassword({
+      ...showPassword,
+      [field]: !showPassword[field],
+    });
+  };
+
+  const checkPasswordMatch = () => {
+    // Giả sử mật khẩu được lưu trong đối tượng data_User lấy từ API
+    if (data_User && data_User[0].Password !== pass_old) {
+      setPasswordMatch(false);
+      return false;
+    }
+    setPasswordMatch(true);
+    return true;
+  };
+  const getUserId = async () => {
+    try {
+      const userIdValue = await AsyncStorage.getItem("UserId");
+      if (userIdValue !== null) {
+        setUserId(userIdValue);
+        return fetch(`http://${IP}:3000/API/users/getbyid?id=` + userId)
+          .then((res) => res.json())
+          .then((data) => setData_User(data))
+          .catch((err) => console.log(err));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const updatePass = async () => {
+    if (!pass_old) {
+      Alert.alert("Error", "Vui lòng nhập mật khẩu cũ");
+      return;
+    }
+    if (!pass_new) {
+      Alert.alert("Error", "Vui lòng nhập mật khẩu mới");
+      return;
+    }
+    if (!repass) {
+      Alert.alert("Error", "Vui lòng nhập lại mật khẩu");
+      return;
+    }
+    if (!checkPasswordMatch()) {
+      Alert.alert("Error", "Mật khẩu cũ của bạn không khớp.");
+      return;
+    }
+    if (!passwordRegex.test(pass_new)) {
+      Alert.alert("Error", "Mật khẩu phải chứa ít nhất 1 chữ và 1 số, độ dài tối thiểu 8 ký tự.");
+      return;
+    }
+    if (pass_new == pass_old) {
+      Alert.alert("Error", "Mật khẩu mới không được trùng với mật khẩu cũ");
+      return;
+    }
+    if (repass !== pass_new) {
+      Alert.alert("Error", "Hai mật khẩu hiện không khớp nhau");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `http://${IP}:3000/API/users/update/` + userId,
+        {
+          method: "PUT",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: userId,
+            Password: pass_new,
+          }),
+        }
+      );
+      setVisible(true);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getUserId();
+  }, [userId]);
+  const gotoLogin = () => navigation.navigate("Login");
   const goBack = () => {
     navigation.goBack();
   };
-  const gotoLogin =()=>navigation.navigate('Login');
-  const [visible, setVisible] = React.useState(false);
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
       <View style={styles.Header}>
@@ -57,8 +157,18 @@ const Update_Pass = ({ navigation }) => {
               justifyContent: "space-between",
             }}
           >
-            <TextInput placeholder="Nhập mật khẩu hiện tại" />
-            <SvgXml xml={Hide_pass()} />
+            <TextInput
+              placeholder="Nhập mật khẩu hiện tại"
+              secureTextEntry={!showPassword.oldPassword}
+              onChangeText={(text) => setPass_old(text)}
+            />
+            <TouchableOpacity onPress={() => toggleShowPassword("oldPassword")}>
+              {showPassword.oldPassword ? (
+                <SvgXml xml={Hide_pass()} />
+              ) : (
+                <SvgXml xml={EyeSvg()} />
+              )}
+            </TouchableOpacity>
           </View>
         </View>
 
@@ -76,8 +186,18 @@ const Update_Pass = ({ navigation }) => {
               justifyContent: "space-between",
             }}
           >
-            <TextInput placeholder="Nhập mật khẩu mới" />
-            <SvgXml xml={Hide_pass()} />
+            <TextInput
+              placeholder="Nhập mật khẩu mới"
+              secureTextEntry={!showPassword.newPassword}
+              onChangeText={(text) => setPass_new(text)}
+            />
+            <TouchableOpacity onPress={() => toggleShowPassword("newPassword")}>
+              {showPassword.newPassword ? (
+                <SvgXml xml={Hide_pass()} />
+              ) : (
+                <SvgXml xml={EyeSvg()} />
+              )}
+            </TouchableOpacity>
           </View>
         </View>
 
@@ -97,11 +217,21 @@ const Update_Pass = ({ navigation }) => {
               justifyContent: "space-between",
             }}
           >
-            <TextInput placeholder="Nhập lại mật khẩu mới" />
-            <SvgXml xml={Hide_pass()} />
+            <TextInput
+              placeholder="Nhập lại mật khẩu mới"
+              secureTextEntry={!showPassword.rePassword}
+              onChangeText={(text) => setRepass(text)}
+            />
+            <TouchableOpacity onPress={() => toggleShowPassword("rePassword")}>
+              {showPassword.rePassword ? (
+                <SvgXml xml={Hide_pass()} />
+              ) : (
+                <SvgXml xml={EyeSvg()} />
+              )}
+            </TouchableOpacity>
           </View>
         </View>
-        <TouchableOpacity onPress={setVisible}>
+        <TouchableOpacity onPress={updatePass}>
           <View
             style={{
               marginTop: 16,
@@ -119,16 +249,30 @@ const Update_Pass = ({ navigation }) => {
           </View>
         </TouchableOpacity>
         <ModalPopups visible={visible}>
-          <View style={{alignItems:'center'}}>
-         
-              <SvgXml xml={TickSvg()}/>
-           <Text style={{color:'#6AC259',fontSize:16,fontWeight:600}}>Đổi mật khẩu thành công</Text>
-           <Text style={{fontSize:12,fontWeight:400,color:'#707070'}}>Chuyển tới trang đăng nhập trong vài giây nữa</Text>
-           <TouchableOpacity onPress={gotoLogin}>
-           <View style={{width:180,padding:15,backgroundColor:'#1890FF',alignItems:'center',marginTop:30,borderRadius:6}}>
-            <Text style={{color:'#fff',fontSize:14,fontWeight:600}}>Đi tới trang đăng nhập</Text>
-           </View>
-           </TouchableOpacity>
+          <View style={{ alignItems: "center" }}>
+            <SvgXml xml={TickSvg()} />
+            <Text style={{ color: "#6AC259", fontSize: 16, fontWeight: 600 }}>
+              Đổi mật khẩu thành công
+            </Text>
+            <Text style={{ fontSize: 12, fontWeight: 400, color: "#707070" }}>
+              Chuyển tới trang đăng nhập trong vài giây nữa
+            </Text>
+            <TouchableOpacity onPress={gotoLogin}>
+              <View
+                style={{
+                  width: 180,
+                  padding: 15,
+                  backgroundColor: "#1890FF",
+                  alignItems: "center",
+                  marginTop: 30,
+                  borderRadius: 6,
+                }}
+              >
+                <Text style={{ color: "#fff", fontSize: 14, fontWeight: 600 }}>
+                  Đi tới trang đăng nhập
+                </Text>
+              </View>
+            </TouchableOpacity>
           </View>
         </ModalPopups>
       </View>
