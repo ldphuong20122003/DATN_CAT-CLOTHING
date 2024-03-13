@@ -33,12 +33,13 @@
                     <thead>
                         <tr class="text-center">
                             <th  scope="col">IMG</th>
-                            <th  scope="col">ID</th>
+                            
                             <th scope="col">Name</th>
                             <th scope="col">Category</th>
-                            <th scope="col">Amount</th>
+                            
                             <th  scope="col">Size</th>
                             <th  scope="col">Price</th>
+                            <th  scope="col">Sale</th>
                             <th  scope="col">Content</th>
                             <th></th>
                            
@@ -50,9 +51,7 @@
 
                             <tr class="align-middle">
                                 <td><img src="<%= item.Img  %>" style="width: 100px; height: 100px;" alt=""></td>
-                                <td>
-                                    <%= item.id %>
-                                </td>
+                                
 
                                 <td>
                                     <%= item.Name %>
@@ -60,17 +59,29 @@
                                 <td scope="row">
                                    <%= item.Categories %>
                                 </td>
-                                <td scope="row">
-                                   <%= item.Amount %>
+                            
+                                <td style="width: 100px; align-items: center;">
+                                    <div>
+                                    <div style="width: 50px;">
+                                        <span>S   : <%= item.Size.S%></span>
+                                     </div>
+                                     <div>
+                                        <span>M   : <%= item.Size.M%></span>
+                                    </div>
+                                    <div>
+                                        <span>L : <%= item.Size.L%></span>
+                                    </div>
+                                    <div>
+                                        <span>XL : <%= item.Size.XL%></span>
+                                    </div>
+                                 </div>
                                 </td>
-                                
-                                <td>
-                                    <%= item.Size %>
-                                </td>
-                                
+                               
+                             
                                 <td>
                                     <%= item.Price %>
                                 </td>
+                                 <td><%= item.Sale %></td>
                                 <td>
                                     <%= item.Content %>
                                 </td>
@@ -84,7 +95,7 @@
                                         data-item-price="<%= item.Price %>" 
                                         data-item-image="<%= item.Img %>"
                                         data-item-size="<%= item.Size %>"
-                                        data-item-amount="<%= item.Amount %>"
+                                        data-item-sale="<%= item.Sale %>"
                                         class="btn btn-success m-2" data-bs-toggle="modal" data-item-id
                                         data-bs-target="#editModal">Edit</button>
 
@@ -139,45 +150,69 @@
                             <label for="descriptionProduct" class="form-label">Description</label>
                             <input name="Content" type="text" id="descriptionProduct" class="form-control">
                             <label for=" priceProduct" class="form-label">Price</label>
-                            <input name="Price" type="number" id="priceProduct" class="form-control">
-                            <label for=" amountProduct" class="form-label">Amount</label>
-                            <input name="Amount" type="number" id="amountProduct" class="form-control">
+                            <input name="Price" type="text" id="priceProduct" class="form-control">
+                            <label for="saleProduct" class="form-label">Sale</label>
+                            <input name="Sale" type="number" id="saleProduct" class="form-control">
                             <label for="sizeProduct" class="form-label">Size</label>
                             
-                            <div class="form-check " id="sizeProduct">
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="checkbox" value="S" id="sizeProduct1" name="Size" checked>
-                                        <label class="form-check-label" for="sizeProduct1">
+                            <div  id="sizeProduct">
+                                    <div  style=" display: flex; ">
+                                        <div style=" display: flex;width: 50px;">
+                                        <input class="form-check-input"  type="checkbox" value="S" id="sizeProduct1" name="SizeS" checked>
+                                        <label style="margin-left: 10px;" for="sizeProduct1">
                                             S
                                         </label>
                                         </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="checkbox" value="M" id="sizeProduct2" name="Size" >
-                                        <label class="form-check-label" for="sizeProduct2">
+                                        <div style="display: flex; margin-left: 50px;">
+                                            <label style="width: 100px; font-size: medium;" for="SlS">
+                                            Số Lượng
+                                        </label >
+                                            <input name="SlS" type="number" id="Sl-S" class="form-control" >
+                                            </div>
+                                        
+                                        </div>
+
+                                    <div style=" display: flex;margin-top: 10px;">
+                                        <div style=" display: flex;width: 50px;">
+                                        <input class="form-check-input" type="checkbox" value="M" id="sizeProduct2" name="SizeM" checked >
+                                        <label style="margin-left: 10px;" for="sizeProduct2">
                                             M
-                                        </label>
+                                        </label></div>
+                                        <div style="display: flex; margin-left: 50px;">
+                                            <label style="width: 100px; font-size: medium;" for="SlS">
+                                            Số Lượng
+                                        </label >
+                                            <input name="SlM" type="number" id="Sl-S" class="form-control" >
+                                            </div>
                                     </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="checkbox" value="L" id="sizeProduct3" name="Size">
-                                        <label class="form-check-label" for="sizeProduct3">
+
+                                    <div style=" display: flex;margin-top: 10px;">
+                                        <div style=" display: flex;width: 50px;">
+                                        <input class="form-check-input" type="checkbox" value="L" id="sizeProduct3" name="SizeL" checked>
+                                        <label style="margin-left: 10px;" for="sizeProduct3">
                                             L
-                                        </label>
+                                        </label></div>
+                                        <div style="display: flex; margin-left: 50px;">
+                                            <label style="width: 100px; font-size: medium;" for="SlS">
+                                            Số Lượng
+                                        </label >
+                                            <input name="SlL" type="number" id="Sl-S" class="form-control" >
+                                            </div>
                                     </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="checkbox" value="XL" id="sizeProduct4" name="Size">
-                                        <label class="form-check-label" for="sizeProduct4">
+
+                                    <div style=" display: flex;margin-top: 10px;">
+                                        <div style=" display: flex; width: 50px;">
+                                        <input class="form-check-input" type="checkbox" value="XL" id="sizeProduct4" name="SizeXL" checked>
+                                        <label style="margin-left: 10px;" for="sizeProduct4">
                                             XL
-                                        </label>
+                                        </label></div>
+                                        <div style="display: flex; margin-left: 50px;">
+                                            <label style="width: 100px; font-size: medium;" for="SlS">
+                                            Số Lượng
+                                        </label >
+                                            <input name="SlXL" type="number" id="Sl-S" class="form-control" >
+                                            </div>
                                     </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="checkbox" value="XXL" id="sizeProduct5" name="Size">
-                                        <label class="form-check-label" for="sizeProduct5">
-                                            XXL
-                                        </label>
-                                    </div>
-                                
-                                
-                                    
                                     
                                 </div>
                         
@@ -203,6 +238,7 @@
                     <form id="editForm" action="products/edit   " method="POST" enctype="multipart/form-data">
 
                         <div class="modal-body">
+                            
                             <label for="inputCode" class="form-label" >Name</label>
                             <input name="Name" type="text" id="nameProduct" class="form-control" >
                             <label for="cateId">Category</label>
@@ -219,47 +255,72 @@
                             <input name="Content" type="text" id="descriptionProduct" class="form-control">
                             <label for=" priceProduct" class="form-label">Price</label>
                             <input name="Price" type="text" id="priceProduct" class="form-control">
-                            <label for=" amountProduct" class="form-label">Amount</label>
-                            <input name="Amount" type="number" id="amountProduct" class="form-control">
-                            <label for=" sizeProduct" class="form-label">Size</label>
-           
+                            <label for="saleProduct" class="form-label">Sale</label>
+                            <input name="Sale" type="number" id="saleProduct" class="form-control">
+                            <label for="sizeProduct" class="form-label">Size</label>
                             
-                            <div class="form-check " id="sizeProduct">
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="checkbox" value="S" id="sizeProduct1" name="Size" checked>
-                                        <label class="form-check-label" for="sizeProduct1">
+                            <div  id="sizeProduct">
+                                    <div  style=" display: flex; ">
+                                        <div style=" display: flex;width: 50px;">
+                                        <input class="form-check-input"  type="checkbox" value="S" id="sizeProduct1" name="SizeS" checked>
+                                        <label style="margin-left: 10px;" for="sizeProduct1">
                                             S
                                         </label>
                                         </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="checkbox" value="M" id="sizeProduct2" name="Size" >
-                                        <label class="form-check-label" for="sizeProduct2">
+                                        <div style="display: flex; margin-left: 50px;">
+                                            <label style="width: 100px; font-size: medium;" for="SlS">
+                                            Số Lượng
+                                        </label >
+                                            <input name="SlS" type="number" id="Sl-S" class="form-control" >
+                                            </div>
+                                        
+                                        </div>
+
+                                    <div style=" display: flex;margin-top: 10px;">
+                                        <div style=" display: flex;width: 50px;">
+                                        <input class="form-check-input" type="checkbox" value="M" id="sizeProduct2" name="SizeM" checked >
+                                        <label style="margin-left: 10px;" for="sizeProduct2">
                                             M
-                                        </label>
+                                        </label></div>
+                                        <div style="display: flex; margin-left: 50px;">
+                                            <label style="width: 100px; font-size: medium;" for="SlS">
+                                            Số Lượng
+                                        </label >
+                                            <input name="SlM" type="number" id="Sl-S" class="form-control" >
+                                            </div>
                                     </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="checkbox" value="L" id="sizeProduct3" name="Size">
-                                        <label class="form-check-label" for="sizeProduct3">
+
+                                    <div style=" display: flex;margin-top: 10px;">
+                                        <div style=" display: flex;width: 50px;">
+                                        <input class="form-check-input" type="checkbox" value="L" id="sizeProduct3" name="SizeL" checked>
+                                        <label style="margin-left: 10px;" for="sizeProduct3">
                                             L
-                                        </label>
+                                        </label></div>
+                                        <div style="display: flex; margin-left: 50px;">
+                                            <label style="width: 100px; font-size: medium;" for="SlS">
+                                            Số Lượng
+                                        </label >
+                                            <input name="SlL" type="number" id="Sl-S" class="form-control" >
+                                            </div>
                                     </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="checkbox" value="XL" id="sizeProduct4" name="Size">
-                                        <label class="form-check-label" for="sizeProduct4">
+
+                                    <div style=" display: flex;margin-top: 10px;">
+                                        <div style=" display: flex; width: 50px;">
+                                        <input class="form-check-input" type="checkbox" value="XL" id="sizeProduct4" name="SizeXL" checked>
+                                        <label style="margin-left: 10px;" for="sizeProduct4">
                                             XL
-                                        </label>
+                                        </label></div>
+                                        <div style="display: flex; margin-left: 50px;">
+                                            <label style="width: 100px; font-size: medium;" for="SlS">
+                                            Số Lượng
+                                        </label >
+                                            <input name="SlXL" type="number" id="Sl-S" class="form-control" >
+                                            </div>
                                     </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="checkbox" value="XXL" id="sizeProduct5" name="Size">
-                                        <label class="form-check-label" for="sizeProduct5">
-                                            XXL
-                                        </label>
-                                    </div>
-                                
-                                
-                                    
                                     
                                 </div>
+                        
+
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -315,14 +376,14 @@
                         const itemPrice = this.getAttribute('data-item-price');
                         const itemDescription = this.getAttribute('data-item-description');
                         const itemSize = this.getAttribute('data-item-size');
-                        const itemAmount = this.getAttribute('data-item-amount');
+                        const itemSale = this.getAttribute('data-item-sale');
                         // const itemIdInput = editModal.querySelector('#itemIdInput');
                         // itemIdInput.value = itemId;
                         // Truy xuất phần tử trong modal để cập nhật nội dung
                         const modalBody = editModal._element.querySelector('.modal-body');
                         const nameInput = editForm.querySelector('#nameProduct');
                         const categoryInput = editForm.querySelector('[name="Categories"]'); // Thêm đoạn này để truy xuất đến menu thả xuống "Category"
-                        const amountinput=editForm.querySelector('#amountProduct')
+                        const saleinput=editForm.querySelector('#saleProduct')
                         const priceInput = editForm.querySelector('#priceProduct');
                         const sizeInput = editForm.querySelector('#sizeProduct');
                         const descriptionInput = editForm.querySelector('#descriptionProduct');
@@ -332,7 +393,7 @@
                         categoryInput.value=itemIdC;
                         priceInput.value = itemPrice;
                         sizeInput.value= itemSize;
-                        amountinput.value=itemAmount;
+                        saleinput.value=itemSale;
                         descriptionInput.value = itemDescription;
 
                         // Thêm thuộc tính "selected" vào tùy chọn chính xác trong menu thả xuống "Category"

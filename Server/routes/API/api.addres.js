@@ -46,16 +46,31 @@ router.get('/', async(req, res, next) =>{
 
   router.post('/add',async(req,res,next)=>{
     try {
-      const data = req.body; 
+      // Dữ liệu từ request body
+     const collectionRef = admin.firestore().collection('Address');
+           const Id = collectionRef.doc().id;
+          
+           const docID = Id ? collectionRef.doc(Id) : collectionRef.doc();
 
-      const docRef = await db.collection('Address').add(data);
-  
-      res.status(201).send(`Document created with ID: ${docRef.id}`);
-    } catch (error) {
-      console.error('Error adding data:', error);
-      res.status(500).send('Error adding data to Firestore');
-    }
-  });
+           const data2={
+             id:Id,
+             ...req.body
+             
+           }
+            docID.set(data2).then(() => {
+             res.status(200).send(`Document with ID: add successfully`);
+             return collectionRef.doc().id;
+         })
+         .catch(error => {
+             console.error('Lỗi khi thêm tài liệu:', error);
+             res.status(500).json({message: 'Lỗi khi thêm tài liệu'});
+         });
+    
+   } catch (error) {
+     console.error('Error adding data:', error);
+     res.status(500).send('Error adding data to Firestore');
+   }
+ });
 
   router.delete('/delete/:id',async(req,res,next)=>{
     try {

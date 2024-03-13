@@ -4,16 +4,22 @@ exports.listProducts = async (req, res, next) => {
     let msg = '';
     let list = null;
     let listJson = [];
+    
     let categories = null;
     let categoriesJson = [];
-    
-
+   
     try {
         list = await admin.firestore().collection('products').get();
         categories = await admin.firestore().collection('Category').get();
-
+         
+       
+    // Truy vấn tài liệu từ Firestore
+    
         list.docs.forEach(doc => {
-            listJson.push(doc.data());
+            const docData = doc.data();
+           
+            listJson.push(docData);
+           
            
         });
 
@@ -26,6 +32,9 @@ exports.listProducts = async (req, res, next) => {
     } catch (error) {
         console.error('Error fetching data:', error);
         res.status(500).send('Error fetching data from Firestore');
+        if (!res.headersSent) {
+            res.status(500).send('Internal Server Error');
+        }
         
     }
 
@@ -72,17 +81,20 @@ try {
             const collectionRef = admin.firestore().collection('products');
             const Id = collectionRef.doc().id;
             
-            const Size = req.body.Size || [];
+            const Size = req.body.Size || [] ;
+            
             let data2 = {
                 id: Id,
                 Name: req.body.Name,
                 Categories: req.body.Categories,
                 Content: req.body.Content,
                 Price: req.body.Price,
-                Amount: req.body.Amount,
-
+                Sale:req.body.Sale,
                 Img: UrlFile,
-                Size: Size,
+                Size:{ [req.body.SizeS]: req.body.SlS,
+                    [req.body.SizeM]: req.body.SlM,
+                    [req.body.SizeL]: req.body.SlL,
+                    [req.body.SizeXL] : req.body.SlXL},
             }
             // Dữ liệu từ request body
             const docID = Id ? collectionRef.doc(Id) : collectionRef.doc();
@@ -146,13 +158,17 @@ exports.put=async(req,res,next)=>{
         try {
             const Size = req.body.Size || [];
             let data2 = {
-                
+               
                 Name: req.body.Name,
                 Categories: req.body.Categories,
                 Content: req.body.Content,
                 Price: req.body.Price,
+                Sale:req.body.Sale,
                 Img: UrlFile,
-                Size: Size,
+                Size:{ [req.body.SizeS]: req.body.SlS,
+                    [req.body.SizeM]: req.body.SlM,
+                    [req.body.SizeL]: req.body.SlL,
+                    [req.body.SizeXL] : req.body.SlXL},
             }
         
             const docId = req.params.id; // Lấy ID tài liệu từ URL
