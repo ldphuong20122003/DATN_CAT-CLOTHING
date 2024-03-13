@@ -51,9 +51,12 @@ const Update_Pass = ({ navigation }) => {
       const userIdValue = await AsyncStorage.getItem("UserId");
       if (userIdValue !== null) {
         setUserId(userIdValue);
-        return fetch(`http://${IP}:3000/API/users/getbyid?id=` + userId)
+        return fetch(`http://${IP}:3000/API/users/`)
           .then((res) => res.json())
-          .then((data) => setData_User(data))
+          .then((data) => {
+            const filteredUser = data.filter((user) => user.id === userIdValue);
+            setData_User(filteredUser);
+          })
           .catch((err) => console.log(err));
       }
     } catch (error) {
@@ -78,7 +81,10 @@ const Update_Pass = ({ navigation }) => {
       return;
     }
     if (!passwordRegex.test(pass_new)) {
-      Alert.alert("Error", "Mật khẩu phải chứa ít nhất 1 chữ và 1 số, độ dài tối thiểu 8 ký tự.");
+      Alert.alert(
+        "Error",
+        "Mật khẩu phải chứa ít nhất 1 chữ và 1 số, độ dài tối thiểu 8 ký tự."
+      );
       return;
     }
     if (pass_new == pass_old) {

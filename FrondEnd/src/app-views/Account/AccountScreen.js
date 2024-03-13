@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -25,7 +24,7 @@ import ReOrder from "../Product/ReOrder/ReOder";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useIsFocused } from "@react-navigation/native";
 import config from "../../../config";
-const IP=config.IP;
+const IP = config.IP;
 const AccountScreen = ({ navigation }) => {
   const isFocused = useIsFocused();
   const [userId, setUserId] = useState("");
@@ -35,9 +34,12 @@ const AccountScreen = ({ navigation }) => {
       const userIdValue = await AsyncStorage.getItem("UserId");
       if (userIdValue !== null) {
         setUserId(userIdValue);
-        return fetch(`http://${IP}:3000/API/users/getbyid?id=` + userId)
+        return fetch(`http://${IP}:3000/API/users/`)
           .then((res) => res.json())
-          .then((data) => setData_User(data))
+          .then((data) => {
+            const filteredUser = data.filter((user) => user.id === userIdValue);
+            setData_User(filteredUser);
+          })
           .catch((err) => console.log(err));
       }
     } catch (error) {
@@ -49,9 +51,12 @@ const AccountScreen = ({ navigation }) => {
       const userIdValue = await AsyncStorage.getItem("UserId");
       if (userIdValue !== null) {
         setUserId(userIdValue);
-        return fetch(`http://${IP}:3000/API/users/getbyid?id=` + userId)
+        return fetch(`http://${IP}:3000/API/users/`)
           .then((res) => res.json())
-          .then((data) => setData_User(data))
+          .then((data) => {
+            const filteredUser = data.filter((user) => user.id === userIdValue);
+            setData_User(filteredUser);
+          })
           .catch((err) => console.log(err));
       }
     } catch (error) {
@@ -95,7 +100,7 @@ const AccountScreen = ({ navigation }) => {
             <Image
               source={require("../../../assets/banner.jpg")}
               style={styles.image}
-/>
+            />
           </View>
           <View style={styles.Voucher}>
             <View style={{ flexDirection: "row" }}>
@@ -184,7 +189,7 @@ const AccountScreen = ({ navigation }) => {
           >
             <View style={{ alignItems: "center" }}>
               <SvgXml xml={UnlockSvg()} />
-<Text style={{ fontSize: 12, fontWeight: 400, marginTop: 8 }}>
+              <Text style={{ fontSize: 12, fontWeight: 400, marginTop: 8 }}>
                 Chờ xác nhận
               </Text>
             </View>
@@ -272,7 +277,7 @@ const AccountScreen = ({ navigation }) => {
                 justifyContent: "space-between",
               }}
             >
-<View style={{ flexDirection: "row", alignItems: "center" }}>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <Image
                   source={require("../../../assets/Voucher.png")}
                   style={{ width: 24, height: 24 }}
@@ -365,7 +370,7 @@ const AccountScreen = ({ navigation }) => {
                 borderRadius: 10,
               }}
             >
-<View style={{ alignItems: "center" }}>
+              <View style={{ alignItems: "center" }}>
                 <Text
                   style={{
                     fontSize: 16,
