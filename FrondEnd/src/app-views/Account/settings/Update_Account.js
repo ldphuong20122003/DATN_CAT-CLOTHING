@@ -26,8 +26,8 @@ const Update_Account = ({ navigation }) => {
     navigation.goBack();
   };
   const gotoChooseAddresses = () => {
-    navigation.navigate('ChooseAddress');
-  }
+    navigation.navigate("ChooseAddress");
+  };
   const [userId, setUserId] = useState("");
   const [data_User, setData_User] = useState([]);
   const getUserId = async () => {
@@ -35,9 +35,12 @@ const Update_Account = ({ navigation }) => {
       const userIdValue = await AsyncStorage.getItem("UserId");
       if (userIdValue !== null) {
         setUserId(userIdValue);
-        return fetch(`http://${IP}:3000/API/users/getbyid?id=` + userId)
+        return fetch(`http://${IP}:3000/API/users/`)
           .then((res) => res.json())
-          .then((data) => setData_User(data))
+          .then((data) => {
+            const filteredUser = data.filter((user) => user.id === userIdValue);
+            setData_User(filteredUser);
+          })
           .catch((err) => console.log(err));
       }
     } catch (error) {
@@ -209,14 +212,14 @@ const Update_Account = ({ navigation }) => {
               Địa chỉ
             </Text>
             <TouchableOpacity onPress={gotoChooseAddresses}>
-            <View style={{ ...styles.Input }}>
-              <TextInput
-                placeholder="Nhập địa chỉ"
-                defaultValue={address}
-                onChangeText={setAddress}
-                editable={false}
-              />
-            </View>
+              <View style={{ ...styles.Input }}>
+                <TextInput
+                  placeholder="Nhập địa chỉ"
+                  defaultValue={address}
+                  onChangeText={setAddress}
+                  editable={false}
+                />
+              </View>
             </TouchableOpacity>
           </View>
           <View style={{ marginTop: 8 }}>
