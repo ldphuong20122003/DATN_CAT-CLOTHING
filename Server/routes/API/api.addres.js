@@ -69,24 +69,45 @@ router.get('/', async(req, res, next) =>{
    }
  });
 
-  router.delete('/delete/:id',async(req,res,next)=>{
+  router.delete('/delete/:id/:fieldName',async(req,res,next)=>{
+    // try {
+    //   const docId = req.params.id; // Lấy ID tài liệu từ URL
+  
+    //   // Xóa tài liệu dựa trên ID đã cung cấp
+    //   await db.collection('Address').doc(docId).delete();
+  
+    //   res.status(200).send(`Document with ID: ${docId} deleted successfully`);
+    // } catch (error) {
+    //   console.error('Error deleting data:', error);
+    //   res.status(500).send('Error deleting data from Firestore');
+    // }
+
     try {
-      const docId = req.params.id; // Lấy ID tài liệu từ URL
+      
+      const documentId = req.params.id;
+      const fieldName = req.params.fieldName;
   
-      // Xóa tài liệu dựa trên ID đã cung cấp
-      await db.collection('Address').doc(docId).delete();
+      // Lấy tham chiếu đến tài liệu
+      const documentRef = db.collection('Address').doc(documentId);
   
-      res.status(200).send(`Document with ID: ${docId} deleted successfully`);
+      // Xóa trường từ tài liệu
+      const updateObj = {};
+      updateObj[fieldName] = admin.firestore.FieldValue.delete();
+  
+      await documentRef.update(updateObj);
+  
+      return res.status(200).json({ message: `Field '${fieldName}' deleted successfully` });
     } catch (error) {
-      console.error('Error deleting data:', error);
-      res.status(500).send('Error deleting data from Firestore');
+      console.error('Error deleting field:', error);
+      return res.status(500).json({ error: 'Internal server error' });
     }
   });
 
-  router.put('/update/:id',async(req,res,next)=>{
+  router.put('/update/:document',async(req,res,next)=>{
     try {
-      const docId = req.params.id; // Lấy ID tài liệu từ URL
-      const newData = req.body; // Dữ liệu mới từ request body
+      const docId = req.params.document; // Lấy ID tài liệu từ URL
+      const newData = req.body;
+       // Dữ liệu mới từ request body
   
       // Cập nhật tài liệu dựa trên ID và dữ liệu mới đã cung cấp
       await db.collection('Address').doc(docId).set(newData, { merge: true });
