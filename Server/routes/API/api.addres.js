@@ -48,15 +48,12 @@ router.get('/', async(req, res, next) =>{
     try {
       // Dữ liệu từ request body
      const collectionRef = admin.firestore().collection('Address');
+
            const Id = collectionRef.doc().id;
           
            const docID = Id ? collectionRef.doc(Id) : collectionRef.doc();
 
-           const data2={
-             id:Id,
-             ...req.body
-             
-           }
+           const data2=req.body;
             docID.set(data2).then(() => {
              res.status(200).send(`Document with ID: add successfully`);
              return collectionRef.doc().id;
