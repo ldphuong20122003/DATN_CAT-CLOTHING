@@ -14,7 +14,7 @@
     <style>
         .footer {
             background-color: #192041;
-            position: fixed;
+            
             bottom: 0;
             width: 100%;
             color: white;
@@ -26,12 +26,15 @@
         }
 
         .pagination-container {
-            position: fixed;
+            
             bottom: 120px;
             width: 100%;
             background-color: #fff;
             padding: 10px;
             z-index: 1000;
+        }
+        .label-width{
+            width: 120px;
         }
         
     </style>
@@ -94,7 +97,7 @@
                                         data-item-ngaydat="<%= donhang.NgayDat %>"
                                         data-item-staff="<%= donhang.Name_Staff %>"
                                         data-item-status="<%= donhang.Status %>" class="btn btn-success m-2"
-                                        data-bs-toggle="modal" data-item-id data-bs-target="#editModal">Edit</button>
+                                        data-bs-toggle="modal" data-item-id data-bs-target="#editModal" type="button">Edit</button>
 
                                     <button data-item-id="<%= donhang.id %>" data-item-name="<%= donhang.TenDonHang %>"
                                         class="btn btn-danger" data-bs-toggle="modal"
@@ -110,7 +113,7 @@
                     <%}%>
 
         </div>
-        <div class="pagination-container d-flex justify-content-between align-items-center mt-4">
+        <div class="pagination-container d-flex justify-content-between align-items-center mt-4 ">
             <p class="m-0">Showing:10/100 items</p>
             <nav aria-label="Page navigation example" class="">
                 <ul class="pagination m-0">
@@ -122,6 +125,54 @@
                 </ul>
             </nav>
         </div>
+        <!-- Modal Edit -->
+        <div class="modal fade" id="editModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="EditModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Update Don Hang</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="editform" action="Orders/edit" method="POST" >
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <label for="TenDonHang" class="input-group-text label-width">tên đơn hàng</label>
+                        <input type="text" id="TenDonHang" class="form-control" name="TenDonHang">
+                    </div>
+                    <div class="input-group mb-3">
+                        <label for="DiaChi" class="input-group-text label-width">Địa chỉ</label>
+                        <input type="text" id="DiaChi" class="form-control" name="DiaChi">
+                    </div>
+                    <div class="input-group mb-3">
+                        <label for="NguoiDung" class="input-group-text label-width">Người Dùng</label>
+                        <input type="text" id="NguoiDung" class="form-control" name="NguoiDung">
+                    </div>
+                    <div class="input-group mb-3">
+                        <label for="TenSanPham" class="input-group-text label-width">Tên Sản Phẩm</label>
+                        <input type="text" id="TenSanPham" class="form-control" name="TenSanPham">
+                    </div>
+                    <div class="input-group mb-3">
+                        <label for="NgayDat" class="input-group-text label-width">Ngày Đặt</label>
+                        <input type="text" id="NgayDat" class="form-control" name="NgayDat">
+                    </div>
+                    <div class="input-group mb-3">
+                        <label for="NhanVien" class="input-group-text label-width">Nhân Viên</label>
+                        <input type="text" id="NhanVien" class="form-control" name="NhanVien">
+                    </div>
+                    <div class="input-group mb-3">
+                        <label for="Status" class="input-group-text label-width">Status</label>
+                        <input type="text" id="Status" class="form-control" aria-label="First name" name="Status">
+                    </div>
+                   
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-primary">Update </button>
+                </div>
+                </form>
+              </div>
+            </div>
+          </div>
         <!-- Modal delete -->
         <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -159,9 +210,9 @@
                 btn_delete.forEach(button => {
                     button.addEventListener('click', function () {
                         const itemId = this.getAttribute('data-item-id');
-                        console.log(itemId);
+                        // console.log(itemId);
                         const itemTenDonHang = this.getAttribute('data-item-name');
-                        console.log(itemTenDonHang);
+                        // console.log(itemTenDonHang);
                         const modalBody = deleteModal._element.querySelector('.modal-body');
                         modalBody.textContent = `Bạn có chắc muốn xóa ${itemId} ? `;
                         // Thay đổi giá trị của thuộc tính action của form khi nút "Delete" được nhấn
@@ -169,6 +220,51 @@
                     })
                 })
             </script>
+
+             <!-- script edit -->
+             <script>
+                var btnEdit = document.querySelectorAll('.btn.btn-success');
+                var myEditModal = new bootstrap.Modal(document.getElementById('editModal'));
+                var editForm = document.getElementById('editform');
+
+                btnEdit.forEach(button =>{
+                    button.addEventListener('click',function(){
+                        const itemid = this.getAttribute('data-item-id');
+                        const item_tenDonHang = this.getAttribute('data-item-tendonhang'); 
+                        // console.log('đây là ten donhang:'+item_tenDonHang);
+                        const item_address = this.getAttribute('data-item-address');
+                        const item_tenNguoiDung = this.getAttribute('data-item-nameuser');
+                        const item_tenSanPham = this.getAttribute('data-item-nameproduct');
+                        const item_NgayDat = this.getAttribute('data-item-ngaydat');
+                        const item_NhanVien = this.getAttribute('data-item-staff');
+                        const item_Status = this.getAttribute('data-item-status');
+                       // Truy xuất phần tử trong modal để cập nhật nội dung
+                        const modalBody = myEditModal._element.querySelector('.modal-body');
+                        const input_TenDonHang = editForm.querySelector('#TenDonHang');
+                        const input_DiaChi = editForm.querySelector('#DiaChi');
+                        // console.log('đây là giá trị địa chỈ:'+ input_DiaChi.value);
+
+                        const input_NguoiDung = editForm.querySelector('#NguoiDung');
+                        const input_NgayDat = editForm.querySelector('#NgayDat');
+                        const input_NhanVien = editForm.querySelector('#NhanVien');
+                        const input_Status = editForm.querySelector('#Status');
+                        const input_TenSanPham = editForm.querySelector('#TenSanPham');
+
+                       
+                        
+                        // Cập nhật nội dung modal và input với item_id và item_name tương ứng
+                        input_TenDonHang.value = item_tenDonHang;
+                        input_DiaChi.value = item_address;
+                        input_NguoiDung.value = item_tenNguoiDung;
+                        input_NgayDat.value = item_NgayDat;
+                        input_NhanVien.value = item_NhanVien;
+                        input_Status.value = item_Status;
+                        input_TenSanPham.value = item_tenSanPham;
+                        
+                        editForm.action = `Orders/update/${itemid}`;
+                    });
+                })
+             </script>
 </body>
 
 </html>

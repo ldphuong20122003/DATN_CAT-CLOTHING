@@ -9,6 +9,7 @@ const donhangCtrl = require('../../controller/donhang.controller');
 router.get('/',donhangCtrl.OrderDanhSach);
 //xóa
 router.post('/delete/:id',donhangCtrl.delete);
-
+//update
+router.post('/update/:id',donhangCtrl.put);
 //Xuất router
 module.exports = router;
