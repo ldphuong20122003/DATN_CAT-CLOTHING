@@ -46,7 +46,26 @@ router.get('/', async(req, res, next) =>{
     console.error('Error fetching data:', error);
     res.status(500).send('Error fetching data from Firestore');
   }});
+router.get('/getbyid', async (req, res, next) => {
+  try {
+    const id = req.query.id; // Lấy giá trị id từ query parameter
 
+    const snapshot = await db.collection('products').where('id', '==', id).get();
+    const data = [];
+
+    snapshot.forEach(doc => {
+      data.push({
+        id: doc.id,
+        ...doc.data()
+      });
+    });
+
+    res.status(200).json(data);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    res.status(500).send('Error fetching data from Firestore');
+  }
+});
   router.post('/add',async(req,res,next)=>{
     try {
       // Dữ liệu từ request body

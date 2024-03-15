@@ -140,7 +140,6 @@ try {
         res.status(500).send('Error deleting data from Firestore');
       }
 }
-
 exports.put=async(req,res,next)=>{
     upload.single('avatar')(req, res, async (err) => {
         if (err) {

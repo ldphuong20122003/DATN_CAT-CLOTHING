@@ -44,7 +44,41 @@ router.get('/', async (req, res, next) => {
   }
   
 });
+router.get('/getbyid', async (req, res, next) => {
+  try {
+    const id = req.query.id;
+    if (!id) {
+      // Nếu không có tham số truy vấn 'id', trả về tất cả người dùng
+      const snapshot = await db.collection('Users').get();
+      const data = [];
 
+      snapshot.forEach(doc => {
+        data.push({
+          id: doc.id,
+          ...doc.data(),
+        });
+      });
+
+      res.status(200).json(data);
+    } else {
+      const snapshot = await db.collection('Users').where('id', '==', req.query.id).get();
+      const data = [];
+
+      snapshot.forEach(doc => {
+        data.push({
+          id: doc.id,
+          ...doc.data()
+        });
+      });
+
+      res.status(200).json(data);
+    }
+
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    res.status(500).send('Error fetching data from Firestore');
+  }
+});
   router.post('/add',async(req,res,next)=>{
     try {
        // Dữ liệu từ request body
