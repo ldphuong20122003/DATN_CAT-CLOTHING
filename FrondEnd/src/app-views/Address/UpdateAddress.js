@@ -10,54 +10,15 @@ import {
 import { SvgXml } from "react-native-svg";
 import BackSvg from "../../../assets/Svg/BackSvg";
 import ToggleSwitch from "toggle-switch-react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
-import config from "../../../config";
 
-const AddAddress = ({ navigation }) => {
-  const IP = config.IP;
+const UpdateAddress = ({ navigation, route }) => {
   const [isToggled, setIsToggled] = useState(false); // State để theo dõi trạng thái bật/tắt
-  const [userId, setUserId] = useState("");
-  const [isFormValid, setIsFormValid] = useState(false); // Trạng thái để kiểm tra xem form có hợp lệ hay không
-  const getUserId = async () => {
-    try {
-      const userIdValue = await AsyncStorage.getItem("UserId");
-      if (userIdValue !== null) {
-        setUserId(userIdValue);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const { item } = route.params;
   const [fullname, setFullName] = useState(""); // State
   const [phone, setPhone] = useState("");
   const [country, setCountry] = useState("");
   const [address, setAddress] = useState("");
 
-  const randomDiaChi = Math.floor(Math.random() * 1000); // Số ngẫu nhiên từ 0 đến 999
-
-  const handleAddAddress = () => {
-    if (isFormValid) {
-      let formData = {
-        id: userId,
-        [`DiaChi${randomDiaChi}`]: {
-          tennguoinhan: fullname,
-          sdtnguoinhan: phone,
-          diachinhanhang: address + country,
-        },
-      };
-      axios
-        .post(`http://${IP}:3000/API/Address/add`, formData)
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => console.log(err));
-
-      navigation.navigate("ChooseAddress");
-    } else {
-      Alert.alert("Error", "Vui lòng điền đầy đủ thông tin");
-    }
-  };
   const onToggle = (isOn) => {
     setIsToggled(isOn); // Cập nhật trạng thái dựa vào giá trị isOn
   };
@@ -65,15 +26,6 @@ const AddAddress = ({ navigation }) => {
     navigation.goBack();
   };
 
-  useEffect(() => {
-    getUserId();
-  }, [userId]);
-  useEffect(() => {
-    // Kiểm tra xem tất cả các trường đã được điền đầy đủ chưa
-    setIsFormValid(
-      fullname !== "" && phone !== "" && country !== "" && address !== ""
-    );
-  }, [fullname, phone, country, address]);
   return (
     <View style={StyleSheet.Container}>
       <View style={styles.Header}>
@@ -231,11 +183,13 @@ const AddAddress = ({ navigation }) => {
             onToggle={onToggle} // Hàm được gọi khi trạng thái của toggle thay đổi
           />
         </View>
-
-        <TouchableOpacity onPress={isFormValid ? handleAddAddress : null}>
+        <View style={{marginHorizontal:16,paddingVertical:10,borderWidth:0.5,justifyContent:'center',alignItems:'center',borderRadius:8,borderColor:'#1890ff'}}>
+          <Text>Xóa tài khoản</Text>
+        </View>
+        <TouchableOpacity>
           <View
             style={{
-              backgroundColor: isFormValid ? "#1890ff" : "#E2E2E2",
+              backgroundColor: "#E2E2E2",
               marginTop: 16,
               paddingVertical: 10,
               marginHorizontal: 16,
@@ -246,7 +200,7 @@ const AddAddress = ({ navigation }) => {
             <Text
               style={{
                 fontWeight: 600,
-                color: isFormValid ? "white" : "#5A5A5A",
+                color: "#5A5A5A",
               }}
             >
               Hoàn thành
@@ -257,7 +211,7 @@ const AddAddress = ({ navigation }) => {
     </View>
   );
 };
-export default AddAddress;
+export default UpdateAddress;
 const styles = StyleSheet.create({
   Container: {
     flex: 1,
