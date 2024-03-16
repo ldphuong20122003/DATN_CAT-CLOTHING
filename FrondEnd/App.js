@@ -25,6 +25,7 @@ import AddAddress from "./src/app-views/Address/AddAddress";
 import Chat from "./src/app-views/Chat/Chat";
 import HistoryOrder from "./src/app-views/Order/HistoryOrder";
 import InformationOrder from "./src/app-views/Order/InformationOrder";
+import UpdateAddress from "./src/app-views/Address/UpdateAddress";
 
 const Stack = createStackNavigator();
 
@@ -162,6 +163,11 @@ export default function App() {
         <Stack.Screen
           name="History_Order"
           component={HistoryOrder}
+          options={{ headerShown: false }}
+        />
+         <Stack.Screen
+          name="UpdateAddress"
+          component={UpdateAddress}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
