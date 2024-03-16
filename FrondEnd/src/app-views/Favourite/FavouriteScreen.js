@@ -5,7 +5,6 @@ import {
   StyleSheet,
   Text,
 } from "react-native";
-import Recommend_Favou from "../Product/Favourite/Recommend_Favou";
 const FavouriteScreen = ({}) => {
   return (
     <SafeAreaView style={{ flex: 0.93 }}>
@@ -28,7 +27,6 @@ const FavouriteScreen = ({}) => {
         </View> 
       </View>
       <View style={{ marginTop: 10, paddingHorizontal: 16 }}>
-        <Recommend_Favou />
       </View>
     </SafeAreaView>
   );
