@@ -30,10 +30,16 @@ import ModalFilter from "../Modal/ModalFilter";
 import DeleteSvg from "../../../assets/Svg/DeleteSvg";
 import { useRoute } from "@react-navigation/native";
 import config from "../../../config";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+import FullFavouriteSvg from "../../../assets/Svg/FullFavouriteSvg";
 
 const Detail_Product = ({ navigation }) => {
   const gotoBack = () => {
     navigation.goBack();
+  };
+  const gotoPayment = () => {
+    navigation.navigate("Payment");
   };
   const route = useRoute();
   const IP = config.IP;
@@ -43,6 +49,114 @@ const Detail_Product = ({ navigation }) => {
   const [selectedSizeAmount, setSelectedSizeAmount] = useState(0); // State lưu số lượng tương ứng với kích cỡ được chọn
   const [defaultAmount, setDefaultAmount] = useState(0); // State lưu số lượng mặc định
   const [quantity, setQuantity] = useState(1);
+  const [userId, setUserId] = useState("");
+  const [isFavourite, setIsFavourite] = useState(false);
+  const [favouriteID, setFavouriteID] = useState("");
+  const [visibleAddtoCart, setVisibleAddtoCart] = useState(false);
+  const [visibleBuy, setVisibleBuy] = useState(false);
+  const getUserId = async () => {
+    try {
+      const userIdValue = await AsyncStorage.getItem("UserId");
+      if (userIdValue !== null) {
+        setUserId(userIdValue);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const getAPI = () => {
+    return fetch(`http://${IP}:3000/API/product/?id=` + productId)
+      .then((res) => res.json())
+      .then((data) => setData_Product(data))
+      .catch((err) => console.log(err));
+  };
+  useEffect(() => {
+    getUserId();
+  }, [userId]);
+  useEffect(() => {
+    getAPI();
+  }, [productId]);
+
+  const getFvrAPI = () => {
+    return fetch(`http://${IP}:3000/API/fvr/`)
+      .then((res) => res.json())
+      .then((data) => {
+        const filteredData = data.filter((item) => {
+          return item.ID_user === userId && item.ID_product === productId;
+        });
+        // Kiểm tra xem dữ liệu đã được lọc có tồn tại hay không
+        if (filteredData.length > 0) {
+          // Thực hiện hành động khi tồn tại
+          setIsFavourite(true);
+        } else {
+          // Thực hiện hành động khi không tồn tại
+          setIsFavourite(false);
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
+  useEffect(() => {
+    getFvrAPI();
+  }, [userId, productId]);
+
+  const getFavouriteID = () => {
+    return fetch(`http://${IP}:3000/API/fvr/`)
+      .then((res) => res.json())
+      .then((data) => {
+        const filteredData = data.filter((item) => {
+          return item.ID_user === userId && item.ID_product === productId;
+        });
+        // Kiểm tra xem dữ liệu đã được lọc có tồn tại hay không
+        if (filteredData.length > 0) {
+          // Thực hiện hành động khi tồn tại
+          setFavouriteID(filteredData[0].id);
+        } else {
+          // Thực hiện hành động khi không tồn tại
+          setFavouriteID(null);
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
+  useEffect(() => {
+    getFavouriteID();
+  }, [userId, productId]); // Thêm userId và productId vào dependency array
+  const handleAddFavourite = () => {
+    let formData = {
+      ID_user: userId,
+      ID_product: productId,
+    };
+    axios
+      .post(`http://${IP}:3000/API/fvr/add`, formData)
+      .then((res) => {
+        console.log(res);
+        setIsFavourite(true); // Cập nhật trạng thái yêu thích
+        getFavouriteID(); // Gọi lại hàm getFavouriteID để lấy ID yêu thích mới
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const handleRemoveFavourite = () => {
+    if (favouriteID) {
+      axios
+        .delete(`http://${IP}:3000/API/fvr/delete/${favouriteID}`)
+        .then((res) => {
+          console.log(res);
+          setIsFavourite(false); // Cập nhật trạng thái yêu thích
+          getFavouriteID(); // Gọi lại hàm getFavouriteID để lấy ID yêu thích mới
+          setFavouriteID(null);
+        })
+        .catch((err) => console.log(err));
+    } else {
+      console.log("Không có favouriteID để xóa.");
+    }
+  };
+
+  const PriceSale =
+    data_Product.length > 0 && data_Product[0].Price && data_Product[0].Sale
+      ? parseInt(data_Product[0].Price) - parseInt(data_Product[0].Sale)
+      : 0;
   const handleIncrement = () => {
     setQuantity((prevQuantity) => prevQuantity + 1);
   };
@@ -64,32 +178,9 @@ const Detail_Product = ({ navigation }) => {
     }
     return total;
   };
-  const getAPI = () => {
-    return fetch(`http://${IP}:3000/API/product/?id=` + productId)
-      .then((res) => res.json())
-      .then((data) => setData_Product(data))
-      .catch((err) => console.log(err));
-  };
-
-  useEffect(() => {
-    getAPI();
-  }, [productId]);
-
   useEffect(() => {
     setDefaultAmount(calculateTotalAmount());
   }, [data_Product]);
-
-  const gotoPayment = () => {
-    navigation.navigate("Payment");
-  };
-
-  const [visibleAddtoCart, setVisibleAddtoCart] = useState(false);
-  const [visibleBuy, setVisibleBuy] = useState(false);
-
-  const PriceSale =
-    data_Product.length > 0 && data_Product[0].Price && data_Product[0].Sale
-      ? parseInt(data_Product[0].Price) - parseInt(data_Product[0].Sale)
-      : 0;
   return (
     <View style={styles.Container}>
       <ScrollView style={{ marginBottom: 50 }}>
@@ -190,7 +281,17 @@ const Detail_Product = ({ navigation }) => {
                 <Text style={{ fontSize: 12, marginLeft: 8 }}>Đã bán 12</Text>
               </View>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <SvgXml xml={BorderFavouriteSvg()} />
+                <TouchableOpacity
+                  onPress={
+                    isFavourite ? handleRemoveFavourite : handleAddFavourite
+                  }
+                >
+                  <SvgXml
+                    xml={
+                      isFavourite ? FullFavouriteSvg() : BorderFavouriteSvg()
+                    }
+                  />
+                </TouchableOpacity>
                 <SvgXml style={{ marginHorizontal: 8 }} xml={iconShareSvg()} />
                 <SvgXml xml={iconCartSvg()} />
               </View>
@@ -670,7 +771,6 @@ const Detail_Product = ({ navigation }) => {
           <View
             style={{
               marginLeft: 16,
-
               alignItems: "center",
               backgroundColor: "#1890ff",
               height: "100%",
@@ -736,7 +836,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 4,
     alignItems: "center",
-
     borderRadius: 6,
     marginRight: 8,
   },
