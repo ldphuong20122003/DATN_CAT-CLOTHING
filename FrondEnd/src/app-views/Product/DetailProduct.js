@@ -184,33 +184,43 @@ const Detail_Product = ({ navigation }) => {
   const handleAddToCart = () => {
     // Tạo một đối tượng mới để đại diện cho sản phẩm được thêm vào giỏ hàng
     const newItem = {
-      id: data_Product.length > 0 ? data_Product[0].id : null,
-      quantity: quantity,
-      size: selectedSize,
-      // Các thuộc tính khác của sản phẩm nếu cần
+        id: data_Product.length > 0 ? data_Product[0].id : null,
+        quantity: quantity,
+        size: selectedSize,
+        // Các thuộc tính khác của sản phẩm nếu cần
     };
 
     // Cập nhật danh sách sản phẩm trong giỏ hàng dựa trên idUser
     AsyncStorage.getItem(`cartItems_${userId}`).then((cartItemsString) => {
-      let cartItemsArray = [];
-      if (cartItemsString !== null) {
-        cartItemsArray = JSON.parse(cartItemsString);
-      }
-      // Thêm sản phẩm mới vào danh sách
-      cartItemsArray.push(newItem);
-      // Lưu danh sách sản phẩm mới vào AsyncStorage
-      AsyncStorage.setItem(
-        `cartItems_${userId}`,
-        JSON.stringify(cartItemsArray)
-      )
+        let cartItemsArray = [];
+        if (cartItemsString !== null) {
+            cartItemsArray = JSON.parse(cartItemsString);
+        }
+
+        // Kiểm tra xem sản phẩm đã tồn tại trong giỏ hàng chưa
+        const existingItemIndex = cartItemsArray.findIndex(item => item.id === newItem.id && item.size === newItem.size);
+
+        if (existingItemIndex !== -1) {
+            // Nếu sản phẩm đã tồn tại, tăng số lượng của sản phẩm đó
+            cartItemsArray[existingItemIndex].quantity += newItem.quantity;
+        } else {
+            // Nếu sản phẩm chưa tồn tại, thêm sản phẩm mới vào giỏ hàng
+            cartItemsArray.push(newItem);
+        }
+
+        // Lưu danh sách sản phẩm mới vào AsyncStorage
+        AsyncStorage.setItem(
+            `cartItems_${userId}`,
+            JSON.stringify(cartItemsArray)
+        )
         .then(() => {
-          console.log("Cart items saved successfully.");
+            console.log("Cart items saved successfully.");
         })
         .catch((error) => {
-          console.error("Error saving cart items: ", error);
+            console.error("Error saving cart items: ", error);
         });
     });
-  };
+};
 
   return (
     <View style={styles.Container}>
