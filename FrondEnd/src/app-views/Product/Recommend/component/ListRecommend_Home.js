@@ -7,19 +7,13 @@ import AddressSvg from "../../../../../assets/Svg/AddressSvg";
 import { useNavigation } from "@react-navigation/native";
 import ModalLoading from "../../../Modal/ModalLoading";
 const ListRecommend_Home = ({ data, onPress }) => {
+  const [renderedItems, setRenderedItems] = useState(4); // Ban đầu chỉ hiển thị 4 sản phẩm
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
   const [numColumns, setNumColumns] = useState(2);
-  const [loaded, setLoaded] = useState(false); // Giá trị ban đầu của numColumns là 2
-
-  const handleNumColumnsChange = (newNumColumns) => {
-    setNumColumns(newNumColumns); // Cập nhật giá trị của numColumns khi thay đổi
-  };
-
   const _renderItem = ({ item, index }) => {
     const PriceSale = item.Price - item.Sale;
     const pressItem = async () => {
- 
       await navigation.navigate("Detail_Product", {
         productId: item.id,
       });
@@ -155,7 +149,7 @@ const ListRecommend_Home = ({ data, onPress }) => {
       <FlatList
         scrollEnabled={false}
         numColumns={numColumns}
-        data={data}
+        data={data} // Chỉ hiển thị 4 sản phẩm ban đầu
         renderItem={_renderItem}
         keyExtractor={(item, index) => index.toString()}
         showsHorizontalScrollIndicator={false}

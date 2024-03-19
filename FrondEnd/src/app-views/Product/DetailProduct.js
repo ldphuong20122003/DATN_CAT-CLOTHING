@@ -30,10 +30,16 @@ import ModalFilter from "../Modal/ModalFilter";
 import DeleteSvg from "../../../assets/Svg/DeleteSvg";
 import { useRoute } from "@react-navigation/native";
 import config from "../../../config";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+import FullFavouriteSvg from "../../../assets/Svg/FullFavouriteSvg";
 
 const Detail_Product = ({ navigation }) => {
   const gotoBack = () => {
     navigation.goBack();
+  };
+  const gotoPayment = () => {
+    navigation.navigate("Payment");
   };
   const route = useRoute();
   const IP = config.IP;
@@ -43,6 +49,114 @@ const Detail_Product = ({ navigation }) => {
   const [selectedSizeAmount, setSelectedSizeAmount] = useState(0); // State lưu số lượng tương ứng với kích cỡ được chọn
   const [defaultAmount, setDefaultAmount] = useState(0); // State lưu số lượng mặc định
   const [quantity, setQuantity] = useState(1);
+  const [userId, setUserId] = useState("");
+  const [isFavourite, setIsFavourite] = useState(false);
+  const [favouriteID, setFavouriteID] = useState("");
+  const [visibleAddtoCart, setVisibleAddtoCart] = useState(false);
+  const [visibleBuy, setVisibleBuy] = useState(false);
+  const getUserId = async () => {
+    try {
+      const userIdValue = await AsyncStorage.getItem("UserId");
+      if (userIdValue !== null) {
+        setUserId(userIdValue);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const getAPI = () => {
+    return fetch(`http://${IP}:3000/API/product/?id=` + productId)
+      .then((res) => res.json())
+      .then((data) => setData_Product(data))
+      .catch((err) => console.log(err));
+  };
+  useEffect(() => {
+    getUserId();
+  }, [userId]);
+  useEffect(() => {
+    getAPI();
+  }, [productId]);
+
+  const getFvrAPI = () => {
+    return fetch(`http://${IP}:3000/API/fvr/`)
+      .then((res) => res.json())
+      .then((data) => {
+        const filteredData = data.filter((item) => {
+          return item.ID_user === userId && item.ID_product === productId;
+        });
+        // Kiểm tra xem dữ liệu đã được lọc có tồn tại hay không
+        if (filteredData.length > 0) {
+          // Thực hiện hành động khi tồn tại
+          setIsFavourite(true);
+        } else {
+          // Thực hiện hành động khi không tồn tại
+          setIsFavourite(false);
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
+  useEffect(() => {
+    getFvrAPI();
+  }, [userId, productId]);
+
+  const getFavouriteID = () => {
+    return fetch(`http://${IP}:3000/API/fvr/`)
+      .then((res) => res.json())
+      .then((data) => {
+        const filteredData = data.filter((item) => {
+          return item.ID_user === userId && item.ID_product === productId;
+        });
+        // Kiểm tra xem dữ liệu đã được lọc có tồn tại hay không
+        if (filteredData.length > 0) {
+          // Thực hiện hành động khi tồn tại
+          setFavouriteID(filteredData[0].id);
+        } else {
+          // Thực hiện hành động khi không tồn tại
+          setFavouriteID(null);
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
+  useEffect(() => {
+    getFavouriteID();
+  }, [userId, productId]); // Thêm userId và productId vào dependency array
+  const handleAddFavourite = () => {
+    let formData = {
+      ID_user: userId,
+      ID_product: productId,
+    };
+    axios
+      .post(`http://${IP}:3000/API/fvr/add`, formData)
+      .then((res) => {
+        console.log(res);
+        setIsFavourite(true); // Cập nhật trạng thái yêu thích
+        getFavouriteID(); // Gọi lại hàm getFavouriteID để lấy ID yêu thích mới
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const handleRemoveFavourite = () => {
+    if (favouriteID) {
+      axios
+        .delete(`http://${IP}:3000/API/fvr/delete/${favouriteID}`)
+        .then((res) => {
+          console.log(res);
+          setIsFavourite(false); // Cập nhật trạng thái yêu thích
+          getFavouriteID(); // Gọi lại hàm getFavouriteID để lấy ID yêu thích mới
+          setFavouriteID(null);
+        })
+        .catch((err) => console.log(err));
+    } else {
+      console.log("Không có favouriteID để xóa.");
+    }
+  };
+
+  const PriceSale =
+    data_Product.length > 0 && data_Product[0].Price && data_Product[0].Sale
+      ? parseInt(data_Product[0].Price) - parseInt(data_Product[0].Sale)
+      : 0;
   const handleIncrement = () => {
     setQuantity((prevQuantity) => prevQuantity + 1);
   };
@@ -64,32 +178,40 @@ const Detail_Product = ({ navigation }) => {
     }
     return total;
   };
-  const getAPI = () => {
-    return fetch(`http://${IP}:3000/API/product/?id=` + productId)
-      .then((res) => res.json())
-      .then((data) => setData_Product(data))
-      .catch((err) => console.log(err));
-  };
-
-  useEffect(() => {
-    getAPI();
-  }, [productId]);
-
   useEffect(() => {
     setDefaultAmount(calculateTotalAmount());
   }, [data_Product]);
+  const handleAddToCart = () => {
+    // Tạo một đối tượng mới để đại diện cho sản phẩm được thêm vào giỏ hàng
+    const newItem = {
+      id: data_Product.length > 0 ? data_Product[0].id : null,
+      quantity: quantity,
+      size: selectedSize,
+      // Các thuộc tính khác của sản phẩm nếu cần
+    };
 
-  const gotoPayment = () => {
-    navigation.navigate("Payment");
+    // Cập nhật danh sách sản phẩm trong giỏ hàng dựa trên idUser
+    AsyncStorage.getItem(`cartItems_${userId}`).then((cartItemsString) => {
+      let cartItemsArray = [];
+      if (cartItemsString !== null) {
+        cartItemsArray = JSON.parse(cartItemsString);
+      }
+      // Thêm sản phẩm mới vào danh sách
+      cartItemsArray.push(newItem);
+      // Lưu danh sách sản phẩm mới vào AsyncStorage
+      AsyncStorage.setItem(
+        `cartItems_${userId}`,
+        JSON.stringify(cartItemsArray)
+      )
+        .then(() => {
+          console.log("Cart items saved successfully.");
+        })
+        .catch((error) => {
+          console.error("Error saving cart items: ", error);
+        });
+    });
   };
 
-  const [visibleAddtoCart, setVisibleAddtoCart] = useState(false);
-  const [visibleBuy, setVisibleBuy] = useState(false);
-
-  const PriceSale =
-    data_Product.length > 0 && data_Product[0].Price && data_Product[0].Sale
-      ? parseInt(data_Product[0].Price) - parseInt(data_Product[0].Sale)
-      : 0;
   return (
     <View style={styles.Container}>
       <ScrollView style={{ marginBottom: 50 }}>
@@ -190,7 +312,17 @@ const Detail_Product = ({ navigation }) => {
                 <Text style={{ fontSize: 12, marginLeft: 8 }}>Đã bán 12</Text>
               </View>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <SvgXml xml={BorderFavouriteSvg()} />
+                <TouchableOpacity
+                  onPress={
+                    isFavourite ? handleRemoveFavourite : handleAddFavourite
+                  }
+                >
+                  <SvgXml
+                    xml={
+                      isFavourite ? FullFavouriteSvg() : BorderFavouriteSvg()
+                    }
+                  />
+                </TouchableOpacity>
                 <SvgXml style={{ marginHorizontal: 8 }} xml={iconShareSvg()} />
                 <SvgXml xml={iconCartSvg()} />
               </View>
@@ -383,32 +515,38 @@ const Detail_Product = ({ navigation }) => {
             borderBottomColor: "#E2E2E2",
           }}
         >
-          <Text>Kích cỡ</Text>
+          <Text>Kích cỡ</Text>
           <View style={{ flexDirection: "row", marginTop: 8 }}>
             {data_Product.length > 0 &&
               data_Product[0]?.Size &&
-              Object.keys(data_Product[0]?.Size).map((size, index) => (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() =>
-                    handleSizeSelection(size, data_Product[0]?.Size[size])
-                  }
-                  style={{
-                    ...styles.itemSize,
-                    backgroundColor:
-                      selectedSize === size ? "#1890ff" : "#f6f6f6",
-                  }}
-                >
-                  <Text
+              Object.keys(data_Product[0]?.Size)
+                .sort((a, b) => {
+                  // Custom sorting function to sort sizes from 'S' to 'XL'
+                  const sizeOrder = { S: 0, M: 1, L: 2, XL: 3 };
+                  return sizeOrder[a] - sizeOrder[b];
+                })
+                .map((size, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() =>
+                      handleSizeSelection(size, data_Product[0]?.Size[size])
+                    }
                     style={{
-                      fontSize: 12,
-                      color: selectedSize === size ? "#fff" : "#000",
+                      ...styles.itemSize,
+                      backgroundColor:
+                        selectedSize === size ? "#1890ff" : "#f6f6f6",
                     }}
                   >
-                    {size}
-                  </Text>
-                </TouchableOpacity>
-              ))}
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        color: selectedSize === size ? "#fff" : "#000",
+                      }}
+                    >
+                      {size}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
           </View>
         </View>
         <View
@@ -468,18 +606,20 @@ const Detail_Product = ({ navigation }) => {
             </View>
           </View>
         </View>
-        <View
-          style={{
-            paddingVertical: 10,
-            backgroundColor: "#1890ff",
-            alignItems: "center",
-            borderRadius: 8,
-          }}
-        >
-          <Text style={{ color: "#fff", fontWeight: 600 }}>
-            Thêm vào giỏ hàng
-          </Text>
-        </View>
+        <TouchableOpacity onPress={handleAddToCart}>
+          <View
+            style={{
+              paddingVertical: 10,
+              backgroundColor: "#1890ff",
+              alignItems: "center",
+              borderRadius: 8,
+            }}
+          >
+            <Text style={{ color: "#fff", fontWeight: 600 }}>
+              Thêm vào giỏ hàng
+            </Text>
+          </View>
+        </TouchableOpacity>
       </ModalFilter>
       <ModalFilter visible={visibleBuy}>
         <View
@@ -533,28 +673,34 @@ const Detail_Product = ({ navigation }) => {
           <View style={{ flexDirection: "row", marginTop: 8 }}>
             {data_Product.length > 0 &&
               data_Product[0]?.Size &&
-              Object.keys(data_Product[0]?.Size).map((size, index) => (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() =>
-                    handleSizeSelection(size, data_Product[0]?.Size[size])
-                  }
-                  style={{
-                    ...styles.itemSize,
-                    backgroundColor:
-                      selectedSize === size ? "#1890ff" : "#f6f6f6",
-                  }}
-                >
-                  <Text
+              Object.keys(data_Product[0]?.Size)
+                .sort((a, b) => {
+                  // Custom sorting function to sort sizes from 'S' to 'XL'
+                  const sizeOrder = { S: 0, M: 1, L: 2, XL: 3 };
+                  return sizeOrder[a] - sizeOrder[b];
+                })
+                .map((size, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() =>
+                      handleSizeSelection(size, data_Product[0]?.Size[size])
+                    }
                     style={{
-                      fontSize: 12,
-                      color: selectedSize === size ? "#fff" : "#000",
+                      ...styles.itemSize,
+                      backgroundColor:
+                        selectedSize === size ? "#1890ff" : "#f6f6f6",
                     }}
                   >
-                    {size}
-                  </Text>
-                </TouchableOpacity>
-              ))}
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        color: selectedSize === size ? "#fff" : "#000",
+                      }}
+                    >
+                      {size}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
           </View>
         </View>
 
@@ -670,7 +816,6 @@ const Detail_Product = ({ navigation }) => {
           <View
             style={{
               marginLeft: 16,
-
               alignItems: "center",
               backgroundColor: "#1890ff",
               height: "100%",
@@ -736,7 +881,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 4,
     alignItems: "center",
-
     borderRadius: 6,
     marginRight: 8,
   },

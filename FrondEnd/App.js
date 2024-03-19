@@ -116,7 +116,7 @@ export default function App() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="Cart"
+          name="CartScreen"
           component={CartScreen}
           options={{ headerShown: false }}
         />
