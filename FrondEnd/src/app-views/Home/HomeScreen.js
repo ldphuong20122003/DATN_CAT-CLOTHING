@@ -22,18 +22,17 @@ import Category_Home from "../Category/Category_Home";
 import FlashSale_Home from "../Product/FlashSale/FlashSale_Home";
 import Recommend_Home from "../Product/Recommend/Recommend_Home";
 
-const HomeScreen = ({navigation}) => {
-  const gotoSearch =()=>{navigation.navigate('Search')};
-  const gotoCart = () => {
-    navigation.navigate('Cart');
+const HomeScreen = ({ navigation }) => {
+  const gotoSearch = () => {
+    navigation.navigate("Search");
   };
-  const gotoChat=()=>{
-    navigation.navigate('Chat')
-  }
-  
+  const gotoChat = () => {
+    navigation.navigate("Chat");
+  };
+
   return (
-    <SafeAreaView style={{ flex: 0.93}}>
-     <ScrollView>
+    <SafeAreaView style={{ flex: 0.93 }}>
+      <ScrollView>
         <View style={styles.Banner}>
           <Swiper
             style={styles.wrapper}
@@ -63,37 +62,34 @@ const HomeScreen = ({navigation}) => {
         <View style={styles.Header}>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <TouchableOpacity onPress={gotoSearch}>
-            <View
-              style={{
-                flexDirection: "row",
-                paddingHorizontal: 8,
-                marginTop: 7,
-                width: 310,
-                borderRadius: 8,
-                height: 32,
-                alignItems: "center",
-                backgroundColor: "#fff",
-                justifyContent: "space-between",
-              }}
-            >
-            
-              <View style={{ flexDirection: "row",alignItems:'center' }}>
-                <SvgXml xml={SearchSvg()} />
-                <TextInput
-                  style={{ marginLeft: 8 }}
-                  placeholder="Tìm kiếm sản phẩm"
-                  editable={false}
-                />
+              <View
+                style={{
+                  flexDirection: "row",
+                  paddingHorizontal: 8,
+                  marginTop: 7,
+                  width: 310,
+                  borderRadius: 8,
+                  height: 32,
+                  alignItems: "center",
+                  backgroundColor: "#fff",
+                  justifyContent: "space-between",
+                }}
+              >
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <SvgXml xml={SearchSvg()} />
+                  <TextInput
+                    style={{ marginLeft: 8 }}
+                    placeholder="Tìm kiếm sản phẩm"
+                    editable={false}
+                  />
+                </View>
+                <SvgXml xml={CameraSvg()} />
               </View>
-              <SvgXml xml={CameraSvg()} />
-            </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={gotoChat}>
-            <HeaderChat />
+              <HeaderChat />
             </TouchableOpacity>
-            <TouchableOpacity onPress={gotoCart}>
             <HeaderCart />
-            </TouchableOpacity>
           </View>
         </View>
         <View style={styles.Voucher}>
@@ -108,24 +104,43 @@ const HomeScreen = ({navigation}) => {
           </View>
         </View>
         <View style={styles.Content}>
-        <View style={{ marginTop: 48 }}>
-          <Text style={{ color: "#1890ff", fontSize: 14, fontWeight: 600 }}>
-            Danh sách thể loại
-          </Text>
-          <Category_Home />
-        </View>
-        <View style={{ marginTop: 12 }}>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <Text style={{ fontSize: 12, fontWeight: 500, color: "#5A5A5A" }}>
-              Mã giảm giá & khuyến mại
+          <View style={{ marginTop: 48 }}>
+            <Text style={{ color: "#1890ff", fontSize: 14, fontWeight: 600 }}>
+              Danh sách thể loại
             </Text>
-            <TouchableOpacity>
+            <Category_Home />
+          </View>
+          <View style={{ marginTop: 12 }}>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Text style={{ fontSize: 12, fontWeight: 500, color: "#5A5A5A" }}>
+                Mã giảm giá & khuyến mại
+              </Text>
+              <TouchableOpacity>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <Text
+                    style={{ fontSize: 12, fontWeight: 400, color: "#1890ff" }}
+                  >
+                    Xem thêm
+                  </Text>
+                  <SvgXml xml={CareRightSvg("#1890ff")} />
+                </View>
+              </TouchableOpacity>
+            </View>
+            <Voucher_Home />
+          </View>
+          <View style={{ marginTop: 10 }}>
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
+              <Text style={{ fontSize: 14, fontWeight: 500, color: "#1890ff" }}>
+                Flash Sale
+              </Text>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <Text
                   style={{ fontSize: 12, fontWeight: 400, color: "#1890ff" }}
@@ -134,44 +149,21 @@ const HomeScreen = ({navigation}) => {
                 </Text>
                 <SvgXml xml={CareRightSvg("#1890ff")} />
               </View>
-            </TouchableOpacity>
-          </View>
-          <Voucher_Home />
-        </View>
-        <View style={{ marginTop: 10 }}>
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-between" }}
-          >
-            <Text style={{ fontSize: 12, fontWeight: 500, color: "#1890ff" }}>
-              Flash Sale
-            </Text>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text style={{ fontSize: 12, fontWeight: 400, color: "#1890ff" }}>
-                Xem thêm
-              </Text>
-              <SvgXml xml={CareRightSvg("#1890ff")} />
             </View>
+            <FlashSale_Home />
           </View>
-          <FlashSale_Home />
-        </View>
-        <View style={{ marginTop: 10 }}>
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-between" }}
-          >
-            <Text style={{ fontSize: 12, fontWeight: 500, color: "#1890ff" }}>
-              Gợi ý cho bạn
-            </Text>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text style={{ fontSize: 12, fontWeight: 400, color: "#1890ff" }}>
-                Xem thêm
+          <View style={{ marginTop: 10 }}>
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
+              <Text style={{ fontSize: 14, fontWeight: 500, color: "#1890ff" }}>
+                Gợi ý cho bạn
               </Text>
-              <SvgXml xml={CareRightSvg("#1890ff")} />
             </View>
+            <Recommend_Home />
           </View>
-          <Recommend_Home />
         </View>
-        </View>
-        </ScrollView>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -226,7 +218,7 @@ const styles = StyleSheet.create({
     height: 200,
     width: "100%",
   },
-  Content:{
-    paddingHorizontal:16
-  }
+  Content: {
+    paddingHorizontal: 16,
+  },
 });

@@ -118,7 +118,6 @@ const FavouriteScreen = ({ navigation }) => {
     try {
       const response = await axios.get(`http://${IP}:3000/API/fvr`);
       const data = response.data;
-      console.log(data);
       setFavouriteList(data);
     } catch (error) {
       console.error("Error fetching favourite list:", error);

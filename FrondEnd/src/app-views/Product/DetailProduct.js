@@ -181,6 +181,37 @@ const Detail_Product = ({ navigation }) => {
   useEffect(() => {
     setDefaultAmount(calculateTotalAmount());
   }, [data_Product]);
+  const handleAddToCart = () => {
+    // Tạo một đối tượng mới để đại diện cho sản phẩm được thêm vào giỏ hàng
+    const newItem = {
+      id: data_Product.length > 0 ? data_Product[0].id : null,
+      quantity: quantity,
+      size: selectedSize,
+      // Các thuộc tính khác của sản phẩm nếu cần
+    };
+
+    // Cập nhật danh sách sản phẩm trong giỏ hàng dựa trên idUser
+    AsyncStorage.getItem(`cartItems_${userId}`).then((cartItemsString) => {
+      let cartItemsArray = [];
+      if (cartItemsString !== null) {
+        cartItemsArray = JSON.parse(cartItemsString);
+      }
+      // Thêm sản phẩm mới vào danh sách
+      cartItemsArray.push(newItem);
+      // Lưu danh sách sản phẩm mới vào AsyncStorage
+      AsyncStorage.setItem(
+        `cartItems_${userId}`,
+        JSON.stringify(cartItemsArray)
+      )
+        .then(() => {
+          console.log("Cart items saved successfully.");
+        })
+        .catch((error) => {
+          console.error("Error saving cart items: ", error);
+        });
+    });
+  };
+
   return (
     <View style={styles.Container}>
       <ScrollView style={{ marginBottom: 50 }}>
@@ -484,32 +515,38 @@ const Detail_Product = ({ navigation }) => {
             borderBottomColor: "#E2E2E2",
           }}
         >
-          <Text>Kích cỡ</Text>
+          <Text>Kích cỡ</Text>
           <View style={{ flexDirection: "row", marginTop: 8 }}>
             {data_Product.length > 0 &&
               data_Product[0]?.Size &&
-              Object.keys(data_Product[0]?.Size).map((size, index) => (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() =>
-                    handleSizeSelection(size, data_Product[0]?.Size[size])
-                  }
-                  style={{
-                    ...styles.itemSize,
-                    backgroundColor:
-                      selectedSize === size ? "#1890ff" : "#f6f6f6",
-                  }}
-                >
-                  <Text
+              Object.keys(data_Product[0]?.Size)
+                .sort((a, b) => {
+                  // Custom sorting function to sort sizes from 'S' to 'XL'
+                  const sizeOrder = { S: 0, M: 1, L: 2, XL: 3 };
+                  return sizeOrder[a] - sizeOrder[b];
+                })
+                .map((size, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() =>
+                      handleSizeSelection(size, data_Product[0]?.Size[size])
+                    }
                     style={{
-                      fontSize: 12,
-                      color: selectedSize === size ? "#fff" : "#000",
+                      ...styles.itemSize,
+                      backgroundColor:
+                        selectedSize === size ? "#1890ff" : "#f6f6f6",
                     }}
                   >
-                    {size}
-                  </Text>
-                </TouchableOpacity>
-              ))}
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        color: selectedSize === size ? "#fff" : "#000",
+                      }}
+                    >
+                      {size}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
           </View>
         </View>
         <View
@@ -569,18 +606,20 @@ const Detail_Product = ({ navigation }) => {
             </View>
           </View>
         </View>
-        <View
-          style={{
-            paddingVertical: 10,
-            backgroundColor: "#1890ff",
-            alignItems: "center",
-            borderRadius: 8,
-          }}
-        >
-          <Text style={{ color: "#fff", fontWeight: 600 }}>
-            Thêm vào giỏ hàng
-          </Text>
-        </View>
+        <TouchableOpacity onPress={handleAddToCart}>
+          <View
+            style={{
+              paddingVertical: 10,
+              backgroundColor: "#1890ff",
+              alignItems: "center",
+              borderRadius: 8,
+            }}
+          >
+            <Text style={{ color: "#fff", fontWeight: 600 }}>
+              Thêm vào giỏ hàng
+            </Text>
+          </View>
+        </TouchableOpacity>
       </ModalFilter>
       <ModalFilter visible={visibleBuy}>
         <View
@@ -634,28 +673,34 @@ const Detail_Product = ({ navigation }) => {
           <View style={{ flexDirection: "row", marginTop: 8 }}>
             {data_Product.length > 0 &&
               data_Product[0]?.Size &&
-              Object.keys(data_Product[0]?.Size).map((size, index) => (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() =>
-                    handleSizeSelection(size, data_Product[0]?.Size[size])
-                  }
-                  style={{
-                    ...styles.itemSize,
-                    backgroundColor:
-                      selectedSize === size ? "#1890ff" : "#f6f6f6",
-                  }}
-                >
-                  <Text
+              Object.keys(data_Product[0]?.Size)
+                .sort((a, b) => {
+                  // Custom sorting function to sort sizes from 'S' to 'XL'
+                  const sizeOrder = { S: 0, M: 1, L: 2, XL: 3 };
+                  return sizeOrder[a] - sizeOrder[b];
+                })
+                .map((size, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() =>
+                      handleSizeSelection(size, data_Product[0]?.Size[size])
+                    }
                     style={{
-                      fontSize: 12,
-                      color: selectedSize === size ? "#fff" : "#000",
+                      ...styles.itemSize,
+                      backgroundColor:
+                        selectedSize === size ? "#1890ff" : "#f6f6f6",
                     }}
                   >
-                    {size}
-                  </Text>
-                </TouchableOpacity>
-              ))}
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        color: selectedSize === size ? "#fff" : "#000",
+                      }}
+                    >
+                      {size}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
           </View>
         </View>
 

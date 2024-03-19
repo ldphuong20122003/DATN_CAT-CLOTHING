@@ -1,12 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import { SvgXml } from "react-native-svg";
 import BackgroundButtonFlashSale from "../../../../../assets/Svg/BackgroundButtonFlashSale";
+import { useNavigation } from "@react-navigation/native";
+import CareRightSvg from "../../../../../assets/Svg/CareRightSvg";
 const ListFlashSale_Home = ({ data, onPress }) => {
-  const pressItem = (item) => {
-    onPress && onPress(item);
-  };
+  const [renderedItems, setRenderedItems] = useState(4); // Ban đầu chỉ hiển thị 4 sản phẩm
+
+  const navigation = useNavigation();
+
   const _renderItem = ({ item, index }) => {
+    const pressItem = async () => {
+      await navigation.navigate("Detail_Product", {
+        productId: item.id,
+      });
+    };
     const PriceSale = item.Price - item.Sale;
     return (
       <View style={{ marginRight: 8 }}>
@@ -91,15 +99,17 @@ const ListFlashSale_Home = ({ data, onPress }) => {
     );
   };
   return (
-    <FlatList
-      horizontal={true}
-      data={data}
-      renderItem={_renderItem}
-      keyExtractor={(item, index) => index.toString()}
-      showsHorizontalScrollIndicator={false}
-      showsVerticalScrollIndicator={false}
-      style={{}}
-    />
+    <View>
+      <FlatList
+        horizontal={true}
+        data={data.slice(0, renderedItems)} // Chỉ hiển thị 4 sản phẩm ban đầu
+        renderItem={_renderItem}
+        keyExtractor={(item, index) => index.toString()}
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+        style={{}}
+      />
+    </View>
   );
 };
 export default ListFlashSale_Home;
