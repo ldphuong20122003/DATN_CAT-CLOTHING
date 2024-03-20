@@ -12,6 +12,7 @@ var productRouter = require('./routes/WebServer/product');
 var userRouter = require('./routes/WebServer/user');
 var staffRouter = require('./routes/WebServer/staff');
 var ordersRouter = require('./routes/WebServer/donhang');
+var orderdetail = require('./routes/WebServer/chitietdonhang');
 
 //API ROuter
 var indexRouter = require('./routes/API/index');
@@ -50,6 +51,7 @@ app.use('/products',productRouter);
 app.use('/users',userRouter);
 app.use('/staffs',staffRouter);
 app.use('/Orders',ordersRouter);
+app.use('/OrderDetails',orderdetail);
 
 //API
 app.use('/API/product', indexRouter);
