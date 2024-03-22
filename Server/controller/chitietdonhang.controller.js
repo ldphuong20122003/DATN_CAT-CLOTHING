@@ -35,10 +35,25 @@ exports.delete = async (req, res, next) => {
 }
 
 exports.put = async(req,res,next) =>{
-    // const id = req.params.id;
-    // var dataOrderdetail = {
-    //     DonHang: req.params.idDonHang,
-    //     Product: req.body.sanpham,
-    //     SoLuong:req.body.soluong
-    // }
+    
+    let dataOrderdetail = {
+        DonHang: req.body.idDonHang,
+        Product: req.body.sanpham,
+        SoLuong:req.body.soluong,
+        Staff_name:req.body.tennhanvien,
+        TongTien:req.body.sotien,
+        Username:req.body.nguoidung
+    }
+    
+    try {
+        console.log(dataOrderdetail);
+        const id = req.params.id;
+        await firestore.collection('Order Details').doc(id).set(dataOrderdetail,{merge : true});
+        res.redirect('/OrderDetails');
+    } catch (error) {
+        console.error('fetching error data',error);
+        res.status(500).send('Error data');
+    }
+    
+
 }
