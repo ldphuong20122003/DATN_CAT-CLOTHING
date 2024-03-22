@@ -25,7 +25,7 @@ import config from "../../../config";
 const IP = config.IP;
 const Login = ({ navigation }) => {
   const [phoneNumber, setPhoneNumber] = useState("0826930839");
-  const [password, setPassword] = useState("Phuong2012");
+  const [password, setPassword] = useState("Phuong1234");
   const [isChecked, setChecked] = useState(false);
   const [loading, setLoading] = useState(false); // State cho loading
   const [showPassword, setShowPassword] = useState(false);
