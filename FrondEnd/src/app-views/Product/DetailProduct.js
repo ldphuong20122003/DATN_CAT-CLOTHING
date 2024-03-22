@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  Alert,
   Image,
   ScrollView,
   StyleSheet,
@@ -183,44 +184,67 @@ const Detail_Product = ({ navigation }) => {
   }, [data_Product]);
   const handleAddToCart = () => {
     // Tạo một đối tượng mới để đại diện cho sản phẩm được thêm vào giỏ hàng
-    const newItem = {
+    if (selectedSize === "") {
+      Alert.alert(
+        "Thông báo",
+        "Vui lòng chọn kích cỡ trước khi thêm sản phẩm.",
+        [{ text: "OK", onPress: () => console.log("OK Pressed") }]
+      );
+    } else {
+      const newItem = {
         id: data_Product.length > 0 ? data_Product[0].id : null,
-        quantity: quantity,
-        size: selectedSize,
-        // Các thuộc tính khác của sản phẩm nếu cần
-    };
-
-    // Cập nhật danh sách sản phẩm trong giỏ hàng dựa trên idUser
-    AsyncStorage.getItem(`cartItems_${userId}`).then((cartItemsString) => {
-        let cartItemsArray = [];
-        if (cartItemsString !== null) {
+        NameProduct: data_Product.length > 0 ? data_Product[0].Name : null,
+        ImgProduct: data_Product.length > 0 ? data_Product[0].Img : null,
+        PriceProduct: data_Product.length > 0 ? data_Product[0].Price : null,
+        SaleProduct: data_Product.length > 0 ? data_Product[0].Sale : null,
+        SizeProduct: data_Product.length > 0 ? data_Product[0].Size : null,
+        quantityInCart: quantity,
+        sizeInCart: selectedSize,
+      };
+      if (quantity > selectedSizeAmount) {
+        Alert.alert(
+          "Lỗi",
+          "Số lượng sản phẩm trong giỏ hàng vượt quá số lượng sản phẩm có sẵn."
+        );
+      } else {
+        // Cập nhật danh sách sản phẩm trong giỏ hàng dựa trên idUser
+        AsyncStorage.getItem(`cartItems_${userId}`).then((cartItemsString) => {
+          let cartItemsArray = [];
+          if (cartItemsString !== null) {
             cartItemsArray = JSON.parse(cartItemsString);
-        }
+          }
 
-        // Kiểm tra xem sản phẩm đã tồn tại trong giỏ hàng chưa
-        const existingItemIndex = cartItemsArray.findIndex(item => item.id === newItem.id && item.size === newItem.size);
+          // Kiểm tra xem sản phẩm đã tồn tại trong giỏ hàng chưa
+          const existingItemIndex = cartItemsArray.findIndex(
+            (item) =>
+              item.id === newItem.id && item.sizeInCart === newItem.sizeInCart
+          );
 
-        if (existingItemIndex !== -1) {
+          if (existingItemIndex !== -1) {
             // Nếu sản phẩm đã tồn tại, tăng số lượng của sản phẩm đó
-            cartItemsArray[existingItemIndex].quantity += newItem.quantity;
-        } else {
+            cartItemsArray[existingItemIndex].quantityInCart +=
+              newItem.quantityInCart;
+          } else {
             // Nếu sản phẩm chưa tồn tại, thêm sản phẩm mới vào giỏ hàng
             cartItemsArray.push(newItem);
-        }
+          }
 
-        // Lưu danh sách sản phẩm mới vào AsyncStorage
-        AsyncStorage.setItem(
+          // Lưu danh sách sản phẩm mới vào AsyncStorage
+          AsyncStorage.setItem(
             `cartItems_${userId}`,
             JSON.stringify(cartItemsArray)
-        )
-        .then(() => {
-            console.log("Cart items saved successfully.");
-        })
-        .catch((error) => {
-            console.error("Error saving cart items: ", error);
+          )
+            .then(() => {
+              Alert.alert("Success", "Thêm vào giỏ hàng thành công");
+              setVisibleAddtoCart(false);
+            })
+            .catch((error) => {
+              console.error("Error saving cart items: ", error);
+            });
         });
-    });
-};
+      }
+    }
+  };
 
   return (
     <View style={styles.Container}>
@@ -334,7 +358,9 @@ const Detail_Product = ({ navigation }) => {
                   />
                 </TouchableOpacity>
                 <SvgXml style={{ marginHorizontal: 8 }} xml={iconShareSvg()} />
-                <SvgXml xml={iconCartSvg()} />
+                <TouchableOpacity onPress={() => setVisibleAddtoCart(true)}>
+                  <SvgXml xml={iconCartSvg()} />
+                </TouchableOpacity>
               </View>
             </View>
             <View
@@ -517,7 +543,6 @@ const Detail_Product = ({ navigation }) => {
             <SvgXml xml={DeleteSvg()} />
           </TouchableOpacity>
         </View>
-
         <View
           style={{
             padding: 16,
