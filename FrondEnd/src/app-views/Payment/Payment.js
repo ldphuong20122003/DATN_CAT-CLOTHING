@@ -5,20 +5,22 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Svg, SvgXml } from "react-native-svg";
 import BackSvg from "../../../assets/Svg/BackSvg";
 import AddressSvg from "../../../assets/Svg/AddressSvg";
-import Payment_Product from "../Product/Payment/Payment_Product";
-
 import iconPaymentMethod from "../../../assets/Svg/iconPaymentMethod";
 import CareRightSvg from "../../../assets/Svg/CareRightSvg";
 import CarSvg from "../../../assets/Svg/CarSvg";
 import OrderSvg from "../../../assets/Svg/OrderSvg";
 import ModalPopups from "../Modal/ModalPopup";
 import TickSvg from "../../../assets/Svg/TickSvg";
+import ListPayment_Product from "../Product/Payment/component/ListPayment_Product";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import VoucherSvg from "../../../assets/Svg/VoucherSvg";
+import moment from "moment";
 
-const Payment = ({ navigation }) => {
+const Payment = ({ navigation, route }) => {
   const gotoBack = () => {
     navigation.goBack();
   };
@@ -37,7 +39,119 @@ const Payment = ({ navigation }) => {
   const gotoInforOder = () => {
     navigation.navigate("Information_Order");
   };
-  const [visible, setVisible] = React.useState(false);
+  const [products, setProducts] = useState([]);
+  const [paymentMethod, setPaymentMethod] = useState(null);
+  const [transportMethod, setTransportMethod] = useState(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const jsonValue = await AsyncStorage.getItem("@selected_products");
+        const retrievedProducts =
+          jsonValue != null ? JSON.parse(jsonValue) : [];
+        setProducts(retrievedProducts);
+      } catch (error) {
+        console.error("Error reading data", error);
+      }
+    };
+
+    const fetchPaymentMethod = async () => {
+      try {
+        const storedPaymentMethod = await AsyncStorage.getItem(
+          "@payment_method"
+        );
+        setPaymentMethod(storedPaymentMethod);
+      } catch (error) {
+        console.error("Error retrieving payment method:", error);
+      }
+    };
+
+    const fetchTransportMethod = async () => {
+      try {
+        const storedTransportMethod = await AsyncStorage.getItem(
+          "@transport_method"
+        );
+        setTransportMethod(storedTransportMethod);
+      } catch (error) {
+        console.error("Error retrieving transport method:", error);
+      }
+    };
+
+    const unsubscribe = navigation.addListener("focus", () => {
+      fetchPaymentMethod();
+      fetchTransportMethod();
+    });
+
+    fetchProducts();
+
+    return unsubscribe; // Cleanup function
+  }, [navigation]);
+  const currentDate = moment();
+  const getEstimatedDeliveryDate = (option) => {
+    const clonedDate = moment(currentDate);
+
+    // Calculate estimated delivery date based on selected shipping method
+    switch (option) {
+      case "option1": // Tiết kiệm (3 - 5 ngày)
+        return (
+          clonedDate.add(3, "days").format("DD MMM YYYY") +
+          " - " +
+          clonedDate.add(5, "days").format("DD MMM YYYY")
+        );
+      case "option2": // Nhanh (1 - 2 ngày)
+        return (
+          clonedDate.add(1, "days").format("DD MMM YYYY") +
+          " - " +
+          clonedDate.add(2, "days").format("DD MMM YYYY")
+        );
+      case "option3": // Hỏa tốc (ngày hôm nay)
+        return clonedDate.format("DD MMM YYYY");
+      default:
+        return "Ngày dự kiến không xác định";
+    }
+  };
+  const calculateTotalPrice = (products) => {
+    let totalPrice = 0;
+
+    // Duyệt qua mỗi sản phẩm trong danh sách
+    products.forEach((product) => {
+      // Tính giá bán sau khi áp dụng giảm giá (nếu có)
+      const salePrice =
+        parseInt(product.PriceProduct) - parseInt(product.SaleProduct);
+
+      // Tính tổng tiền hàng của sản phẩm này và cộng vào tổng tiền hàng
+      totalPrice += salePrice * product.quantityInCart;
+    });
+
+    return totalPrice;
+  };
+  const totalPrice = calculateTotalPrice(products);
+  const calculateTotalPayment = (totalPrice, transportMethod) => {
+    let totalPayment = totalPrice;
+
+    // Xử lý phí vận chuyển
+    if (transportMethod) {
+      switch (transportMethod) {
+        case "option1":
+          totalPayment += 20000; // Phí vận chuyển khi chọn option1
+          break;
+        case "option2":
+          totalPayment += 35000; // Phí vận chuyển khi chọn option2
+          break;
+        case "option3":
+          totalPayment += 70000; // Phí vận chuyển khi chọn option3
+          break;
+        default:
+          break;
+      }
+    }
+
+    return totalPayment;
+  };
+
+  // Tính tổng thanh toán
+  const totalPayment = calculateTotalPayment(totalPrice, transportMethod);
   return (
     <View style={styles.Container}>
       <View style={styles.Header}>
@@ -90,7 +204,33 @@ const Payment = ({ navigation }) => {
               </Text>
             </TouchableOpacity>
           </View>
-          <Payment_Product />
+          <ListPayment_Product data={products} />
+          <View style={{ borderBottomWidth: 10, borderBottomColor: "#DADADA" }}>
+            <View
+              style={{
+                flexDirection: "row",
+                paddingVertical: 4,
+                paddingHorizontal: 16,
+                justifyContent: "space-between",
+                alignItems: "center",
+                borderBottomWidth: 0.3,
+                borderBottomColor: "#707070",
+              }}
+            >
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <SvgXml xml={VoucherSvg()} />
+                <Text style={{ marginLeft: 10, color: "#707070" }}>
+                  Voucher
+                </Text>
+              </View>
+              <TouchableOpacity onPress={gotoPaymentMethod}>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <Text style={{ fontSize: 12, color: "#1890ff" }}></Text>
+                  <SvgXml xml={CareRightSvg("#1890ff")} />
+                </View>
+              </TouchableOpacity>
+            </View>
+          </View>
           <View style={{ borderBottomWidth: 10, borderBottomColor: "#DADADA" }}>
             <View
               style={{
@@ -119,9 +259,26 @@ const Payment = ({ navigation }) => {
               </TouchableOpacity>
             </View>
             <View style={{ padding: 16 }}>
-              <Text style={{ fontSize: 12, color: "#707070" }}>
-                Thanh toán khi nhận hàng
-              </Text>
+              {paymentMethod ? (
+                <View>
+                  {paymentMethod === "option1" && (
+                    <Text style={{ fontSize: 12, color: "#707070" }}>
+                      Thanh toán khi nhận hàng
+                    </Text>
+                  )}
+                  {paymentMethod === "option2" && (
+                    <Text style={{ fontSize: 12, color: "#707070" }}>
+                      Ví MoMo
+                    </Text>
+                  )}
+                </View>
+              ) : (
+                <View>
+                  <Text style={{ fontSize: 12, color: "#707070" }}>
+                    Chọn phương thức thanh toán
+                  </Text>
+                </View>
+              )}
             </View>
           </View>
           <View style={{ borderBottomWidth: 10, borderBottomColor: "#DADADA" }}>
@@ -152,10 +309,55 @@ const Payment = ({ navigation }) => {
               </TouchableOpacity>
             </View>
             <View style={{ padding: 16 }}>
-              <Text>Hỏa tốc</Text>
-              <Text style={{ fontSize: 12, color: "#707070", marginTop: 8 }}>
-                Nhận hàng dự kiến vào 25 Th12 - 27 Th12
-              </Text>
+              {transportMethod ? (
+                <View>
+                  {transportMethod === "option1" && (
+                    <View>
+                      <Text
+                        style={{ fontSize: 12, color: "#000", fontWeight: 600 }}
+                      >
+                        Tiết kiệm
+                      </Text>
+                      <Text style={{ fontSize: 12, color: "#00C5C1" }}>
+                        Nhận hàng dự kiến vào{" "}
+                        {getEstimatedDeliveryDate("option1")}{" "}
+                      </Text>
+                    </View>
+                  )}
+                  {transportMethod === "option2" && (
+                    <View>
+                      <Text
+                        style={{ fontSize: 12, color: "#000", fontWeight: 600 }}
+                      >
+                        Nhanh
+                      </Text>
+                      <Text style={{ fontSize: 12, color: "#00C5C1" }}>
+                        Nhận hàng dự kiến vào{" "}
+                        {getEstimatedDeliveryDate("option2")}{" "}
+                      </Text>
+                    </View>
+                  )}
+                  {transportMethod === "option3" && (
+                    <View>
+                      <Text
+                        style={{ fontSize: 12, color: "#000", fontWeight: 600 }}
+                      >
+                        Hỏa tốc
+                      </Text>
+                      <Text style={{ fontSize: 12, color: "#00C5C1" }}>
+                        Nhận hàng dự kiến vào{" "}
+                        {getEstimatedDeliveryDate("option3")}{" "}
+                      </Text>
+                    </View>
+                  )}
+                </View>
+              ) : (
+                <View>
+                  <Text style={{ fontSize: 12, color: "#707070" }}>
+                    Chọn phương thức vận chuyển
+                  </Text>
+                </View>
+              )}
             </View>
           </View>
           <View>
@@ -176,10 +378,6 @@ const Payment = ({ navigation }) => {
                   Chi tiết thanh toán
                 </Text>
               </View>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Text style={{ fontSize: 12, color: "#1890ff" }}>Thay đổi</Text>
-                <SvgXml xml={CareRightSvg("#1890ff")} />
-              </View>
             </View>
             <View
               style={{
@@ -194,7 +392,8 @@ const Payment = ({ navigation }) => {
                 Tổng tiền hàng
               </Text>
               <Text style={{ fontSize: 12, color: "#707070" }}>
-                3.200.000 đ
+                {totalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") +
+                  " đ"}
               </Text>
             </View>
             <View
@@ -209,7 +408,37 @@ const Payment = ({ navigation }) => {
               <Text style={{ fontSize: 12, color: "#707070" }}>
                 Phí vận chuyển
               </Text>
-              <Text style={{ fontSize: 12, color: "#707070" }}>20.000 đ</Text>
+              {transportMethod ? (
+                <View>
+                  {transportMethod === "option1" && (
+                    <View>
+                      <Text style={{ fontSize: 12, color: "#707070" }}>
+                        20.000 đ
+                      </Text>
+                    </View>
+                  )}
+                  {transportMethod === "option2" && (
+                    <View>
+                      <Text style={{ fontSize: 12, color: "#707070" }}>
+                        35.000 đ
+                      </Text>
+                    </View>
+                  )}
+                  {transportMethod === "option3" && (
+                    <View>
+                      <Text style={{ fontSize: 12, color: "#707070" }}>
+                        70.000 đ
+                      </Text>
+                    </View>
+                  )}
+                </View>
+              ) : (
+                <View>
+                  <Text style={{ fontSize: 12, color: "#707070" }}>
+                    Chọn phương thức vận chuyển
+                  </Text>
+                </View>
+              )}
             </View>
             <View
               style={{
@@ -221,7 +450,10 @@ const Payment = ({ navigation }) => {
               }}
             >
               <Text>Tổng thanh toán</Text>
-              <Text style={{ color: "#EF4444" }}>3.220.000 đ</Text>
+              <Text style={{ color: "#EF4444" }}>
+                {totalPayment.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") +
+                  " đ"}
+              </Text>
             </View>
           </View>
         </View>
@@ -311,6 +543,6 @@ const styles = StyleSheet.create({
 
     backgroundColor: "#1890ff",
     borderRadius: 8,
-    marginVertical:16
+    marginVertical: 16,
   },
 });

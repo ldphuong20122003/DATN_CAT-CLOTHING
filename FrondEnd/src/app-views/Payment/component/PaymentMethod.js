@@ -1,9 +1,10 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useMemo, useState } from "react";
 import { Svg, SvgXml } from "react-native-svg";
 import BackSvg from "../../../../assets/Svg/BackSvg";
 import iconDollarSvg from "../../../../assets/Svg/iconDollarSvg";
 import iconWalletSvg from "../../../../assets/Svg/iconWalletSvg";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const PaymentMethod = ({ navigation }) => {
   const gotoBack = () => {
@@ -31,6 +32,20 @@ const PaymentMethod = ({ navigation }) => {
     `;
 
     return isChecked ? checkedSvg : uncheckedSvg;
+  };
+  const handleConfirm = async () => {
+    if(!selectedOption){
+      Alert.alert('Error',"Vui lòng chọn phương thức thanh toán");
+      return;
+    }
+    // Lưu lựa chọn vào AsyncStorage
+    try {
+      await AsyncStorage.setItem('@payment_method', selectedOption);
+      // Chuyển sang màn hình Payment và truyền giá trị selectedOption qua props
+      navigation.navigate('Payment', { paymentMethod: selectedOption });
+    } catch (error) {
+      console.error('Error saving payment method:', error);
+    }
   };
 
   return (
@@ -96,19 +111,20 @@ const PaymentMethod = ({ navigation }) => {
           </View>
         </TouchableOpacity>
 
-      
+      <TouchableOpacity onPress={handleConfirm}>
         <View
           style={{
             marginTop: 16,
             alignItems: "center",
             paddingVertical: 10,
-            backgroundColor: "#E2E2E2",
+            backgroundColor: "#1890ff",
             marginHorizontal: 16,
             borderRadius: 8,
           }}
         >
-          <Text style={{ fontSize: 14, fontWeight: 600 }}>Xác nhận</Text>
+          <Text style={{ fontSize: 14, fontWeight: 600,color:'#fff' }}>Xác nhận</Text>
         </View>
+        </TouchableOpacity>
       </View>
     </View>
   );

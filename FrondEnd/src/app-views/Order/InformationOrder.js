@@ -9,7 +9,6 @@ import React from "react";
 import { Svg, SvgXml } from "react-native-svg";
 import BackSvg from "../../../assets/Svg/BackSvg";
 import AddressSvg from "../../../assets/Svg/AddressSvg";
-import Payment_Product from "../Product/Payment/Payment_Product";
 
 import iconPaymentMethod from "../../../assets/Svg/iconPaymentMethod";
 import CareRightSvg from "../../../assets/Svg/CareRightSvg";
