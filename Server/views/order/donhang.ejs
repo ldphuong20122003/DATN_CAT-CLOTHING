@@ -45,8 +45,8 @@
 
 
         <div class="m-4">
-            <a href="/Orders" type="button" class="btn btn-add fw-medium float-end mb-2 " data-bs-toggle="modal"
-                data-bs-target="#addModal">Add</a>
+            <!-- <a href="/Orders" type="button" class="btn btn-add fw-medium float-end mb-2 " data-bs-toggle="modal"
+                data-bs-target="#addModal">Add</a> -->
             <% if (listdonhang) { %>
                 <table class="table table-hover table-bordered mt-2">
                     <thead>
@@ -137,31 +137,31 @@
                 <div class="modal-body">
                     <div class="input-group mb-3">
                         <label for="TenDonHang" class="input-group-text label-width">tên đơn hàng</label>
-                        <input type="text" id="TenDonHang" class="form-control" name="TenDonHang">
+                        <input type="text" id="TenDonHang" class="form-control" name="TenDonHang" required>
                     </div>
                     <div class="input-group mb-3">
                         <label for="DiaChi" class="input-group-text label-width">Địa chỉ</label>
-                        <input type="text" id="DiaChi" class="form-control" name="DiaChi">
+                        <input type="text" id="DiaChi" class="form-control" name="DiaChi" required>
                     </div>
                     <div class="input-group mb-3">
                         <label for="NguoiDung" class="input-group-text label-width">Người Dùng</label>
-                        <input type="text" id="NguoiDung" class="form-control" name="NguoiDung">
+                        <input type="text" id="NguoiDung" class="form-control" name="NguoiDung" required>
                     </div>
                     <div class="input-group mb-3">
                         <label for="TenSanPham" class="input-group-text label-width">Tên Sản Phẩm</label>
-                        <input type="text" id="TenSanPham" class="form-control" name="TenSanPham">
+                        <input type="text" id="TenSanPham" class="form-control" name="TenSanPham" required>
                     </div>
                     <div class="input-group mb-3">
                         <label for="NgayDat" class="input-group-text label-width">Ngày Đặt</label>
-                        <input type="text" id="NgayDat" class="form-control" name="NgayDat">
+                        <input type="date" id="NgayDat" class="form-control" name="NgayDat" required>
                     </div>
                     <div class="input-group mb-3">
                         <label for="NhanVien" class="input-group-text label-width">Nhân Viên</label>
-                        <input type="text" id="NhanVien" class="form-control" name="NhanVien">
+                        <input type="text" id="NhanVien" class="form-control" name="NhanVien" required>
                     </div>
                     <div class="input-group mb-3">
                         <label for="Status" class="input-group-text label-width">Status</label>
-                        <input type="text" id="Status" class="form-control" aria-label="First name" name="Status">
+                        <input type="text" id="Status" class="form-control" aria-label="First name" name="Status" required>
                     </div>
                    
                 </div>
