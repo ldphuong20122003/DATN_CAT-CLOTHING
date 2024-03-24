@@ -48,7 +48,7 @@ router.delete('/delete/:id',async(req,res,next)=>{
     const docId = req.params.id; // Lấy ID tài liệu từ URL
 
     // Xóa tài liệu dựa trên ID đã cung cấp
-    await db.collection('Vouchers').doc(docId).delete();
+    await db1.collection('Vouchers').doc(docId).delete();
 
     res.status(200).send(`Document with ID: ${docId} deleted successfully`);
   } catch (error) {
@@ -59,15 +59,31 @@ router.delete('/delete/:id',async(req,res,next)=>{
 
 router.post('/add',async(req,res,next)=>{
   try {
-    const data = req.body; 
+    // Dữ liệu từ request body
+   const collectionRef = admin.firestore().collection('Vouchers');
+         const Id = collectionRef.doc().id;
+       
+         const docID = Id ? collectionRef.doc(Id) : collectionRef.doc();
 
-    const docRef = await db.collection('Vouchers').add(data);
-
-    res.status(201).send(`Document created with ID: ${docRef.id}`);
-  } catch (error) {
-    console.error('Error adding data:', error);
-    res.status(500).send('Error adding data to Firestore');
-  }
+         let data2 = {
+          id: Id,
+          Discount: req.body.Discount,
+          Title: req.body.Title,
+          
+      }
+          docID.set(data2).then(() => {
+           res.status(200).send(`Document with ID: add successfully`);
+           return collectionRef.doc().id;
+       })
+       .catch(error => {
+           console.error('Lỗi khi thêm tài liệu:', error);
+           res.status(500).json({message: 'Lỗi khi thêm tài liệu'});
+       });
+  
+ } catch (error) {
+   console.error('Error adding data:', error);
+   res.status(500).send('Error adding data to Firestore');
+ }
 });
 
 router.put('/update/:id',async(req,res,next)=>{
@@ -76,7 +92,7 @@ router.put('/update/:id',async(req,res,next)=>{
     const newData = req.body; // Dữ liệu mới từ request body
 
     // Cập nhật tài liệu dựa trên ID và dữ liệu mới đã cung cấp
-    await db.collection('Vouchers').doc(docId).set(newData, { merge: true });
+    await db1.collection('Vouchers').doc(docId).set(newData, { merge: true });
 
     res.status(200).send(`Document with ID: ${docId} updated successfully`);
   } catch (error) {
