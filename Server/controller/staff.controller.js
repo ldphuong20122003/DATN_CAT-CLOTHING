@@ -44,19 +44,21 @@ exports.delete=async(req,res,next)=>{
 
 exports.put=async(req,res,next)=>{
    // Lấy ID tài liệu từ URL
-        const newData = {
+        
+        
+    try {
+      const docId = req.params.id; 
+      const newData = {
           
           Fullname: req.body.tenStaff,
           Email:req.body.emailStaff,
           Password: req.body.mkStaff,
         }; 
-        
-    try {
        // Dữ liệu mới từ request body
         console.log(newData);
-        const docId = req.params.id; 
+        
         // Cập nhật tài liệu dựa trên ID và dữ liệu mới đã cung cấp
-        await admin.firestore().collection('Staff').doc(docId).set(newData,{ merge: true });
+        await admin.firestore().collection('Staff').doc(docId).update(newData,{ merge: true });
         res.redirect('/staffs');
     
         

@@ -13,6 +13,7 @@ var userRouter = require('./routes/WebServer/user');
 var staffRouter = require('./routes/WebServer/staff');
 var ordersRouter = require('./routes/WebServer/donhang');
 var orderdetail = require('./routes/WebServer/chitietdonhang');
+var VRouter = require('./routes/WebServer/voucher');
 
 //API ROuter
 var indexRouter = require('./routes/API/index');
@@ -39,6 +40,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({
   secret: 'nhNNGHSNFGH83sdf23435Fdzgsfnksjdfh9', // Thay thế bằng một khóa bí mật mạnh mẽ hơn trong thực tế
   resave: false,
@@ -52,7 +54,7 @@ app.use('/users',userRouter);
 app.use('/staffs',staffRouter);
 app.use('/Orders',ordersRouter);
 app.use('/OrderDetails',orderdetail);
-
+app.use('/Vouchers',VRouter);
 //API
 app.use('/API/product', indexRouter);
 app.use('/API/users', usersRouter);

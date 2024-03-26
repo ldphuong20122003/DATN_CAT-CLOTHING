@@ -19,12 +19,12 @@
             <div class="input-group">
                 <span class="input-group-text col-md-1">Search</span>
                 
-                <input type="text" class="form-control" placeholder="Name">
+                <input type="text" class="form-control" placeholder="Name" id="searchInput" onkeyup="searchData()">
              
-                <a href="/staffs" class="btn btn-add fw-medium">Search</a>
+              
             </div>
             <% if(listStaff) {%>
-                <table class="table table-hover table-bordered mt-2">
+                <table class="table table-hover table-bordered mt-2" id="resultTable">
                     <thead>
                         <tr class="text-center">
                             
@@ -217,7 +217,28 @@
             </script>
 
             
+            <script>
+  // Hàm search sẽ được gọi khi người dùng nhập vào ô tìm kiếm
+  function searchData() {
+      var input, filter, table, tr, td, i, txtValue;
+      input = document.getElementById("searchInput");
+      filter = input.value.toUpperCase();
+      table = document.getElementById("resultTable");
+      tr = table.getElementsByTagName("tr");
 
+      for (i = 0; i < tr.length; i++) {
+          td = tr[i].getElementsByTagName("td")[2]; // chỉ tìm kiếm trong cột ID
+          if (td) {
+              txtValue = td.textContent || td.innerText;
+              if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                  tr[i].style.display = ""; // Hiển thị hàng nếu có từ khóa tìm kiếm
+              } else {
+                  tr[i].style.display = "none"; // Ẩn hàng nếu không phù hợp với từ khóa tìm kiếm
+              }
+          }
+      }
+  }
+</script>
    
 
 
