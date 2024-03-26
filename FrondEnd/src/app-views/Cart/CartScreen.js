@@ -252,8 +252,26 @@ const CartScreen = ({ navigation }) => {
     });
     return totalPayment;
   };
-  const handleBuy = () => {
+  const handleBuy = async () => {
+    if(selectedItems.length === 0){
+      Alert.alert('Error', 'Bạn chưa chọn sản phẩm nào để đặt hàng');
+      return;
+    }
+  
+    // Lấy danh sách sản phẩm đã chọn từ cartItems dựa vào index đã chọn
     const selectedProducts = selectedItems.map((index) => cartItems[index]);
+    
+    try {
+      // Chuyển đổi danh sách sản phẩm đã chọn thành chuỗi JSON để lưu trữ
+      const jsonValue = JSON.stringify(selectedProducts);
+      await AsyncStorage.setItem('@selected_products', jsonValue);
+      
+      // Chuyển hướng sang màn hình Payment và truyền danh sách sản phẩm đã chọn
+      navigation.navigate('Payment', { data: selectedProducts });
+    } catch (error) {
+      // Xử lý lỗi khi lưu dữ liệu
+      console.error("Error saving data", error);
+    }
   };
   return (
     <View style={{ flex: 1 }}>
@@ -313,6 +331,7 @@ const CartScreen = ({ navigation }) => {
                                 fontSize: 12,
                                 color: "#5A5A5A",
                                 fontWeight: 400,
+                             
                               }}
                             >
                               Phân loại: {product.sizeInCart}
@@ -661,6 +680,7 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
     marginVertical: 4,
     paddingHorizontal: 4,
+    width:90,
   },
   itemInCart: {
     flex: 1,

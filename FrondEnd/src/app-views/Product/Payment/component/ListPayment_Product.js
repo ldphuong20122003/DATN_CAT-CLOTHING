@@ -8,8 +8,9 @@ const ListPayment_Product = ({ data, onPress }) => {
   const pressItem = (item) => {
     onPress && onPress(item);
   };
-  
+
   const _renderItem = ({ item, index }) => {
+    const PriceSale= item.PriceProduct - item.SaleProduct;
     return (
       <View style={{ borderBottomWidth: 10, borderBottomColor: "#dadada" }}>
         <TouchableOpacity onPress={() => pressItem(item)}>
@@ -29,9 +30,9 @@ const ListPayment_Product = ({ data, onPress }) => {
                 }}
               >
                 <View style={{ marginLeft: 12 }}>
-                  {item.image && (
+                  {item.ImgProduct && (
                     <Image
-                      source={{ uri: item.image }}
+                      source={{ uri: item.ImgProduct }}
                       style={{
                         height: 100,
                         width: 100,
@@ -43,7 +44,7 @@ const ListPayment_Product = ({ data, onPress }) => {
                   <Text
                     style={{ fontSize: 14, fontWeight: 400, color: "#2d2d2d" }}
                   >
-                    {item.name}
+                    {item.NameProduct}
                   </Text>
 
                   <View
@@ -59,9 +60,7 @@ const ListPayment_Product = ({ data, onPress }) => {
                       style={{ flexDirection: "row", alignItems: "center" }}
                     >
                       <Text style={{ fontSize: 10 }}>Phân loại: {""}</Text>
-                      <Text style={{ fontSize: 10 }}>
-                        {item.color} , {item.size}
-                      </Text>
+                      <Text style={{ fontSize: 10 }}>{item.sizeInCart}</Text>
                     </View>
                   </View>
                   <Text
@@ -72,7 +71,9 @@ const ListPayment_Product = ({ data, onPress }) => {
                       marginTop: 5,
                     }}
                   >
-                    {item.price}.000 đ
+                    {PriceSale
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " đ"}
                   </Text>
                 </View>
               </View>
@@ -82,16 +83,21 @@ const ListPayment_Product = ({ data, onPress }) => {
                 flexDirection: "row",
                 paddingHorizontal: 16,
                 paddingBottom: 16,
-                justifyContent:'space-between'
+                justifyContent: "space-between",
               }}
             >
               <Text style={{ fontSize: 12, color: "#707070" }}>
-                Số lượng : {item.number} sản phẩm
+                Số lượng : {item.quantityInCart} sản phẩm
               </Text>
-              <View style={{flexDirection:'row',alignItems:'center'}}>
-                <SvgXml xml={iconDollarSvg()}/>
-                <Text style={{fontSize:14,marginLeft:6}}>Thành tiền : </Text>
-                <Text style={{ fontWeight: 600,color: "#EF4444",}}>{item.price * item.number}.000 đ</Text>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <SvgXml xml={iconDollarSvg()} />
+                <Text style={{ fontSize: 14, marginLeft: 6 }}>
+                  Thành tiền :{" "}
+                </Text>
+                <Text style={{ fontWeight: 600, color: "#EF4444" }}>
+                 {(PriceSale*item.quantityInCart).toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " đ"}
+                </Text>
               </View>
             </View>
           </View>
@@ -101,7 +107,7 @@ const ListPayment_Product = ({ data, onPress }) => {
   };
   return (
     <FlatList
-    scrollEnabled={false}
+      scrollEnabled={false}
       data={data}
       renderItem={_renderItem}
       keyExtractor={(item, index) => index.toString()}

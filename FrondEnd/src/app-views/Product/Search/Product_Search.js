@@ -35,20 +35,18 @@ const Product_Search = ({ navigation }) => {
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     { key: '1', title: 'Tất cả' },
-    { key: '2', title: 'Mới nhất' },
-    { key: '3', title: 'Bán chạy' },
-    { key: '4', title: 'Giá' },
+    { key: '2', title: 'Giá tăng dần' },
+    { key: '3', title: 'Giá giảm dần' },
+
   ]);
   const renderScene = ({ route }) => {
     switch (route.key) {
       case '1':
-        return <All_Products keyword={keyword}/>;
+        return <All_Products keyword={keyword} />;
       case '2':
-        return <All_Products keyword={keyword}/>;
+        return <All_Products keyword={keyword} sortBy="ascending" />;
       case '3':
-        return <All_Products keyword={keyword}/>;
-      case '4':
-        return <All_Products keyword={keyword}/>;
+        return <All_Products keyword={keyword} sortBy="descending" />;
       default:
         return null;
     }
@@ -92,7 +90,7 @@ const Product_Search = ({ navigation }) => {
             </View>
             <SvgXml xml={DeleteSvg()} />
           </View>
-          <TouchableOpacity onPress={()=>setVisible(true)}>
+          <TouchableOpacity onPress={() => setVisible(true)}>
             <SvgXml xml={FilterSvg()} />
           </TouchableOpacity>
         </View>
@@ -102,183 +100,182 @@ const Product_Search = ({ navigation }) => {
           <View style={{ width: "98%", alignItems: "center" }}>
             <Text style={{ fontSize: 16, fontWeight: 600 }}>Bộ Lọc</Text>
           </View>
-          <TouchableOpacity onPress={()=>setVisible(false)}>
-          <SvgXml xml={DeleteSvg()} />
+          <TouchableOpacity onPress={() => setVisible(false)}>
+            <SvgXml xml={DeleteSvg()} />
           </TouchableOpacity>
         </View>
         <ScrollView>
-        <View style={styles.ContentFilter}>
-          <Text style={{ fontSize: 14, fontWeight: 600 }}>Khoảng giá</Text>
-          <View
-            style={{
-              flexDirection: "row",
-              marginTop: 8,
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <View style={{ width: "40%" }}>
-              <Text>Từ</Text>
+          <View style={styles.ContentFilter}>
+            <Text style={{ fontSize: 14, fontWeight: 600 }}>Khoảng giá</Text>
+            <View
+              style={{
+                flexDirection: "row",
+                marginTop: 8,
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <View style={{ width: "40%" }}>
+                <Text>Từ</Text>
+                <View
+                  style={{
+                    paddingVertical: 4,
+                    borderWidth: 1,
+                    borderColor: "#D4D4D4",
+                    paddingHorizontal: 4,
+                    borderRadius: 6,
+                    marginTop: 6,
+                  }}
+                >
+                  <TextInput placeholder="0đ" />
+                </View>
+              </View>
               <View
                 style={{
-                  paddingVertical: 4,
                   borderWidth: 1,
+                  height: 0,
+                  width: 20,
                   borderColor: "#D4D4D4",
-                  paddingHorizontal: 4,
-                  borderRadius: 6,
-                  marginTop: 6,
+                  marginTop: 25,
                 }}
-              >
-                <TextInput placeholder="0đ" />
+              ></View>
+              <View style={{ width: "40%" }}>
+                <Text>Đến </Text>
+                <View
+                  style={{
+                    paddingVertical: 4,
+                    borderWidth: 1,
+                    borderColor: "#D4D4D4",
+                    paddingHorizontal: 4,
+                    borderRadius: 6,
+                    marginTop: 6,
+                  }}
+                >
+                  <TextInput placeholder="0đ" />
+                </View>
               </View>
             </View>
             <View
               style={{
-                borderWidth: 1,
-                height: 0,
-                width: 20,
-                borderColor: "#D4D4D4",
-                marginTop: 25,
+                flexDirection: "row",
+                marginTop: 12,
+                justifyContent: "space-between",
               }}
-            ></View>
-            <View style={{ width: "40%" }}>
-              <Text>Đến </Text>
+            >
               <View
                 style={{
+                  width: "30%",
+                  backgroundColor: "#F6F6F6",
+                  alignItems: "center",
                   paddingVertical: 4,
-                  borderWidth: 1,
-                  borderColor: "#D4D4D4",
-                  paddingHorizontal: 4,
-                  borderRadius: 6,
-                  marginTop: 6,
+                  borderRadius: 4,
                 }}
               >
-                <TextInput placeholder="0đ" />
+                <Text style={{ fontSize: 12, fontWeight: 400, color: "#707070" }}>
+                  0k - 100k
+                </Text>
+              </View>
+              <View
+                style={{
+                  width: "30%",
+                  backgroundColor: "#F6F6F6",
+                  alignItems: "center",
+                  paddingVertical: 4,
+                  borderRadius: 4,
+                }}
+              >
+                <Text style={{ fontSize: 12, fontWeight: 400, color: "#707070" }}>
+                  100k - 500k
+                </Text>
+              </View>
+              <View
+                style={{
+                  width: "30%",
+                  backgroundColor: "#F6F6F6",
+                  alignItems: "center",
+                  paddingVertical: 4,
+                  borderRadius: 4,
+                }}
+              >
+                <Text style={{ fontSize: 12, fontWeight: 400, color: "#707070" }}>
+                  500k - 1M
+                </Text>
               </View>
             </View>
+            <Text style={{ fontSize: 14, fontWeight: 600, marginTop: 20 }}>
+              Dịch vụ & Khuyến mãi
+            </Text>
+            <View style={{ flexDirection: "row", marginTop: 12 }}>
+              <View
+                style={{
+                  backgroundColor: "#F6F6F6",
+                  alignItems: "center",
+                  paddingVertical: 4,
+                  borderRadius: 4,
+                  paddingHorizontal: 8,
+                }}
+              >
+                <Text style={{ fontSize: 12, fontWeight: 400, color: "#707070" }}>
+                  Thanh toán Khi nhận hàng
+                </Text>
+              </View>
+              <View
+                style={{
+                  backgroundColor: "#F6F6F6",
+                  alignItems: "center",
+                  paddingVertical: 4,
+                  borderRadius: 4,
+                  paddingHorizontal: 8,
+                  marginHorizontal: 20,
+                }}
+              >
+                <Text style={{ fontSize: 12, fontWeight: 400, color: "#707070" }}>
+                  Free ship
+                </Text>
+              </View>
+              <View
+                style={{
+                  backgroundColor: "#F6F6F6",
+                  alignItems: "center",
+                  paddingVertical: 4,
+                  borderRadius: 4,
+                  paddingHorizontal: 8,
+                }}
+              >
+                <Text style={{ fontSize: 12, fontWeight: 400, color: "#707070" }}>
+                  Flash Sale
+                </Text>
+              </View>
+            </View>
+            <Text style={{ fontSize: 14, fontWeight: 600, marginTop: 20 }}>
+              Thể loại sản phẩm
+            </Text>
+            <ListCategory_Filter />
           </View>
-          <View
-            style={{
-              flexDirection: "row",
-              marginTop: 12,
-              justifyContent: "space-between",
-            }}
-          >
-            <View
-              style={{
-                width: "30%",
-                backgroundColor: "#F6F6F6",
-                alignItems: "center",
-                paddingVertical: 4,
-                borderRadius: 4,
-              }}
-            >
-              <Text style={{ fontSize: 12, fontWeight: 400, color: "#707070" }}>
-                0k - 100k
-              </Text>
-            </View>
-            <View
-              style={{
-                width: "30%",
-                backgroundColor: "#F6F6F6",
-                alignItems: "center",
-                paddingVertical: 4,
-                borderRadius: 4,
-              }}
-            >
-              <Text style={{ fontSize: 12, fontWeight: 400, color: "#707070" }}>
-                100k - 500k
-              </Text>
-            </View>
-            <View
-              style={{
-                width: "30%",
-                backgroundColor: "#F6F6F6",
-                alignItems: "center",
-                paddingVertical: 4,
-                borderRadius: 4,
-              }}
-            >
-              <Text style={{ fontSize: 12, fontWeight: 400, color: "#707070" }}>
-                500k - 1M
-              </Text>
-            </View>
-          </View>
-          <Text style={{ fontSize: 14, fontWeight: 600, marginTop: 20 }}>
-            Dịch vụ & Khuyến mãi
-          </Text>
-          <View style={{ flexDirection: "row", marginTop: 12 }}>
-            <View
-              style={{
-                backgroundColor: "#F6F6F6",
-                alignItems: "center",
-                paddingVertical: 4,
-                borderRadius: 4,
-                paddingHorizontal: 8,
-              }}
-            >
-              <Text style={{ fontSize: 12, fontWeight: 400, color: "#707070" }}>
-                Thanh toán Khi nhận hàng
-              </Text>
-            </View>
-            <View
-              style={{
-                backgroundColor: "#F6F6F6",
-                alignItems: "center",
-                paddingVertical: 4,
-                borderRadius: 4,
-                paddingHorizontal: 8,
-                marginHorizontal: 20,
-              }}
-            >
-              <Text style={{ fontSize: 12, fontWeight: 400, color: "#707070" }}>
-                Free ship
-              </Text>
-            </View>
-            <View
-              style={{
-                backgroundColor: "#F6F6F6",
-                alignItems: "center",
-                paddingVertical: 4,
-                borderRadius: 4,
-                paddingHorizontal: 8,
-              }}
-            >
-              <Text style={{ fontSize: 12, fontWeight: 400, color: "#707070" }}>
-                Flash Sale
-              </Text>
-            </View>
-          </View>
-          <Text style={{ fontSize: 14, fontWeight: 600, marginTop: 20 }}>
-            Thể loại sản phẩm
-          </Text>
-          <ListCategory_Filter />
-        </View>
         </ScrollView>
         <View style={styles.FooterFilter}>
-          <View style={{width:'45%',alignItems:'center',borderColor:'#1890ff',borderWidth:1,paddingVertical:8,borderRadius:8}}>
-            <Text style={{color:'#1890ff',fontSize:16,fontWeight:600}}>Đặt lại</Text>
+          <View style={{ width: '45%', alignItems: 'center', borderColor: '#1890ff', borderWidth: 1, paddingVertical: 8, borderRadius: 8 }}>
+            <Text style={{ color: '#1890ff', fontSize: 16, fontWeight: 600 }}>Đặt lại</Text>
           </View>
-          <View style={{width:'45%',alignItems:'center',backgroundColor:'#1890ff',paddingVertical:8,borderRadius:8}}>
+          <View style={{ width: '45%', alignItems: 'center', backgroundColor: '#1890ff', paddingVertical: 8, borderRadius: 8 }}>
 
-          <Text style={{color:'#fff',fontSize:16,fontWeight:600}}>Áp dụng</Text>
+            <Text style={{ color: '#fff', fontSize: 16, fontWeight: 600 }}>Áp dụng</Text>
 
           </View>
         </View>
       </ModalFilter>
       <View style={styles.Content}>
-      <TabView
+        <TabView
           navigationState={{ index, routes }}
           renderScene={renderScene}
           onIndexChange={setIndex}
-          initialLayout={{ width:'100%' }}
+          initialLayout={{ width: '100%' }}
           lazy={true}
           renderTabBar={props => (
             <TabBar
               {...props}
-              
-              style={{ backgroundColor: '#f2f2f2',marginTop:5 }} // Chỉnh style cho thanh tab
-              indicatorStyle={{ backgroundColor: '#1890FF' }} // Chỉnh style cho chỉ mục hiện tại
+              style={{ backgroundColor: '#f2f2f2', marginTop: 5 }}
+              indicatorStyle={{ backgroundColor: '#1890FF' }}
               labelStyle={{
                 fontSize: 14,
                 fontFamily: 'Roboto',
@@ -308,13 +305,14 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.2,
     paddingBottom: 8,
   },
-  ContentFilter: { marginTop: 16,marginBottom:50 },
+  ContentFilter: { marginTop: 16, marginBottom: 50 },
   FooterFilter: {
     position: "absolute",
     bottom: 0,
     flexDirection: "row",
-    marginHorizontal:16,justifyContent:'space-between',width:'100%',paddingVertical:8
+    marginHorizontal: 16, justifyContent: 'space-between', width: '100%', paddingVertical: 8
   },
-  Content:{
-height:'100%' }
+  Content: {
+    height: '100%'
+  }
 });

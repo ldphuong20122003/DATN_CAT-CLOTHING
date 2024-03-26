@@ -1,16 +1,17 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useMemo, useState } from "react";
 import { Svg, SvgXml } from "react-native-svg";
 import BackSvg from "../../../../assets/Svg/BackSvg";
 import iconDollarSvg from "../../../../assets/Svg/iconDollarSvg";
 import iconWalletSvg from "../../../../assets/Svg/iconWalletSvg";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const PaymentMethod = ({ navigation }) => {
+const PaymentMethod = ({ navigation, route }) => {
+  const { paymentMethod } = route.params;
   const gotoBack = () => {
     navigation.goBack();
   };
-
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedOption, setSelectedOption] = useState(paymentMethod);
 
   const handleSelect = (option) => {
     setSelectedOption(option);
@@ -31,6 +32,20 @@ const PaymentMethod = ({ navigation }) => {
     `;
 
     return isChecked ? checkedSvg : uncheckedSvg;
+  };
+  const handleConfirm = async () => {
+    if (!selectedOption) {
+      Alert.alert("Error", "Vui lòng chọn phương thức thanh toán");
+      return;
+    }
+    // Lưu lựa chọn vào AsyncStorage
+    try {
+      await AsyncStorage.setItem("@payment_method", selectedOption);
+      // Chuyển sang màn hình Payment và truyền giá trị selectedOption qua props
+      navigation.navigate("Payment", { paymentMethod: selectedOption });
+    } catch (error) {
+      console.error("Error saving payment method:", error);
+    }
   };
 
   return (
@@ -63,52 +78,53 @@ const PaymentMethod = ({ navigation }) => {
               padding: 16,
               alignItems: "center",
               borderBottomWidth: 0.3,
-              justifyContent:'space-between'
+              justifyContent: "space-between",
             }}
           >
-            <View style={{flexDirection:'row',alignItems:'center'}}>
-                <SvgXml xml={iconDollarSvg()}/>
-                <Text style={{marginLeft:12,fontSize:14}}>Thanh toán khi nhận hàng</Text>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <SvgXml xml={iconDollarSvg()} />
+              <Text style={{ marginLeft: 12, fontSize: 14 }}>
+                Thanh toán khi nhận hàng
+              </Text>
             </View>
             <SvgXml xml={RadioButtonSvg("option1")} />
-           
           </View>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => handleSelect("option2")}>
-          
-          
-        <View
+          <View
             style={{
               flexDirection: "row",
               padding: 16,
               alignItems: "center",
               borderBottomWidth: 0.3,
-              justifyContent:'space-between'
+              justifyContent: "space-between",
             }}
           >
-            <View style={{flexDirection:'row',alignItems:'center'}}>
-                <SvgXml xml={iconWalletSvg()}/>
-                <Text style={{marginLeft:12,fontSize:14}}>Ví MoMo</Text>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <SvgXml xml={iconWalletSvg()} />
+              <Text style={{ marginLeft: 12, fontSize: 14 }}>Ví MoMo</Text>
             </View>
             <SvgXml xml={RadioButtonSvg("option2")} />
-           
           </View>
         </TouchableOpacity>
 
-      
-        <View
-          style={{
-            marginTop: 16,
-            alignItems: "center",
-            paddingVertical: 10,
-            backgroundColor: "#E2E2E2",
-            marginHorizontal: 16,
-            borderRadius: 8,
-          }}
-        >
-          <Text style={{ fontSize: 14, fontWeight: 600 }}>Xác nhận</Text>
-        </View>
+        <TouchableOpacity onPress={handleConfirm}>
+          <View
+            style={{
+              marginTop: 16,
+              alignItems: "center",
+              paddingVertical: 10,
+              backgroundColor: "#1890ff",
+              marginHorizontal: 16,
+              borderRadius: 8,
+            }}
+          >
+            <Text style={{ fontSize: 14, fontWeight: 600, color: "#fff" }}>
+              Xác nhận
+            </Text>
+          </View>
+        </TouchableOpacity>
       </View>
     </View>
   );

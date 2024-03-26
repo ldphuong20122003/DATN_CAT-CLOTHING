@@ -1,25 +1,24 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ListVoucher_Home from "./component/ListVoucher_Home";
 import { View } from "react-native";
+import config from "../../../config";
 
 const Voucher_Home = () => {
-  const default_data = [
-    {
-      title: "Giảm đ50k",
-      content: "Cho đơn từ 500k",
-    },
-    {
-      title: "Giảm đ50k",
-      content: "Cho đơn từ 500k",
-    },
-    {
-        title: "Giảm đ50k",
-        content: "Cho đơn từ 500k",
-      },
-  ];
+  const IP= config.IP;
+  const [data, setData] = useState([]);
+  const getAPI = () => {
+    return fetch(`http://${IP}:3000/API/Voucher`)
+      .then((res) => res.json())
+      .then((data) => setData(data))
+      .catch((err) => console.log(err));
+  };
+
+  useEffect(() => {
+    getAPI();
+  }, []);
   return (
     <View style={{ marginTop: 10 }}>
-      <ListVoucher_Home data={default_data} />
+      <ListVoucher_Home data={data} />
     </View>
   );
 };

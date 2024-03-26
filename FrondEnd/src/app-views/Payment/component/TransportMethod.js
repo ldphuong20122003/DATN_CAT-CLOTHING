@@ -1,18 +1,45 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useMemo, useState } from "react";
 import { Svg, SvgXml } from "react-native-svg";
 import BackSvg from "../../../../assets/Svg/BackSvg";
+import moment from "moment";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const TransportMethod = ({ navigation }) => {
+const TransportMethod = ({ navigation, route }) => {
+  const { transportMethod } = route.params;
   const gotoBack = () => {
     navigation.goBack();
   };
 
-  const [selectedOption, setSelectedOption] = useState(null);
-
+  const currentDate = moment();
+  const [selectedOption, setSelectedOption] = useState(transportMethod);
   const handleSelect = (option) => {
     setSelectedOption(option);
   };
+  const getEstimatedDeliveryDate = (option) => {
+    const clonedDate = moment(currentDate);
+
+    // Calculate estimated delivery date based on selected shipping method
+    switch (option) {
+      case "option1": // Tiết kiệm (3 - 5 ngày)
+        return (
+          clonedDate.add(3, "days").format("DD MMM YYYY") +
+          " - " +
+          clonedDate.add(5, "days").format("DD MMM YYYY")
+        );
+      case "option2": // Nhanh (1 - 2 ngày)
+        return (
+          clonedDate.add(1, "days").format("DD MMM YYYY") +
+          " - " +
+          clonedDate.add(2, "days").format("DD MMM YYYY")
+        );
+      case "option3": // Hỏa tốc (ngày hôm nay)
+        return clonedDate.format("DD MMM YYYY");
+      default:
+        return "Ngày dự kiến không xác định";
+    }
+  };
+
   const RadioButtonSvg = (option) => {
     const isChecked = selectedOption === option;
     // Thay thế bằng mã SVG của hình ảnh không được chọn
@@ -31,6 +58,22 @@ const TransportMethod = ({ navigation }) => {
     return isChecked ? checkedSvg : uncheckedSvg;
   };
 
+  const handleConfirm = async () => {
+    if (!selectedOption) {
+      Alert.alert("Thông báo", "Vui lòng chọn phương thức vận chuyển.");
+      return;
+    }
+
+    // Lưu lựa chọn vào AsyncStorage
+    try {
+      await AsyncStorage.setItem("@transport_method", selectedOption);
+      // Chuyển sang màn hình Payment và truyền giá trị selectedOption qua props
+      navigation.navigate("Payment", { transportMethod: selectedOption });
+    } catch (error) {
+      console.error("Error saving selected shipping method:", error);
+    }
+  };
+
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.Header}>
@@ -43,7 +86,6 @@ const TransportMethod = ({ navigation }) => {
               style={{
                 fontSize: 16,
                 color: "white",
-
                 fontWeight: "bold",
                 alignItems: "center",
               }}
@@ -67,7 +109,7 @@ const TransportMethod = ({ navigation }) => {
             <View style={{ marginLeft: 12 }}>
               <Text style={{ fontSize: 14 }}>Tiết kiệm</Text>
               <Text style={{ marginTop: 8, fontSize: 12, color: "#707070" }}>
-                Nhận hàng dự kiến vào 25 Th12 - 27 Th12
+                Nhận hàng dự kiến vào {getEstimatedDeliveryDate("option1")}
               </Text>
             </View>
           </View>
@@ -86,7 +128,7 @@ const TransportMethod = ({ navigation }) => {
             <View style={{ marginLeft: 12 }}>
               <Text style={{ fontSize: 14 }}>Nhanh</Text>
               <Text style={{ marginTop: 8, fontSize: 12, color: "#707070" }}>
-                Nhận hàng dự kiến vào 25 Th12 - 27 Th12
+                Nhận hàng dự kiến vào {getEstimatedDeliveryDate("option2")}
               </Text>
             </View>
           </View>
@@ -105,23 +147,27 @@ const TransportMethod = ({ navigation }) => {
             <View style={{ marginLeft: 12 }}>
               <Text style={{ fontSize: 14 }}>Hỏa tốc</Text>
               <Text style={{ marginTop: 8, fontSize: 12, color: "#707070" }}>
-                Nhận hàng dự kiến vào 25 Th12 - 27 Th12
+                Nhận hàng dự kiến vào {getEstimatedDeliveryDate("option3")}
               </Text>
             </View>
           </View>
         </TouchableOpacity>
-        <View
-          style={{
-            marginTop: 16,
-            alignItems: "center",
-            paddingVertical: 10,
-            backgroundColor: "#E2E2E2",
-            marginHorizontal: 16,
-            borderRadius: 8,
-          }}
-        >
-          <Text style={{ fontSize: 14, fontWeight: 600 }}>Xác nhận</Text>
-        </View>
+        <TouchableOpacity onPress={handleConfirm}>
+          <View
+            style={{
+              marginTop: 16,
+              alignItems: "center",
+              paddingVertical: 10,
+              backgroundColor: "#1890ff",
+              marginHorizontal: 16,
+              borderRadius: 8,
+            }}
+          >
+            <Text style={{ fontSize: 14, fontWeight: 600, color: "#fff" }}>
+              Xác nhận
+            </Text>
+          </View>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -136,5 +182,4 @@ const styles = StyleSheet.create({
     paddingTop: 30,
     paddingBottom: 12,
   },
-  Content: {},
 });

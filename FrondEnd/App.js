@@ -26,6 +26,7 @@ import Chat from "./src/app-views/Chat/Chat";
 import HistoryOrder from "./src/app-views/Order/HistoryOrder";
 import InformationOrder from "./src/app-views/Order/InformationOrder";
 import UpdateAddress from "./src/app-views/Address/UpdateAddress";
+import Voucher_Payment from "./src/app-views/Payment/component/Voucher_Payment";
 
 const Stack = createStackNavigator();
 
@@ -170,6 +171,12 @@ export default function App() {
           component={UpdateAddress}
           options={{ headerShown: false }}
         />
+        <Stack.Screen
+          name="Voucher_Payment"
+          component={Voucher_Payment}
+          options={{ headerShown: false }}
+        />
+        
       </Stack.Navigator>
     </NavigationContainer>
   );

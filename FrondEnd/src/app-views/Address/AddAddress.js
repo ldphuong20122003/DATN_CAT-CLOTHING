@@ -34,46 +34,61 @@ const AddAddress = ({ navigation }) => {
   const [country, setCountry] = useState("");
   const [address, setAddress] = useState("");
 
-  const randomDiaChi = Math.floor(Math.random() * 1000); // Số ngẫu nhiên từ 0 đến 999
-
-  const handleAddAddress = () => {
-    if (isFormValid) {
-      let formData = {
-        id: userId,
-        [`DiaChi${randomDiaChi}`]: {
-          tennguoinhan: fullname,
-          sdtnguoinhan: phone,
-          diachinhanhang: address + country,
-        },
-      };
-      axios
-        .post(`http://${IP}:3000/API/Address/add`, formData)
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => console.log(err));
-
-      navigation.navigate("ChooseAddress");
-    } else {
-      Alert.alert("Error", "Vui lòng điền đầy đủ thông tin");
-    }
-  };
   const onToggle = (isOn) => {
     setIsToggled(isOn); // Cập nhật trạng thái dựa vào giá trị isOn
   };
   const gotoBack = () => {
     navigation.goBack();
   };
+  const handleAddAddress = () => {
+    if (!fullname || !phone || !country || !address) {
+      Alert.alert("Error", "Vui lòng điền đầy đủ thông tin địa chỉ");
+      return;
+    }
+    const newAddress = {
+      fullname: fullname,
+      phone: phone,
+      country: country,
+      address: address,
+      isDefault: isToggled,
+    };
+
+    AsyncStorage.getItem(`address_${userId}`)
+      .then((addressesString) => {
+        let addressesArray = [];
+        if (addressesString !== null) {
+          // Chuyển đổi giá trị từ chuỗi JSON thành mảng
+          addressesArray = JSON.parse(addressesString);
+        }
+        // Kiểm tra xem addressesArray có phải là một mảng không
+        if (!Array.isArray(addressesArray)) {
+          // Nếu không phải mảng, bạn có thể tạo một mảng mới
+          addressesArray = [];
+        }
+        // Thêm địa chỉ mới vào mảng
+        addressesArray.push(newAddress);
+        // Lưu mảng mới vào AsyncStorage
+        AsyncStorage.setItem(
+          `address_${userId}`,
+          JSON.stringify(addressesArray)
+        )
+          .then(() => {
+            Alert.alert("Success", "Thêm địa chỉ mới thành công");
+            navigation.navigate("ChooseAddress");
+          })
+          .catch((error) => {
+            console.error("Error saving new address: ", error);
+          });
+      })
+      .catch((error) => {
+        console.error("Error fetching addresses from AsyncStorage: ", error);
+      });
+  };
 
   useEffect(() => {
     getUserId();
   }, [userId]);
-  useEffect(() => {
-    // Kiểm tra xem tất cả các trường đã được điền đầy đủ chưa
-    setIsFormValid(
-      fullname !== "" && phone !== "" && country !== "" && address !== ""
-    );
-  }, [fullname, phone, country, address]);
+
   return (
     <View style={StyleSheet.Container}>
       <View style={styles.Header}>
@@ -232,10 +247,10 @@ const AddAddress = ({ navigation }) => {
           />
         </View>
 
-        <TouchableOpacity onPress={isFormValid ? handleAddAddress : null}>
+        <TouchableOpacity onPress={handleAddAddress}>
           <View
             style={{
-              backgroundColor: isFormValid ? "#1890ff" : "#E2E2E2",
+              backgroundColor: "#1890ff",
               marginTop: 16,
               paddingVertical: 10,
               marginHorizontal: 16,
@@ -246,7 +261,7 @@ const AddAddress = ({ navigation }) => {
             <Text
               style={{
                 fontWeight: 600,
-                color: isFormValid ? "white" : "#5A5A5A",
+                color: "white",
               }}
             >
               Hoàn thành

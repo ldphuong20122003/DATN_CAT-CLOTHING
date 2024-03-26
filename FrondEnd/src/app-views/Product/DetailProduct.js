@@ -245,6 +245,40 @@ const Detail_Product = ({ navigation }) => {
       }
     }
   };
+  const handleBuy=async()=>{
+    if (selectedSize === "") {
+      Alert.alert(
+        "Thông báo",
+        "Vui lòng chọn kích cỡ trước khi thêm sản phẩm.",
+        [{ text: "OK", onPress: () => console.log("OK Pressed") }]
+      );
+    } else {
+      const newItem = {
+        id: data_Product.length > 0 ? data_Product[0].id : null,
+        NameProduct: data_Product.length > 0 ? data_Product[0].Name : null,
+        ImgProduct: data_Product.length > 0 ? data_Product[0].Img : null,
+        PriceProduct: data_Product.length > 0 ? data_Product[0].Price : null,
+        SaleProduct: data_Product.length > 0 ? data_Product[0].Sale : null,
+        SizeProduct: data_Product.length > 0 ? data_Product[0].Size : null,
+        quantityInCart: quantity,
+        sizeInCart: selectedSize,
+      };
+      try {
+        // Chuyển đổi danh sách sản phẩm đã chọn thành chuỗi JSON để lưu trữ
+        const jsonValue = JSON.stringify(newItem);
+        await AsyncStorage.setItem('@buy_product', jsonValue);
+        
+        // Chuyển hướng sang màn hình Payment và truyền danh sách sản phẩm đã chọn
+        navigation.navigate('Payment', { data: newItem });
+        console.log(jsonValue);
+      } catch (error) {
+        // Xử lý lỗi khi lưu dữ liệu
+        console.error("Error saving data", error);
+      }
+     
+  };
+}
+  
 
   return (
     <View style={styles.Container}>
@@ -796,7 +830,7 @@ const Detail_Product = ({ navigation }) => {
             </View>
           </View>
         </View>
-        <TouchableOpacity onPress={gotoPayment}>
+        <TouchableOpacity onPress={handleBuy}>
           <View
             style={{
               paddingVertical: 10,
