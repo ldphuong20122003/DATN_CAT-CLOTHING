@@ -154,12 +154,20 @@ const FavouriteScreen = ({ navigation }) => {
       // Nếu sản phẩm không có trong danh sách yêu thích, không hiển thị nó
       return null;
     }
+   
+      const pressItem = async () => {
+        await navigation.navigate("Detail_Product", {
+          productId: item.id,
+        });
+ 
+      };
+    
 
     return (
       <View style={{ marginRight: 10 }}>
         <TouchableOpacity
           style={{ alignItems: "center" }}
-        // onPress={() => handleRemoveFavourite(item.id, userId)}
+        onPress={() => pressItem()}
         >
           <View
             style={{

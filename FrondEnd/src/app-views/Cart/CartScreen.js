@@ -331,6 +331,7 @@ const CartScreen = ({ navigation }) => {
                                 fontSize: 12,
                                 color: "#5A5A5A",
                                 fontWeight: 400,
+                             
                               }}
                             >
                               Phân loại: {product.sizeInCart}
@@ -679,6 +680,7 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
     marginVertical: 4,
     paddingHorizontal: 4,
+    width:90,
   },
   itemInCart: {
     flex: 1,

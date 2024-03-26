@@ -10,20 +10,100 @@ import {
 import { SvgXml } from "react-native-svg";
 import BackSvg from "../../../assets/Svg/BackSvg";
 import ToggleSwitch from "toggle-switch-react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const UpdateAddress = ({ navigation, route }) => {
-  const [isToggled, setIsToggled] = useState(false); // State để theo dõi trạng thái bật/tắt
+  const { index, address } = route.params;
+  const [isToggled, setIsToggled] = useState(address.isDefault); // State để theo dõi trạng thái bật/tắt
   const { item } = route.params;
-  const [fullname, setFullName] = useState(""); // State
-  const [phone, setPhone] = useState("");
-  const [country, setCountry] = useState("");
-  const [address, setAddress] = useState("");
+  const [fullname_update, setFullName] = useState(address.fullname); // State
+  const [phone_update, setPhone] = useState(address.phone);
+  const [country_update, setCountry] = useState(address.country);
+  const [address_update, setAddress] = useState(address.address);
 
   const onToggle = (isOn) => {
     setIsToggled(isOn); // Cập nhật trạng thái dựa vào giá trị isOn
   };
   const gotoBack = () => {
     navigation.goBack();
+  };
+
+  const handleDeleteAddress = async () => {
+    Alert.alert(
+      "Xóa địa chỉ",
+      "Bạn có chắc chắn muốn xóa địa chỉ này?",
+      [
+        {
+          text: "Hủy",
+          style: "cancel",
+        },
+        {
+          text: "Xác nhận",
+          onPress: async () => {
+            try {
+              const userId = await AsyncStorage.getItem("UserId");
+              const addressesString = await AsyncStorage.getItem(
+                `address_${userId}`
+              );
+              if (addressesString !== null) {
+                let addressesArray = JSON.parse(addressesString);
+                addressesArray = addressesArray.filter(
+                  (item, idx) => idx !== index
+                );
+                await AsyncStorage.setItem(
+                  `address_${userId}`,
+                  JSON.stringify(addressesArray)
+                );
+                navigation.goBack();
+                Alert.alert("Success", "Đã xóa địa chỉ thành công");
+              }
+            } catch (error) {
+              console.error("Error deleting address: ", error);
+              Alert.alert("Error", "Xóa địa chỉ thất bại");
+            }
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
+  const handleUpdateAddress = async () => {
+    try {
+      // Lấy thông tin user id từ AsyncStorage
+      const userId = await AsyncStorage.getItem("UserId");
+
+      // Lấy danh sách địa chỉ từ AsyncStorage
+      let addressesString = await AsyncStorage.getItem(`address_${userId}`);
+      let addressesArray = [];
+
+      // Chuyển đổi dữ liệu từ string thành mảng (nếu có)
+      if (addressesString !== null) {
+        addressesArray = JSON.parse(addressesString);
+      }
+
+      // Cập nhật thông tin địa chỉ tương ứng trong mảng
+      addressesArray[index] = {
+        fullname: fullname_update,
+        phone: phone_update,
+        country: country_update,
+        address: address_update,
+        isDefault: isToggled,
+      };
+
+      // Lưu danh sách địa chỉ mới vào AsyncStorage
+      await AsyncStorage.setItem(
+        `address_${userId}`,
+        JSON.stringify(addressesArray)
+      );
+
+      // Thông báo cập nhật thành công và quay lại màn hình trước
+      Alert.alert("Success", "Đã cập nhật địa chỉ thành công");
+      navigation.goBack();
+    } catch (error) {
+      console.error("Error updating address: ", error);
+      Alert.alert("Error", "Cập nhật địa chỉ thất bại");
+    }
   };
 
   return (
@@ -67,7 +147,7 @@ const UpdateAddress = ({ navigation, route }) => {
           <TextInput
             placeholder="Họ và tên"
             placeholderTextColor={"#D4D4D4"}
-            value={fullname}
+            value={fullname_update}
             onChangeText={(txt) => setFullName(txt)}
           />
         </View>
@@ -81,7 +161,7 @@ const UpdateAddress = ({ navigation, route }) => {
           <TextInput
             placeholder="Số điện thoại"
             placeholderTextColor={"#D4D4D4"}
-            value={phone}
+            value={phone_update}
             onChangeText={(txt) => setPhone(txt)}
           />
         </View>
@@ -104,7 +184,7 @@ const UpdateAddress = ({ navigation, route }) => {
           <TextInput
             placeholder="Tỉnh/Thành Phố, Quận/Huyện, Phường/Xã"
             placeholderTextColor={"#D4D4D4"}
-            value={country}
+            value={country_update}
             onChangeText={(txt) => setCountry(txt)}
           />
         </View>
@@ -118,7 +198,7 @@ const UpdateAddress = ({ navigation, route }) => {
           <TextInput
             placeholder="Tên đường/Số nhà"
             placeholderTextColor={"#D4D4D4"}
-            value={address}
+            value={address_update}
             onChangeText={(txt) => setAddress(txt)}
           />
         </View>
@@ -183,13 +263,25 @@ const UpdateAddress = ({ navigation, route }) => {
             onToggle={onToggle} // Hàm được gọi khi trạng thái của toggle thay đổi
           />
         </View>
-        <View style={{marginHorizontal:16,paddingVertical:10,borderWidth:0.5,justifyContent:'center',alignItems:'center',borderRadius:8,borderColor:'#1890ff'}}>
-          <Text>Xóa tài khoản</Text>
-        </View>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={handleDeleteAddress}>
           <View
             style={{
-              backgroundColor: "#E2E2E2",
+              marginHorizontal: 16,
+              paddingVertical: 10,
+              borderWidth: 0.5,
+              justifyContent: "center",
+              alignItems: "center",
+              borderRadius: 8,
+              borderColor: "#1890ff",
+            }}
+          >
+            <Text>Xóa địa chỉ</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleUpdateAddress}>
+          <View
+            style={{
+              backgroundColor: "#1890ff",
               marginTop: 16,
               paddingVertical: 10,
               marginHorizontal: 16,
@@ -200,7 +292,7 @@ const UpdateAddress = ({ navigation, route }) => {
             <Text
               style={{
                 fontWeight: 600,
-                color: "#5A5A5A",
+                color: "#fff",
               }}
             >
               Hoàn thành

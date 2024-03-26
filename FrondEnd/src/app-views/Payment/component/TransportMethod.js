@@ -5,13 +5,14 @@ import BackSvg from "../../../../assets/Svg/BackSvg";
 import moment from "moment";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const TransportMethod = ({ navigation }) => {
+const TransportMethod = ({ navigation, route }) => {
+  const { transportMethod } = route.params;
   const gotoBack = () => {
     navigation.goBack();
   };
 
   const currentDate = moment();
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedOption, setSelectedOption] = useState(transportMethod);
   const handleSelect = (option) => {
     setSelectedOption(option);
   };
@@ -65,11 +66,11 @@ const TransportMethod = ({ navigation }) => {
 
     // Lưu lựa chọn vào AsyncStorage
     try {
-      await AsyncStorage.setItem('@transport_method', selectedOption);
+      await AsyncStorage.setItem("@transport_method", selectedOption);
       // Chuyển sang màn hình Payment và truyền giá trị selectedOption qua props
-      navigation.navigate('Payment', {transportMethod: selectedOption });
+      navigation.navigate("Payment", { transportMethod: selectedOption });
     } catch (error) {
-      console.error('Error saving selected shipping method:', error);
+      console.error("Error saving selected shipping method:", error);
     }
   };
 
@@ -152,18 +153,20 @@ const TransportMethod = ({ navigation }) => {
           </View>
         </TouchableOpacity>
         <TouchableOpacity onPress={handleConfirm}>
-        <View
-          style={{
-            marginTop: 16,
-            alignItems: "center",
-            paddingVertical: 10,
-            backgroundColor: "#1890ff",
-            marginHorizontal: 16,
-            borderRadius: 8,
-          }}
-        >
-          <Text style={{ fontSize: 14, fontWeight: 600 ,color:'#fff'}}>Xác nhận</Text>
-        </View>
+          <View
+            style={{
+              marginTop: 16,
+              alignItems: "center",
+              paddingVertical: 10,
+              backgroundColor: "#1890ff",
+              marginHorizontal: 16,
+              borderRadius: 8,
+            }}
+          >
+            <Text style={{ fontSize: 14, fontWeight: 600, color: "#fff" }}>
+              Xác nhận
+            </Text>
+          </View>
         </TouchableOpacity>
       </View>
     </View>
