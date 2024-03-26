@@ -25,6 +25,12 @@
              
             
             </div></form>
+
+            <select id="sortOption" onchange="sortData()" class="form-select mt-2" style="align-items: end;">
+                
+                <option value="asc">Giá: Từ Thấp Đến Cao</option>
+                <option value="desc">Giá : Từ Cao Đến Thấp</option>
+            </select>
             <div id="searchResults"></div>
             <% if(listProducts) {%>
                 <table class="table table-hover table-bordered mt-2" id="resultTable">
@@ -543,6 +549,40 @@
       }
   }
 </script>
+
+<script>
+        function sortData() {
+            var table, rows, switching, i, x, y, shouldSwitch;
+            table = document.getElementById("resultTable");
+            switching = true;
+
+            // Lặp qua tất cả các hàng, trừ header
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("td")[4]; // Lấy giá trị cần so sánh
+                    y = rows[i + 1].getElementsByTagName("td")[4];
+                    if (document.getElementById("sortOption").value === "asc") {
+                        if (parseFloat(x.innerHTML) > parseFloat(y.innerHTML)) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else {
+                        if (parseFloat(x.innerHTML) < parseFloat(y.innerHTML)) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                }
+            }
+        }
+    </script>
 
 </body>
 
