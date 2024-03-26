@@ -1,10 +1,5 @@
 import React from "react";
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
-import { SvgXml } from "react-native-svg";
-import CheckSvg from "../../../../assets/Svg/CheckSvg";
-
-
-
 
 const ListReNoti = ({ data, onPress }) => {
   const pressItem = (item) => {
@@ -13,43 +8,76 @@ const ListReNoti = ({ data, onPress }) => {
   const _renderItem = ({ item, index }) => {
     return (
       <View>
-        <TouchableOpacity onPress={pressItem} style={{marginTop:10,paddingHorizontal:16}}>
-        <View style={{flexDirection: 'row',justifyContent:'space-between',alignItems:'center'}}>
-            <View style={{flexDirection: 'row',alignItems:'center'}}>
-              <View>
-                {item.image && (
-                  <Image
-                    source={{ uri: item.image }}
-                    style={{
-                      height: 50,
-                      width: 50,
-                      borderRadius: 20,
-                    }}
-                  />
-                )}
-              </View>
-           
-              <View ml={2} style={{ marginLeft:8}}>
-                <Text
-                  style={{ color: "#000", fontSize: 14, fontWeight: 400}}
-                >
-                  {item.title}
-                </Text>
-                <Text
-                  style={{ color: "#5a5a5a", fontSize: 12, fontWeight: 400}}
-                >
-                  {item.content}
-                </Text>
-              </View>
-             
+        <TouchableOpacity
+          onPress={pressItem}
+          style={{ marginTop: 10, paddingHorizontal: 16 }}
+        >
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            {item.Img ? (
+              <Image
+                source={{ uri: item.Img }}
+                style={{
+                  height: 50,
+                  width: 50,
+                  borderRadius: 20,
+                }}
+              />
+            ) : (
+              <Image
+                source={require("../../../../assets/anhdaidien.jpg")}
+                style={{
+                  height: 50,
+                  width: 50,
+                  borderRadius: 20,
+                }}
+              />
+            )}
+            <View
+              style={{
+                flex: 1,
+                marginLeft: 8,
+                justifyContent: "space-between",
+              }}
+            >
+              <Text style={{ fontSize: 14, fontWeight: 400 }}>
+                {item.Title}
+              </Text>
+              <Text
+                style={{
+                  width: 270,
+                  fontSize: 12,
+                  fontWeight: 400,
+                  color: "#707070",
+                }}
+              >
+                {item.TypeNotification}
+              </Text>
             </View>
-            <View>
-              <Text style={{fontSize:10,color:'#707070'}}>16/12</Text>
-              
-              <View style={{backgroundColor:'#1890ff',width:8,height:8,borderRadius:4,marginLeft:18,marginTop:8}}></View>
+            <View
+              style={{
+                alignItems: "flex-end",
+                justifyContent: "space-between",
+                height: "80%",
+              }}
+            >
+              <Text style={{ fontSize: 12 }}>{item.Time}</Text>
+              <View
+                style={{
+                  width: 10,
+                  height: 10,
+                  borderRadius: 15,
+                  backgroundColor: "#1890ff",
+                }}
+              ></View>
             </View>
-            </View>
-          
+          </View>
         </TouchableOpacity>
       </View>
     );
