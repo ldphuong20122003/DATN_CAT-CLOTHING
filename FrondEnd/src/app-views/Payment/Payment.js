@@ -59,6 +59,8 @@ const Payment = ({ navigation, route }) => {
   const [voucher, setVoucher] = useState(null);
   const [visible, setVisible] = useState(false);
   const [userId, setUserId] = useState("");
+  const totalQuantity = products.reduce((acc, curr) => acc + curr.quantityInCart, 0);
+
   const getUserId = async () => {
     try {
       const userIdValue = await AsyncStorage.getItem("UserId");
@@ -72,8 +74,6 @@ const Payment = ({ navigation, route }) => {
   const currentDate = moment();
   const getEstimatedDeliveryDate = (option) => {
     const clonedDate = moment(currentDate);
-
-    // Calculate estimated delivery date based on selected shipping method
     switch (option) {
       case "option1": // Tiết kiệm (3 - 5 ngày)
         return (
@@ -111,7 +111,6 @@ const Payment = ({ navigation, route }) => {
   const totalPrice = calculateTotalPrice(products);
   const calculateTotalPayment = (totalPrice, transportMethod) => {
     let totalPayment = totalPrice;
-
     // Xử lý phí vận chuyển
     if (transportMethod) {
       switch (transportMethod) {
@@ -137,7 +136,6 @@ const Payment = ({ navigation, route }) => {
   const totalPayment = calculateTotalPayment(totalPrice, transportMethod);
 
   const handlePayment = () => {
-    const docId = generateId();
     let paymentMethodValue = {};
     if (paymentMethod === "option1") {
       paymentMethodValue = { phuongthucthanhtoan: "Thanh toán khi nhận hàng" };
@@ -157,6 +155,7 @@ const Payment = ({ navigation, route }) => {
       product: products.map((product) => ({
         id_product: product.id,
         image: product.ImgProduct,
+        name: product.NameProduct,
         size: product.sizeInCart,
         price: product.PriceProduct - product.SaleProduct,
         soluong: product.quantityInCart,
@@ -164,6 +163,7 @@ const Payment = ({ navigation, route }) => {
           product.quantityInCart * (product.PriceProduct - product.SaleProduct),
       })),
       diachinhanhang: addressorder,
+      tongsanpham: totalQuantity,
       ...paymentMethodValue,
       ...transportMethodValue,
       status: "Chờ xác nhận",
@@ -174,8 +174,23 @@ const Payment = ({ navigation, route }) => {
     axios
       .post(`http://${IP}:3000/API/donhang/add`, formData)
       .then((res) => {
-        console.log(res);
+        const createdDocumentID = res.data.split(": ")[1];
+        console.log(createdDocumentID);
         setVisible(true);
+        let data = {
+          Img: "",
+          Time: currentDate.format("DD/MM"),
+          Title: "Đã đặt",
+          TypeNotification: `Đơn hàng với mã đơn ${createdDocumentID} đã được đặt thành công`,
+          id_DonHang: createdDocumentID,
+          id_user: userId,
+        };
+        axios
+          .post(`http://${IP}:3000/API/ntf/add`, data)
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((err) => console.log(err));
       })
       .catch((err) => console.log(err));
   };
@@ -614,15 +629,17 @@ const Payment = ({ navigation, route }) => {
           </View>
         </View>
       </ScrollView>
-      <TouchableOpacity onPress={()=>{
-        if (paymentMethod === 'option1') {
-          handlePayment();
-        } else if (paymentMethod === 'option2') {
-          console.log('Thanh toán bằng MoMo');
-        } else {
-          console.log('No payment method selected');
-        }
-      }}>
+      <TouchableOpacity
+        onPress={() => {
+          if (paymentMethod === "option1") {
+            handlePayment();
+          } else if (paymentMethod === "option2") {
+            console.log("Thanh toán bằng MoMo");
+          } else {
+            console.log("No payment method selected");
+          }
+        }}
+      >
         <View style={styles.Footer}>
           <Text style={{ color: "#fff", fontWeight: 600 }}>Thanh toán</Text>
         </View>
