@@ -67,9 +67,9 @@
                                         class="btn btn-success m-2" data-bs-target="#updateModal">edit
                                     </button>
 
-                                    <button data-item-id="<%= item.id %>" data-item-Product="<%= item.Product %>"
+                                    <!-- <button data-item-id="<%#= item.id %>" data-item-Product="<%#= item.Product %>"
                                         class="btn btn-danger" data-bs-toggle="modal"
-                                        data-bs-target="#deleteModal">Delete</button>
+                                        data-bs-target="#deleteModal">Delete</button> -->
                                 </td>
 
                             </tr>
@@ -132,7 +132,7 @@
                             </div>
                         </div>
                         <!--modal-delete-->
-                        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel"
+                        <!-- <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel"
                             aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
@@ -153,7 +153,7 @@
                                     </form>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
         </div>
         <%- include('../inc/footer') %>
             <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
@@ -163,7 +163,7 @@
                 integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS"
                 crossorigin="anonymous"></script>
             <!--script delete-->
-            <script>
+            <!-- <script>
                 const btnDelete = document.querySelectorAll('.btn.btn-danger');
                 const deletemodal = new bootstrap.Modal(document.getElementById('deleteModal'));
                 const deleteform = document.querySelector('form[action="OrderDetails/delete"]');
@@ -182,7 +182,7 @@
                         deleteform.action = `/OrderDetails/delete/${itemId}`;
                     })
                 })
-            </script>
+            </script> -->
             <!--script edit-->
             <script>
                 const btnEdit = document.querySelectorAll('.btn.btn-success');
