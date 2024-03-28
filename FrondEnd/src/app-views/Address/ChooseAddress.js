@@ -17,14 +17,15 @@ const ChooseAddress = ({ navigation, route }) => {
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState("");
   const [selectedItem, setSelectedItem] = useState(null);
-  const addressorder = route.params.addressorder;
+  // const addressorder = route.params.addressorder;
+  // console.log(addressorder);
 
   const gotoBack = () => {
     navigation.goBack();
   };
   const gotoAddAddress = () => {
     navigation.navigate("AddAddress");
-  };
+  };;
   const gotoUpdateAddress = (index, address) => {
     navigation.navigate("UpdateAddress", { index, address });
   };
@@ -98,16 +99,24 @@ const ChooseAddress = ({ navigation, route }) => {
     return unsubscribe;
   }, [userId, navigation]); 
   useEffect(() => {
-    if (addressorder) {
-      const selectedAddress = data.find(address => 
-        address.address === addressorder.address &&
-        address.country === addressorder.country &&
-        address.fullname === addressorder.fullname &&
-        address.phone === addressorder.phone
+    // Kiểm tra xem addressorder có tồn tại trong route.params không
+    if (route.params && route.params.addressorder) {
+      const addressOrderFromParams = route.params.addressorder;
+      
+      // Tìm địa chỉ được chọn từ danh sách địa chỉ dựa trên các thông tin của addressorder
+      const selectedAddress = data.find(address =>
+        address.address === addressOrderFromParams.address &&
+        address.country === addressOrderFromParams.country &&
+        address.fullname === addressOrderFromParams.fullname &&
+        address.phone === addressOrderFromParams.phone
       );
-      setSelectedItem(selectedAddress);
+      
+      // Cập nhật địa chỉ được chọn nếu tìm thấy
+      if (selectedAddress) {
+        setSelectedItem(selectedAddress);
+      }
     }
-  }, [addressorder, data]);
+  }, [route.params, data]);
   return (
     <View style={StyleSheet.Container}>
       <View style={styles.Header}>

@@ -27,6 +27,7 @@ import HistoryOrder from "./src/app-views/Order/HistoryOrder";
 import InformationOrder from "./src/app-views/Order/InformationOrder";
 import UpdateAddress from "./src/app-views/Address/UpdateAddress";
 import Voucher_Payment from "./src/app-views/Payment/component/Voucher_Payment";
+import ProductByCategory from "./src/app-views/Product/Category/ProductByCategory";
 
 const Stack = createStackNavigator();
 
@@ -166,7 +167,7 @@ export default function App() {
           component={HistoryOrder}
           options={{ headerShown: false }}
         />
-         <Stack.Screen
+        <Stack.Screen
           name="UpdateAddress"
           component={UpdateAddress}
           options={{ headerShown: false }}
@@ -176,7 +177,11 @@ export default function App() {
           component={Voucher_Payment}
           options={{ headerShown: false }}
         />
-        
+        <Stack.Screen
+          name="ProductByCategory"
+          component={ProductByCategory}
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

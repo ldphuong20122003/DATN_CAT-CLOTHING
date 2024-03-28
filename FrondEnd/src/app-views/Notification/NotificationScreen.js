@@ -24,7 +24,6 @@ const NotificationScreen = ({}) => {
           paddingBottom: 8,
           justifyContent: "space-between",
           paddingHorizontal: 16,
-          width: "100%",
         }}
       >
         <View style={{ flex: 1, alignItems: "center" }}>
@@ -34,7 +33,8 @@ const NotificationScreen = ({}) => {
         </View>
         <SvgXml xml={CheckSvg("white")} />
       </View>
-      <View style={{ marginTop: 10 }}>
+      <View style={{          height:'87%'
+}}>
         <Recommend_Noti />
       </View>
     </SafeAreaView>

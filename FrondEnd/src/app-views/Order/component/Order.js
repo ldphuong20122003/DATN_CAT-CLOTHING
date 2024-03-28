@@ -5,7 +5,7 @@ import config from "../../../../config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 const IP = config.IP;
 
-const Order = () => {
+const Order = ({}) => {
   const [userId, setUserId] = useState("");
   const [data,setData]=useState([]);
   const [isLoading,setIsLoading]=useState(false);

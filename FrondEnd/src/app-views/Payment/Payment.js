@@ -59,7 +59,10 @@ const Payment = ({ navigation, route }) => {
   const [voucher, setVoucher] = useState(null);
   const [visible, setVisible] = useState(false);
   const [userId, setUserId] = useState("");
-  const totalQuantity = products.reduce((acc, curr) => acc + curr.quantityInCart, 0);
+  const totalQuantity = products.reduce(
+    (acc, curr) => acc + curr.quantityInCart,
+    0
+  );
 
   const getUserId = async () => {
     try {
@@ -150,6 +153,12 @@ const Payment = ({ navigation, route }) => {
     } else if (transportMethod === "option3") {
       transportMethodValue = { phuongthucvanchuyen: "Hỏa tốc" };
     }
+    let vouchersMethod = "";
+    if (voucher) {
+      vouchersMethod = { id_voucher: voucher.id };
+    } else {
+      vouchersMethod = { id_voucher: "" };
+    }
     let formData = {
       id_user: userId,
       product: products.map((product) => ({
@@ -167,7 +176,7 @@ const Payment = ({ navigation, route }) => {
       ...paymentMethodValue,
       ...transportMethodValue,
       status: "Chờ xác nhận",
-      id_voucher: voucher.id,
+      ...vouchersMethod,
       ngaydat: currentDate.format("DD MMM YYYY"),
       totalPayment: totalPayment,
     };
@@ -175,8 +184,51 @@ const Payment = ({ navigation, route }) => {
       .post(`http://${IP}:3000/API/donhang/add`, formData)
       .then((res) => {
         const createdDocumentID = res.data.split(": ")[1];
-        console.log(createdDocumentID);
         setVisible(true);
+        products.forEach((product) => {
+          let productId = product.id; // Lấy ID của sản phẩm
+          let sizeOrdered = product.sizeInCart; // Số lượng đặt hàng
+          let quantityOrdered = product.quantityInCart; // Số lượng đặt hàng
+          axios
+            .get(`http://${IP}:3000/API/product/?id=${productId}`)
+            .then((response) => {
+              // Kiểm tra xem sản phẩm có tồn tại không
+              if (response.data) {
+                let productData = response.data[0]; // Lấy phần tử đầu tiên vì productData là một mảng chỉ chứa một phần tử
+                if (
+                  productData &&
+                  productData.Size &&
+                  productData.Size[sizeOrdered.toString()]
+                ) {
+                  let currentStock = productData.Size[sizeOrdered.toString()]; // Số lượng tồn kho hiện tại
+                  console.log(currentStock);
+                  if (currentStock >= quantityOrdered) {
+                    // Trừ số lượng đã đặt hàng ra khỏi số lượng tồn kho
+                    let newStock = currentStock - quantityOrdered;
+                    productData.Size[sizeOrdered.toString()] = newStock;
+                    axios
+                      .put(
+                        `http://${IP}:3000/API/product/update/${productData.id}`,
+                        {
+                          Size: productData.Size,
+                        }
+                      )
+                      .then((updateResponse) => {})
+                      .catch((error) => {
+                        console.error(`Lỗi khi cập nhật sản phẩm: ${error}`);
+                      });
+                  }
+                }
+              } else {
+                console.log(
+                  `Sản phẩm với ID ${productId} không tồn tại trong API sản phẩm.`
+                );
+              }
+            })
+            .catch((error) => {
+              console.error(`Lỗi khi truy cập API sản phẩm: ${error}`);
+            });
+        });
         let data = {
           Img: "",
           Time: currentDate.format("DD/MM"),
@@ -187,14 +239,11 @@ const Payment = ({ navigation, route }) => {
         };
         axios
           .post(`http://${IP}:3000/API/ntf/add`, data)
-          .then((res) => {
-            console.log(res);
-          })
+          .then((res) => {})
           .catch((err) => console.log(err));
       })
       .catch((err) => console.log(err));
   };
-  console.log();
   useEffect(() => {
     getUserId();
   }, []);
@@ -367,7 +416,9 @@ const Payment = ({ navigation, route }) => {
                       </Text>
                     </View>
                   ) : (
-                    <Text>Chọn Voucher</Text>
+                    <Text style={{ fontSize: 12, color: "#1890ff" }}>
+                      Chọn Voucher
+                    </Text>
                   )}
                   <SvgXml xml={CareRightSvg("#1890ff")} />
                 </View>
@@ -605,9 +656,7 @@ const Payment = ({ navigation, route }) => {
                 </View>
               ) : (
                 <View>
-                  <Text style={{ fontSize: 12, color: "#707070" }}>
-                    Chọn phương thức vận chuyển
-                  </Text>
+                  <Text style={{ fontSize: 12, color: "#707070" }}>0 đ</Text>
                 </View>
               )}
             </View>
