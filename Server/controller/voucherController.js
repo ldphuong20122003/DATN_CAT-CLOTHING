@@ -1,6 +1,8 @@
 const admin = require('firebase-admin');
 // const firestore  = admin.firestore();
 // firestore.settings({ignoreUndefinedProperties:true});
+
+
 exports.listVouchers = async (req, res, next) => {
     let msg = '';
     let list = null;

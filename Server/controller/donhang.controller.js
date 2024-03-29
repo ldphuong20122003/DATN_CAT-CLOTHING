@@ -9,6 +9,7 @@ exports.OrderDanhSach = async (req, res, next) => {
     let msg = '';
     let listDonHang = null;
     let listDonHangJson = [];
+    
 
     try {
         listDonHang = await firestore.collection('DonHang').get();
@@ -18,6 +19,7 @@ exports.OrderDanhSach = async (req, res, next) => {
         }
         listDonHang.docs.forEach(doc => {
             listDonHangJson.push(doc.data());
+            
         });
 
         // console.log('donhang:' + listDonHang);
@@ -29,7 +31,7 @@ exports.OrderDanhSach = async (req, res, next) => {
     }
 
     res.render('order/donhang', {
-        title: "Order", listdonhang: listDonHangJson
+        title: "Order", listdonhang: listDonHangJson 
     });
 };
 exports.delete = async(req,res,next)=>{

@@ -10,14 +10,18 @@
         <%= title %>
     </title>
     <link rel="stylesheet" href="../css/app.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
 </head>
 
 <body class="m-0 p-0 container-fluid">
     <%- include('../inc/header') %>
         <div class="m-4">
+            <div style="display: flex;">
+            <h1 >QUẢN LÝ SẢN PHẨM</h1>
             <a href="/products" type="button" class="btn btn-add fw-medium float-end mb-2" data-bs-toggle="modal"
-                data-bs-target="#addModal">Add</a>
-           <form > <div class="input-group">
+                data-bs-target="#addModal" style="margin-left: 950px; width: 100px; height: 40px;" >Add</a>
+            </div>
+           <!-- <form > <div class="input-group">
                 
                 <span class="input-group-text col-md-1">Search</span>
                 
@@ -32,9 +36,9 @@
                 <option value="desc">Giá : Từ Cao Đến Thấp</option>
                 
                 
-            </select>
+            </select> -->
             
-            <div id="searchResults"></div>
+            
             <% if(listProducts) {%>
                 <table class="table table-hover table-bordered mt-2" id="resultTable">
                     <thead>
@@ -106,30 +110,20 @@
                                         class="btn btn-success m-2" data-bs-toggle="modal" data-item-id
                                         data-bs-target="#editModal">Edit</button>
 
-                                    <button data-item-id="<%= item.id %>" data-item-name="<%= item.Name %>"
+                                        <!-- <button data-item-id="<%= item.id %>" data-item-name="<%= item.Name %>"
                                         class="btn btn-danger" data-bs-toggle="modal"
-                                        data-bs-target="#deleteModal">Delete</button>
+                                        data-bs-target="#deleteModal">Delete</button>-->
                                 </td>
                              
                             </tr>
+                            
                             <% }) %>
                     </tbody>
                 </table>
                 <% }else{ %>
                     <h3>Không có dữ liệu</h3>
                     <% } %>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <p class="m-0">Showing:10/100 items</p>
-                            <nav aria-label="Page navigation example" class="">
-                                <ul class="pagination m-0">
-                                    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                                </ul>
-                            </nav>
-                        </div>
+                        
         </div>
         <!-- Modal add -->
         <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
@@ -589,7 +583,13 @@
       
     </script>
 
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#resultTable').DataTable();
+        });
+    </script>
 </body>
 
 

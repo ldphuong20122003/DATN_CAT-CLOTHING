@@ -47,6 +47,8 @@ app.use(session({
   saveUninitialized: true
 }));
 
+
+
 //WEB SERVER
 app.use('/', homeRouter);
 app.use('/products',productRouter);
@@ -82,5 +84,8 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+
+
 
 module.exports = app;
