@@ -61,6 +61,19 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 const bucket = admin.storage().bucket();
+exports.validateData= async(req, res, next)=> {
+   const Name= req.body.Name;
+   const Categories= req.body.Categories;
+   const Content= req.body.Content;
+   const Price= req.body.Price;
+   const Sale=req.body.Sale;
+  
+    if (!Name || !Categories ||!Content ||!Price||!Sale ) {
+      return res.status(400).json({ error: ' Không được để trống' });
+    }
+    // Kiểm tra dữ liệu khác nếu cần
+    next();
+  }
 exports.addProduct= async(req,res,next)=>{
     upload.single('avatar')(req, res, async (err) => {
         if (err) {

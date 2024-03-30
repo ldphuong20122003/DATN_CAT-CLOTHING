@@ -11,6 +11,13 @@
     </title>
     <link rel="stylesheet" href="../css/app.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+    <style>
+        .error-message {
+          color: red;
+          font-size: 12px;
+          margin-top: 5px;
+        }
+      </style>
 </head>
 
 <body class="m-0 p-0 container-fluid">
@@ -110,9 +117,9 @@
                                         class="btn btn-success m-2" data-bs-toggle="modal" data-item-id
                                         data-bs-target="#editModal">Edit</button>
 
-                                        <!-- <button data-item-id="<%= item.id %>" data-item-name="<%= item.Name %>"
+                                         <button data-item-id="<%= item.id %>" data-item-name="<%= item.Name %>"
                                         class="btn btn-danger" data-bs-toggle="modal"
-                                        data-bs-target="#deleteModal">Delete</button>-->
+                                        data-bs-target="#deleteModal">Delete</button>
                                 </td>
                              
                             </tr>
@@ -138,6 +145,8 @@
                             
                             <label for="inputCode" class="form-label" >Name</label>
                             <input name="Name" type="text" id="nameProduct" class="form-control" >
+                            <div id="nameError" class="error-message"></div>
+
                             <label for="cateId">Category</label>
                             <select class="form-select mt-2" aria-label="Pick Category" name="Categories" required >
                                 <% categories.forEach(item=> { %>
@@ -148,12 +157,19 @@
                             </select>
                             <label for="imageProduct" class="form-label">Image</label>
                             <input type="file" aria-label="First name" class="form-control" name="avatar" id="imageProduct">
+
                             <label for="descriptionProduct" class="form-label">Description</label>
                             <input name="Content" type="text" id="descriptionProduct" class="form-control">
+                            <div id="descriptionValueError" class="error-message"></div>
+
                             <label for=" priceProduct" class="form-label">Price</label>
                             <input name="Price" type="text" id="priceProduct" class="form-control">
+                            <div id="priceValueError" class="error-message"></div>
+
                             <label for="saleProduct" class="form-label">Sale</label>
                             <input name="Sale" type="number" id="saleProduct" class="form-control">
+                            <div id="saleValueError" class="error-message"></div>
+
                             <label for="sizeProduct" class="form-label">Size</label>
                             
                             <div  id="sizeProduct">
@@ -590,6 +606,56 @@
             $('#resultTable').DataTable();
         });
     </script>
+
+    <script>
+document.getElementById('addModal').addEventListener('submit', function(event) {
+   // Ngăn chặn form submit
+
+  // Lấy giá trị từ input
+  var nameValue = document.getElementById('nameProduct').value.trim();
+  var descriptionValue = document.getElementById('descriptionProduct').value.trim();
+  var priceValue = document.getElementById('priceProduct').value.trim();
+  var saleValue = document.getElementById('saleProduct').value.trim();
+  // Kiểm tra tính hợp lệ của dữ liệu
+  var isValid = true;
+  if (nameValue === '') {
+    document.getElementById('nameError').textContent = 'Tên không được để trống';
+    isValid = false;
+  } else {
+    document.getElementById('nameError').textContent = '';
+  }
+
+  if (descriptionValue === '') {
+    document.getElementById('descriptionValueError').textContent = 'Thông tin không được để trống';
+    isValid = false;
+  } else {
+    document.getElementById('descriptionValueError').textContent = '';
+  }
+
+  if (priceValue === '') {
+    document.getElementById('priceValueError').textContent = 'Giá không được để trống';
+    isValid = false;
+  } else {
+    document.getElementById('priceValueError').textContent = '';
+  }
+
+  if (saleValue === '') {
+    document.getElementById('saleValueError').textContent = 'Giá Sale không được để trống';
+    isValid = false;
+  } else {
+    document.getElementById('saleValueError').textContent = '';
+  }
+
+
+  // Nếu dữ liệu không hợp lệ, không thực hiện hành động tiếp theo
+  if (!isValid) {
+     event.preventDefault();;
+  }
+
+  // Nếu dữ liệu hợp lệ, bạn có thể gửi dữ liệu đi hoặc thực hiện hành động khác ở đây
+
+});
+</script>
 </body>
 
 
