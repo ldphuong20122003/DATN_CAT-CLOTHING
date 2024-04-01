@@ -10,14 +10,18 @@
         <%= title %>
     </title>
     <link rel="stylesheet" href="../css/app.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
 </head>
 
 <body class="m-0 p-0 container-fluid">
     <%- include('../inc/header') %>
         <div class="m-4">
+            <div style="display: flex;">
+            <h1 >QUẢN LÝ SẢN PHẨM</h1>
             <a href="/products" type="button" class="btn btn-add fw-medium float-end mb-2" data-bs-toggle="modal"
-                data-bs-target="#addModal">Add</a>
-           <form > <div class="input-group">
+                data-bs-target="#addModal" style="margin-left: 950px; width: 100px; height: 40px;" >Add</a>
+            </div>
+           <!-- <form > <div class="input-group">
                 
                 <span class="input-group-text col-md-1">Search</span>
                 
@@ -27,11 +31,14 @@
             </div></form>
 
             <select id="sortOption" onchange="sortData()" class="form-select mt-2" style="align-items: end;">
-                
+                <option value="all">All</option>
                 <option value="asc">Giá: Từ Thấp Đến Cao</option>
                 <option value="desc">Giá : Từ Cao Đến Thấp</option>
-            </select>
-            <div id="searchResults"></div>
+                
+                
+            </select> -->
+            
+            
             <% if(listProducts) {%>
                 <table class="table table-hover table-bordered mt-2" id="resultTable">
                     <thead>
@@ -102,31 +109,28 @@
                                         data-item-sale="<%= item.Sale %>"
                                         class="btn btn-success m-2" data-bs-toggle="modal" data-item-id
                                         data-bs-target="#editModal">Edit</button>
+
                                         
                                    <button data-item-id="<%= item.id %>" data-item-name="<%= item.Name %>"
                                         class="btn btn-danger" data-bs-toggle="modal"
                                         data-bs-target="#deleteModal">Delete</button> 
+
+
+                                        <!-- <button data-item-id="<%= item.id %>" data-item-name="<%= item.Name %>"
+                                        class="btn btn-danger" data-bs-toggle="modal"
+                                        data-bs-target="#deleteModal">Delete</button>-->
+
                                 </td>
                              
                             </tr>
+                            
                             <% }) %>
                     </tbody>
                 </table>
                 <% }else{ %>
                     <h3>Không có dữ liệu</h3>
                     <% } %>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <p class="m-0">Showing:10/100 items</p>
-                            <nav aria-label="Page navigation example" class="">
-                                <ul class="pagination m-0">
-                                    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                                </ul>
-                            </nav>
-                        </div>
+                        
         </div>
         <!-- Modal add -->
         <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
@@ -537,7 +541,7 @@
       tr = table.getElementsByTagName("tr");
 
       for (i = 0; i < tr.length; i++) {
-          td = tr[i].getElementsByTagName("td")[2]; // chỉ tìm kiếm trong cột ID
+          td = tr[i].getElementsByTagName("td")[1]; // chỉ tìm kiếm trong cột ID
           if (td) {
               txtValue = td.textContent || td.innerText;
               if (txtValue.toUpperCase().indexOf(filter) > -1) {
@@ -551,26 +555,26 @@
 </script>
 
 <script>
-        function sortData() {
+    function sortData() {
+            var select = document.getElementById("sortOption");
+            var sortValue = select.options[select.selectedIndex].value;
             var table, rows, switching, i, x, y, shouldSwitch;
             table = document.getElementById("resultTable");
             switching = true;
-
-            // Lặp qua tất cả các hàng, trừ header
             while (switching) {
                 switching = false;
                 rows = table.rows;
                 for (i = 1; i < (rows.length - 1); i++) {
                     shouldSwitch = false;
-                    x = rows[i].getElementsByTagName("td")[4]; // Lấy giá trị cần so sánh
-                    y = rows[i + 1].getElementsByTagName("td")[4];
-                    if (document.getElementById("sortOption").value === "asc") {
-                        if (parseFloat(x.innerHTML) > parseFloat(y.innerHTML)) {
+                    x = rows[i].getElementsByTagName("td")[4]; // Cột giá
+                    y = rows[i + 1].getElementsByTagName("td")[4]; // Cột giá
+                    if (sortValue === "asc") {
+                        if (parseInt(x.innerHTML) > parseInt(y.innerHTML)) {
                             shouldSwitch = true;
                             break;
                         }
-                    } else {
-                        if (parseFloat(x.innerHTML) < parseFloat(y.innerHTML)) {
+                    } else if (sortValue === "desc") {
+                        if (parseInt(x.innerHTML) < parseInt(y.innerHTML)) {
                             shouldSwitch = true;
                             break;
                         }
@@ -582,8 +586,17 @@
                 }
             }
         }
+
+      
     </script>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#resultTable').DataTable();
+        });
+    </script>
 </body>
 
 

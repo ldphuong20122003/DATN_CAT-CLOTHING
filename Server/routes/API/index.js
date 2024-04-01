@@ -69,7 +69,7 @@ router.get('/getbyid', async (req, res, next) => {
   router.post('/add',async(req,res,next)=>{
     try {
       // Dữ liệu từ request body
-     const collectionRef = admin.firestore().collection('Users');
+     const collectionRef = admin.firestore().collection('products');
            const Id = collectionRef.doc().id;
          
            const docID = Id ? collectionRef.doc(Id) : collectionRef.doc();

@@ -4,6 +4,7 @@ const serviceAccount = require('../model/firebaseConfig');
 const firestore = admin.firestore();
 const bodyParser = require('body-parser');
 const path = require("path");
+const db = admin.firestore();
 exports.home = (req,res,next)=>{
     const message1 = req.query.msg;
     res.render('home/home',{title: "Home",errorMessage:'a', message1});
@@ -94,6 +95,8 @@ exports.addSTAFF= async(req,res,next)=>{
 
 
 };
+
+
 
 
 
