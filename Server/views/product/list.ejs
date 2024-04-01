@@ -110,9 +110,22 @@
                                         class="btn btn-success m-2" data-bs-toggle="modal" data-item-id
                                         data-bs-target="#editModal">Edit</button>
 
+
+                                        
+                                   <button data-item-id="<%= item.id %>" data-item-name="<%= item.Name %>"
+                                        class="btn btn-danger" data-bs-toggle="modal"
+                                        data-bs-target="#deleteModal">Delete</button> 
+
+
                                         <!-- <button data-item-id="<%= item.id %>" data-item-name="<%= item.Name %>"
                                         class="btn btn-danger" data-bs-toggle="modal"
                                         data-bs-target="#deleteModal">Delete</button>-->
+
+
+                                        <!-- <button data-item-id="<%= item.id %>" data-item-name="<%= item.Name %>"
+                                        class="btn btn-danger" data-bs-toggle="modal"
+                                        data-bs-target="#deleteModal">Delete</button>-->
+
                                 </td>
                              
                             </tr>
@@ -351,7 +364,7 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div>  
         <%- include('../inc/footer') %>
 
             <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
