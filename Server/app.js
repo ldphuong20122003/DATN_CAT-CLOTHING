@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var session = require('express-session');
 
+  
 //Controller router
 
 var homeRouter = require('./routes/WebServer/home');
@@ -42,10 +43,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({
-  secret: 'nhNNGHSNFGH83sdf23435Fdzgsfnksjdfh9', // Thay thế bằng một khóa bí mật mạnh mẽ hơn trong thực tế
-  resave: false,
-  saveUninitialized: true
-}));
+  secret:'nhNNGHSNFGH83sdf23435Fdzgsfnksjdfh9', // chuỗi ký tự đặc biệt để Session mã hóa, tự viết
+  resave:true,
+  saveUninitialized:true
+  }));
 
 
 

@@ -5,8 +5,8 @@ const bodyParser = require('body-parser');
 
 //Đường dẫn tới donhang.controller.js 
 const donhangCtrl = require('../../controller/donhang.controller');
-
-router.get('/',donhangCtrl.OrderDanhSach);
+var middleware = require('../../middleware/checklogin');
+router.get('/',middleware.yeu_cau_login,donhangCtrl.OrderDanhSach);
 //xóa
 router.post('/delete/:id',donhangCtrl.delete);
 //update

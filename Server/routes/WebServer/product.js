@@ -5,10 +5,10 @@ const multer = require('multer');
 
 //Đường dẫn tới products.controller.js 
 var productCtrl = require('../../controller/productController');
-
+var middleware = require('../../middleware/checklogin');
 
 //Vào trang product theo địa chỉ '/products/'
-router.get('/',productCtrl.listProducts);
+router.get('/' ,middleware.yeu_cau_login,productCtrl.listProducts);
 //Chi tiết
 // router.get('/view/:id_p',productCtrl.viewProducts);
 // //Thêm
