@@ -7,10 +7,10 @@ const admin = require('firebase-admin');
 //Đường dẫn tới home.controller.js 
 var homeCtrl = require('../../controller/home.controller');
 const productCtrl = require("../../controller/productController");
-
+var middleware = require('../../middleware/checklogin');
 router.post('/add',homeCtrl.addSTAFF)
 //Vào trang home theo địa chỉ '/'
-router.get('/home',homeCtrl.home);
+router.get('/home',middleware.yeu_cau_login,homeCtrl.home);
 router.post('/login',homeCtrl.LOGIN);
 router.get('/',productCtrl.loginScreen);
   router.get('/reg',homeCtrl.reg);
