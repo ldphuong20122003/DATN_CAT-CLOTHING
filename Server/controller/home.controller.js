@@ -31,7 +31,8 @@ console.log("email"+datatocheck.Email+"pass:"+datatocheck.Password)
                 if (userData.Password === datatocheck.Password) {
                     console.log("Mật khẩu đúng"+userData.Password);
                     req.session.staffLogin=userData.Password && userData.Email;
-                   
+                   req.session.nameStaff=userData.Fullname;
+                   res.locals.nameStaff=req.session.nameStaff;
                  return res.redirect('/home?msg=staff')
                    
                     
