@@ -20,8 +20,8 @@ exports.LOGIN = (req,res,next)=> {
 
 console.log("email"+datatocheck.Email+"pass:"+datatocheck.Password)
         if(datatocheck.Email==="admin"&&datatocheck.Password==="admin"){
-            req.session.adminLogin=datatocheck.Email==="admin"&&datatocheck.Password==="admin";
-            res.redirect('/home?msg=admin')
+            req.session.adminLogin=datatocheck;
+          return  res.redirect('/home?msg=admin')
         }
     collectionRef.get().then((snapshot) => {
             if (!snapshot.empty) {
@@ -31,7 +31,10 @@ console.log("email"+datatocheck.Email+"pass:"+datatocheck.Password)
                 if (userData.Password === datatocheck.Password) {
                     console.log("Mật khẩu đúng"+userData.Password);
                     req.session.staffLogin=userData.Password && userData.Email;
-                    res.redirect('/home?msg=staff')
+                   
+                 return res.redirect('/home?msg=staff')
+                   
+                    
                 }  else {
            const message = 'Mật khẩu không đúng';
                     res.render('home/login', { title: 'Login', message });
@@ -107,6 +110,8 @@ exports.Logout = (req , res  , next) => {
   
      
 }
+
+
 
 
 

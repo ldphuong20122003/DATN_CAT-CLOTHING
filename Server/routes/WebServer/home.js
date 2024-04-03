@@ -23,5 +23,6 @@ router.get('/', async (req, res) => {
     res.render('../../views/inc/header.ejs', { documents: data });
   });
 router.get('/logout' ,homeCtrl.Logout );
+
 //Xuất router
 module.exports = router;
