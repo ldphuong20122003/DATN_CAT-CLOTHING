@@ -91,7 +91,7 @@ const ChooseAddress = ({ navigation, route }) => {
     };
 
     fetchAddress(); 
-
+    console.log(data);
     const unsubscribe = navigation.addListener("focus", () => {
       fetchAddress(); // Gọi hàm fetchAddress khi màn hình được focus lại.
     });
@@ -106,12 +106,14 @@ const ChooseAddress = ({ navigation, route }) => {
       // Tìm địa chỉ được chọn từ danh sách địa chỉ dựa trên các thông tin của addressorder
       const selectedAddress = data.find(address =>
         address.address === addressOrderFromParams.address &&
-        address.country === addressOrderFromParams.country &&
+        address.city === addressOrderFromParams.city &&
+        address.ward === addressOrderFromParams.ward &&
+        address.district === addressOrderFromParams.district &&
         address.fullname === addressOrderFromParams.fullname &&
         address.phone === addressOrderFromParams.phone
       );
       
-      // Cập nhật địa chỉ được chọn nếu tìm thấy
+      // Cập nhật địa chỉ được chọn nếu tìm thấycount
       if (selectedAddress) {
         setSelectedItem(selectedAddress);
       }
@@ -195,7 +197,7 @@ const ChooseAddress = ({ navigation, route }) => {
                           color: "#707070",
                         }}
                       >
-                        {address.address}, {address.country}
+                        {address.address}, {address.ward}, {address.district}, {address.city}
                       </Text>
                     </View>
                   </View>

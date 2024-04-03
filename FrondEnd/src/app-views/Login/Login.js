@@ -21,6 +21,7 @@ import ForgotPass from "../ForgotPassword/ForgotPass";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Hide_pass from "../../../assets/Svg/Hide_pass";
 import config from "../../../config";
+import LottieView from "lottie-react-native";
 
 const IP = config.IP;
 const Login = ({ navigation }) => {
@@ -71,8 +72,8 @@ const Login = ({ navigation }) => {
             return;
           } else {
             try {
-              await AsyncStorage.setItem("UserId",objU.id);
-             
+              await AsyncStorage.setItem("UserId", objU.id);
+
               await AsyncStorage.setItem("InforLogin", JSON.stringify(objU));
               gotoHome();
             } catch (error) {
@@ -82,11 +83,19 @@ const Login = ({ navigation }) => {
         }
       });
   };
-  
+
   return (
     <View style={{ flex: 1, width: "100%", backgroundColor: "#fff" }}>
       <View style={{ alignItems: "center" }}>
-        <SvgXml xml={BannerSvg()} />
+        <View style={{ height: 180, alignItems: "center" }}>
+          <LottieView
+            source={require("../../../assets/Animation - 1711700040611.json")}
+            style={{ width: "100%", height: 210 }}
+            autoPlay
+            loop
+          />
+        </View>
+
         <SvgXml style={{ marginTop: 10 }} xml={LogoCat()} />
         <Text style={{ fontSize: 32, fontWeight: 400, marginTop: 9 }}>
           Đăng nhập
@@ -143,8 +152,11 @@ const Login = ({ navigation }) => {
             />
           </View>
           <TouchableOpacity onPress={toggleShowPassword}>
-            {showPassword? <SvgXml xml={Hide_pass()}/>:<SvgXml xml={EyeSvg()}/>}
-         
+            {showPassword ? (
+              <SvgXml xml={Hide_pass()} />
+            ) : (
+              <SvgXml xml={EyeSvg()} />
+            )}
           </TouchableOpacity>
         </View>
       </View>

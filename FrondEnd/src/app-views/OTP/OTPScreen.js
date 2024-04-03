@@ -18,11 +18,11 @@ import firebase from "firebase/compat/app";
 import "firebase/auth";
 import axios from "axios";
 import config from "../../../config";
-const IP=config.IP;
+const IP = config.IP;
+import LottieView from "lottie-react-native";
 
 const OTPScreen = ({ navigation, route }) => {
   const inputRefs = Array.from({ length: 6 }, () => useRef(null));
-  const gotoLogin = () => navigation.navigate("Login");
   const [loading, setLoading] = useState(false); // State cho loading
   const [code, setCode] = useState(["", "", "", "", "", ""]); // Mảng lưu mã OTP
   const { phoneNumber } = route.params;
@@ -62,13 +62,13 @@ const OTPScreen = ({ navigation, route }) => {
 
   const recaptchaVertifier = useRef(null);
   const [visible, setVisible] = React.useState(false);
-  const resendOTP = async () => {
-    
-  };
+  const gotoLogin = () => {navigation.navigate("Login"),setVisible(false)};
+
+  const resendOTP = async () => {};
   const confirmCode = () => {
     setLoading(true);
-    if(!code){
-      Alert.alert('Error','Vui lòng nhập mã OTP để tiếp tục');
+    if (!code) {
+      Alert.alert("Error", "Vui lòng nhập mã OTP để tiếp tục");
       return true;
     }
     const credential = firebase.auth.PhoneAuthProvider.credential(
@@ -86,7 +86,7 @@ const OTPScreen = ({ navigation, route }) => {
         setLoading(false);
       })
       .catch((error) => {
-        Alert.alert('Mã xác thực không hợp lệ');
+        Alert.alert("Mã xác thực không hợp lệ");
       });
   };
   return (
@@ -189,19 +189,26 @@ const OTPScreen = ({ navigation, route }) => {
             borderRadius: 6,
           }}
         >
-           {loading ? ( // Kiểm tra trạng thái loading để hiển thị hoặc ẩn đi phần tử
-              <ActivityIndicator color="#fff" />
-            ) : (
-          <Text style={{ color: "white", fontSize: 14, fontWeight: 600 }}>
-            Xác nhận
-          </Text>
-            )}
+          {loading ? ( // Kiểm tra trạng thái loading để hiển thị hoặc ẩn đi phần tử
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={{ color: "white", fontSize: 14, fontWeight: 600 }}>
+              Xác nhận
+            </Text>
+          )}
         </View>
       </TouchableOpacity>
 
       <ModalPopups visible={visible}>
         <View style={{ alignItems: "center" }}>
-          <SvgXml xml={TickSvg()} />
+          <View style={{ width: 50, height: 70 }}>
+            <LottieView
+              source={require("../../../assets/Animation - 1711695455244.json")}
+              style={{ width: "100%" }}
+              autoPlay
+              loop={false}
+            />
+          </View>
           <Text style={{ color: "#6AC259", fontSize: 16, fontWeight: 600 }}>
             Đăng ký tài khoản thành công
           </Text>

@@ -189,6 +189,7 @@ const Search = ({ navigation }) => {
           </Text>
           <Recommend_Search />
         </View>
+      
       </View>
     </SafeAreaView>
   );

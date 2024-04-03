@@ -19,18 +19,22 @@ const ProductByCategory = ({ navigation, route }) => {
   const { name } = route.params;
   const [text_search, setTextSearch] = useState("");
   const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
 
   const gotoBack = () => {
     navigation.goBack();
   };
 
   const getAPI = () => {
+    setIsLoading(true)
     return fetch(
       `http://${IP}:3000/API/product/getbyCategories/?Categories=${name}`
     )
       .then((res) => res.json())
       .then((data) => {
         setData(data);
+        setIsLoading(false)
       })
       .catch((err) => console.log(err));
   };

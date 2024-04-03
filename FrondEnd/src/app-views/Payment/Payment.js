@@ -23,6 +23,7 @@ import moment from "moment";
 import Voucher from "../../../assets/Svg/Voucher";
 import axios from "axios";
 import config from "../../../config";
+import LottieView from "lottie-react-native";
 
 const Payment = ({ navigation, route }) => {
   const IP = config.IP;
@@ -42,6 +43,7 @@ const Payment = ({ navigation, route }) => {
   };
   const gotoHome = () => {
     navigation.navigate("BottomTabScreen");
+    setVisible(false)
   };
   const gotoInforOder = () => {
     navigation.navigate("Information_Order");
@@ -368,7 +370,7 @@ const Payment = ({ navigation, route }) => {
               </View>
               <Text style={{ marginTop: 8, fontSize: 12, color: "#707070" }}>
                 {addressorder && addressorder.address},{" "}
-                {addressorder && addressorder.country}
+                {addressorder && addressorder.ward},  {addressorder && addressorder.district},  {addressorder && addressorder.city}
               </Text>
             </View>
             <TouchableOpacity onPress={gotoChooseAddress}>
@@ -695,7 +697,14 @@ const Payment = ({ navigation, route }) => {
       </TouchableOpacity>
       <ModalPopups visible={visible}>
         <View style={{ alignItems: "center" }}>
-          <SvgXml xml={TickSvg()} />
+          <View style={{ width: 50, height: 70 }}>
+            <LottieView
+              source={require("../../../assets/Animation - 1711695455244.json")}
+              style={{ width: "100%" }}
+              autoPlay
+              loop={false}
+            />
+          </View>
           <Text style={{ color: "#6AC259", fontSize: 16, fontWeight: 600 }}>
             Đặt hàng thành công
           </Text>
