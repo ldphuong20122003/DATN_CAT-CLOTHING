@@ -118,10 +118,10 @@
                                         data-bs-target="#editModal">Edit</button>
 
 
+
                                         
-                                   <button data-item-id="<%= item.id %>" data-item-name="<%= item.Name %>"
-                                        class="btn btn-danger" data-bs-toggle="modal"
-                                        data-bs-target="#deleteModal">Delete</button> 
+                                
+
                                 </td>
                              
                             </tr>
@@ -246,7 +246,7 @@
             </div>
         </div>
         
-        <!-- Modal Edit-->
+        
         <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -350,7 +350,7 @@
             </div>
         </div>
 
-        <!-- Modal delete -->
+       
         <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -369,7 +369,7 @@
                     </form>
                 </div>
             </div>
-        </div>  
+        </div>
         <%- include('../inc/footer') %>
 
             <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
