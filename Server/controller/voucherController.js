@@ -49,3 +49,40 @@ exports.delete=async(req,res,next)=>{
       res.status(500).send('Error deleting data from Firestore');
     }
 }
+
+exports.addVoucher = async (req, res, next) => {
+  
+    try {
+        var addlist = null;
+        addlist =  await admin.firestore().collection('Vouchers').add({
+            Discount: req.body.Discount,
+            id: req.body.id,
+            Title: req.body.Title,
+            From: req.body.from
+        });
+        console.log('danhsachvoucher:',addlist);
+        res.redirect('/Vouchers')
+    } catch (error) {
+        console.error('Error adding data:', error);
+        res.status(500).send('Error adding data from Firestore');
+    }
+    
+};
+
+exports.updateVoucher = async (req, res, next) => {
+    let _id = req.body.id;
+    try {
+        await admin.firestore().collection('Vouchers').doc(_id).set({
+
+            Discount: req.body.Discount,
+            id: req.body.id,
+            Title: req.body.Title,
+            From: req.body.from
+
+        }, { merge: true });
+        res.redirect('/Vouchers');
+    } catch (error) {
+        console.error('Error deleting data:', error);
+        res.status(500).send('Error deleting data from Firestore');
+    }
+}
