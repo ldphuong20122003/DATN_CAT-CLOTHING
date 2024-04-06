@@ -4,6 +4,7 @@ const serviceAccount = require('../model/firebaseConfig');
 const firestore = admin.firestore();
 const bodyParser = require('body-parser');
 const path = require("path");
+const db = admin.firestore();
 exports.home = (req,res,next)=>{
     const message1 = req.query.msg;
     res.render('home/home',{title: "Home",errorMessage:'a', message1});
@@ -19,7 +20,8 @@ exports.LOGIN = (req,res,next)=> {
 
 console.log("email"+datatocheck.Email+"pass:"+datatocheck.Password)
         if(datatocheck.Email==="admin"&&datatocheck.Password==="admin"){
-            res.redirect('/home?msg=admin')
+            req.session.adminLogin=datatocheck;
+          return  res.redirect('/home?msg=admin')
         }
     collectionRef.get().then((snapshot) => {
             if (!snapshot.empty) {
@@ -28,8 +30,12 @@ console.log("email"+datatocheck.Email+"pass:"+datatocheck.Password)
                 // Kiểm tra mật khẩu
                 if (userData.Password === datatocheck.Password) {
                     console.log("Mật khẩu đúng"+userData.Password);
-
-                    res.redirect('/home?msg=staff')
+                    req.session.staffLogin=userData.Password && userData.Email;
+                   req.session.nameStaff=userData.Fullname;
+                   res.locals.nameStaff=req.session.nameStaff;
+                 return res.redirect('/home?msg=staff')
+                   
+                    
                 }  else {
            const message = 'Mật khẩu không đúng';
                     res.render('home/login', { title: 'Login', message });
@@ -94,6 +100,20 @@ exports.addSTAFF= async(req,res,next)=>{
 
 
 };
+exports.Logout = (req , res  , next) => {
+    req.session.destroy((err) => {
+        if(err){
+          console.log(err)
+        }else{
+          return res.redirect('/');
+        }
+      })
+  
+     
+}
+
+
+
 
 
 

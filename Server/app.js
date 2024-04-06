@@ -5,12 +5,16 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var session = require('express-session');
 
+  
 //Controller router
-
+var satisticsRouter=require('./routes/WebServer/revenuestatistics');
 var homeRouter = require('./routes/WebServer/home');
 var productRouter = require('./routes/WebServer/product');
 var userRouter = require('./routes/WebServer/user');
 var staffRouter = require('./routes/WebServer/staff');
+var ordersRouter = require('./routes/WebServer/donhang');
+var orderdetail = require('./routes/WebServer/chitietdonhang');
+var VRouter = require('./routes/WebServer/voucher');
 
 //API ROuter
 var indexRouter = require('./routes/API/index');
@@ -22,8 +26,8 @@ var apiHoaDon=require('./routes/API/api.hoaDon');
 var apiRating=require('./routes/API/api.Rating');
 var apiNotification=require('./routes/API/api.notification');
 var apiFVR=require('./routes/API/api.FVR');
-
-
+var apiAddress=require('./routes/API/api.addres');
+var apiVoucher=require('./routes/API/api.vooucher');
 const bodyParser = require('body-parser');
 var app = express();
 
@@ -37,17 +41,24 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({
-  secret: 'nhNNGHSNFGH83sdf23435Fdzgsfnksjdfh9', // Thay thế bằng một khóa bí mật mạnh mẽ hơn trong thực tế
-  resave: false,
-  saveUninitialized: true
-}));
+  secret:'nhNNGHSNFGH83sdf23435Fdzgsfnksjdfh9', // chuỗi ký tự đặc biệt để Session mã hóa, tự viết
+  resave:true,
+  saveUninitialized:true
+  }));
+
+
 
 //WEB SERVER
 app.use('/', homeRouter);
 app.use('/products',productRouter);
 app.use('/users',userRouter);
 app.use('/staffs',staffRouter);
+app.use('/Orders',ordersRouter);
+app.use('/OrderDetails',orderdetail);
+app.use('/Vouchers',VRouter);
+app.use('/Statistics',satisticsRouter);
 //API
 app.use('/API/product', indexRouter);
 app.use('/API/users', usersRouter);
@@ -58,6 +69,8 @@ app.use('/API/hoaDon',apiHoaDon);
 app.use('/API/Rating',apiRating);
 app.use('/API/ntf',apiNotification);
 app.use('/API/fvr',apiFVR);
+app.use('/API/Address', apiAddress);
+app.use('/API/Voucher', apiVoucher);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -74,5 +87,8 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+
+
 
 module.exports = app;

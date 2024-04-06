@@ -10,21 +10,22 @@
         <%= title %>
     </title>
     <link rel="stylesheet" href="../css/app.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
 </head>
 
 <body class="m-0 p-0 container-fluid">
     <%- include('../inc/header') %>
         <div class="m-4">
-            <h1 style="margin-left:20px ;">DANH SÁCH NHÂN VIÊN</h1>
-            <div class="input-group">
+            <h1 style="margin-left:20px ;">QUẢN LÝ NHÂN VIÊN</h1>
+            <!-- <div class="input-group">
                 <span class="input-group-text col-md-1">Search</span>
                 
-                <input type="text" class="form-control" placeholder="Name">
+                <input type="text" class="form-control" placeholder="Name" id="searchInput" onkeyup="searchData()">
              
-                <a href="/staffs" class="btn btn-add fw-medium">Search</a>
-            </div>
+              
+            </div> -->
             <% if(listStaff) {%>
-                <table class="table table-hover table-bordered mt-2">
+                <table class="table table-hover table-bordered mt-2" id="resultTable">
                     <thead>
                         <tr class="text-center">
                             
@@ -67,9 +68,9 @@
                                         
                                         type="button" class="btn btn-success " data-bs-toggle="modal" data-bs-target="#updateModal" >Edit</button>
 
-                                    <button data-item-id="<%= item.id %>" data-item-name="<%= item.Fullname %>"
+                                        <!--   <button data-item-id="<%= item.id %>" data-item-name="<%= item.Fullname %>"
                                         class="btn btn-danger" data-bs-toggle="modal"
-                                        data-bs-target="#deleteModal">Delete</button>
+                                        data-bs-target="#deleteModal">Delete</button> -->
                                 </td>
                              
                             </tr>
@@ -79,7 +80,7 @@
                 <% }else{ %>
                     <h3>Không có dữ liệu</h3>
                     <% } %>
-                        <div class="d-flex justify-content-between align-items-center">
+                      <!-- <div class="d-flex justify-content-between align-items-center">
                             <p class="m-0">Showing:10/100 items</p>
                             <nav aria-label="Page navigation example" class="">
                                 <ul class="pagination m-0">
@@ -90,7 +91,7 @@
                                     <li class="page-item"><a class="page-link" href="#">Next</a></li>
                                 </ul>
                             </nav>
-                        </div>
+                        </div>--> 
         </div>
         
        
@@ -217,9 +218,36 @@
             </script>
 
             
+            <script>
+  // Hàm search sẽ được gọi khi người dùng nhập vào ô tìm kiếm
+  function searchData() {
+      var input, filter, table, tr, td, i, txtValue;
+      input = document.getElementById("searchInput");
+      filter = input.value.toUpperCase();
+      table = document.getElementById("resultTable");
+      tr = table.getElementsByTagName("tr");
 
+      for (i = 0; i < tr.length; i++) {
+          td = tr[i].getElementsByTagName("td")[2]; // chỉ tìm kiếm trong cột ID
+          if (td) {
+              txtValue = td.textContent || td.innerText;
+              if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                  tr[i].style.display = ""; // Hiển thị hàng nếu có từ khóa tìm kiếm
+              } else {
+                  tr[i].style.display = "none"; // Ẩn hàng nếu không phù hợp với từ khóa tìm kiếm
+              }
+          }
+      }
+  }
+</script>
    
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+  <script>
+      $(document).ready(function() {
+          $('#resultTable').DataTable();
+      });
+  </script>
 
 </body>
 
