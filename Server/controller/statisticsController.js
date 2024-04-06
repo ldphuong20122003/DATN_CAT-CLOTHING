@@ -143,7 +143,7 @@ monthLabels=modifiedChartData;
               }
           }
       });
-
+      msg= 'Đây là dữ liệu được lấy từ tháng này';
       listitem.forEach((item) => {
           var index = Dates.findIndex((date) => date === item.date);
 
@@ -272,8 +272,9 @@ if(theloai==="Doanhthu"&&thoigian==="all"){
                     });
                 }
             }
-        });
 
+        });
+        msg= 'Đây là dữ liệu được lấy từ tháng này';
         listitem.forEach((item) => {
             var index = Dates.findIndex((date) => date === item.date);
 
