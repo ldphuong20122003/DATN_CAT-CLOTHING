@@ -132,6 +132,9 @@
                                         class="btn btn-danger" data-bs-toggle="modal"
                                         data-bs-target="#deleteModal">Delete</button> -->
                                 </td>
+                                <td class="text-center">
+                                    <button class="btn btn-confirm" data-item-id="<%= donhang.id %>">Xác nhận</button>
+                                </td>
                             </tr>
                             <% }) %>
 
@@ -155,31 +158,35 @@
                 <div class="modal-body">
                     <div class="input-group mb-3">
                         <label for="TenDonHang" class="input-group-text label-width">tên đơn hàng</label>
-                        <input type="text" id="TenDonHang" class="form-control" name="TenDonHang" required>
+                        <input type="text" id="TenDonHang" class="form-control" name="TenDonHang" required disabled>
                     </div>
                     <div class="input-group mb-3">
                         <label for="DiaChi" class="input-group-text label-width">Địa chỉ</label>
-                        <input type="text" id="DiaChi" class="form-control" name="DiaChi" required>
+                        <input type="text" id="DiaChi" class="form-control" name="DiaChi" required disabled>
                     </div>
                     <div class="input-group mb-3">
                         <label for="NguoiDung" class="input-group-text label-width">Người Dùng</label>
-                        <input type="text" id="NguoiDung" class="form-control" name="NguoiDung" required>
+                        <input type="text" id="NguoiDung" class="form-control" name="NguoiDung" required disabled>
                     </div>
                     <div class="input-group mb-3">
                         <label for="TenSanPham" class="input-group-text label-width">Tên Sản Phẩm</label>
-                        <input type="text" id="TenSanPham" class="form-control" name="TenSanPham" required>
+                        <input type="text" id="TenSanPham" class="form-control" name="TenSanPham" required disabled>
                     </div>
                     <div class="input-group mb-3">
                         <label for="NgayDat" class="input-group-text label-width">Ngày Đặt</label>
-                        <input type="date" id="NgayDat" class="form-control" name="NgayDat" required>
+                        <input type="date" id="NgayDat" class="form-control" name="NgayDat" required disabled>
                     </div>
                     <div class="input-group mb-3">
                         <label for="NhanVien" class="input-group-text label-width">Nhân Viên</label>
-                        <input type="text" id="NhanVien" class="form-control" name="NhanVien" required>
+                        <input type="text" id="NhanVien" class="form-control" name="NhanVien" required disabled>
                     </div>
                     <div class="input-group mb-3">
                         <label for="Status" class="input-group-text label-width">Status</label>
-                        <input type="text" id="Status" class="form-control" aria-label="First name" name="Status" required>
+                        <!-- <input type="text" id="Status" class="form-control" aria-label="First name" name="Status" required> -->
+                        <select id="Status" class="form-select" aria-label="Status" name="Status" required>
+                            <option value="1">Đã xác nhận</option>
+                            <option value="2">Chờ xác nhận</option>
+                        </select>
                     </div>
                    
                 </div>

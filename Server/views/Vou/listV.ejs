@@ -88,23 +88,23 @@
                     <div class="modal-body">
                       <div>
                         <div class="input-group" style="margin-top: 10px;">
-                          <span class="input-group-text" style="width: 100px;">id</span>
-                          <input type="text" aria-label="First name" class="form-control" name="id" id="addidname"
+                          <label class="input-group-text" style="width: 100px;" for="addidname">id</label>
+                          <input type="text" aria-label="First name" class="form-control" name="voucherid" id="addidname"
                             required>
                         </div>
                         <div class="input-group" style="margin-top: 10px;">
-                          <span class="input-group-text" style="width: 100px;">From</span>
+                          <span class="input-group-text" style="width: 100px;" for="addFrom">From</span>
                           <input type="text" aria-label="First name" class="form-control" name="from" id="addFrom"
                             required>
                         </div>
                         <div class="input-group" style="margin-top: 10px;">
-                          <span class="input-group-text" style="width: 100px;">Discount</span>
-                          <input type="text" aria-label="First name" class="form-control" name="Discount"
+                          <label class="input-group-text" style="width: 100px;" for="addDiscount">Discount</label>
+                          <input type="text" aria-label="First name" class="form-control" name="discount"
                             id="addDiscount" required>
                         </div>
 
                         <div class="input-group" style="margin-top: 10px;">
-                          <span class="input-group-text" style="width: 100px;">Title</span>
+                          <label class="input-group-text" style="width: 100px;" for="addTitle">Title</label>
                           <input type="text" aria-label="First name" class="form-control" name="Title" id="addTitle"
                             required>
                         </div>
@@ -146,7 +146,7 @@
                       </div>
                       <div class="input-group mb-3">
                         <label for="Discount" class="input-group-text label-width">Discount</label>
-                        <input type="text" id="Discount" class="form-control" name="Discount" required>
+                        <input type="text" id="Discount" class="form-control" name="discount" required>
                       </div>
                       <div class="input-group mb-3">
                         <label for="Fromm" class="input-group-text label-width">From</label>
@@ -299,16 +299,22 @@
       //     AddForm.action = `Vouchers/addVoucher`
       //   });
       // })
+       const AddForm = document.getElementById('addVoucherForm');
       document.getElementById('addvcModal').addEventListener('submit', function (event) {
         var addidname = document.getElementById('addidname').value.trim();
         var addFrom = document.getElementById('addFrom').value.trim();
-        var priceValue = document.getElementById('addDiscount').value.trim();
+        var priceDiscount = document.getElementById('addDiscount').value.trim();
         var addTitle = document.getElementById('addTitle').value.trim();
         var isValid = true;
-        
-        if (!isValid) {
-          event.preventDefault();;
+        if (addidname === '' || addFrom === '' || priceDiscount === '' || addTitle === '') {
+          isValid = false;
         }
+        if (!isValid) {
+          // event.preventDefault();
+          // Hiển thị thông báo lỗi hoặc thực hiện các hành động khác tương ứng
+          alert('Vui lòng điền đầy đủ thông tin vào các trường.');
+        }
+            AddForm.action = `Vouchers/addVoucher`
       })
     </script>
 
