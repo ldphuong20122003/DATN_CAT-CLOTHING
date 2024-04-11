@@ -23,7 +23,7 @@
 
       <div style="display: flex;">
         <h1>QUẢN LÝ VOUCHER</h1>
-        <a href="/products" type="button" class="btn btn-add fw-medium float-end mb-2" data-bs-toggle="modal"
+        <a href="/Vouchers" type="button" class="btn btn-add fw-medium float-end mb-2" data-bs-toggle="modal"
           data-bs-target="#addvcModal" style="margin-left: 950px; width: 150px; height: 40px; margin-top: 10px;">Thêm
           Voucher</a>
       </div>
@@ -84,25 +84,29 @@
                     <h1 class="modal-title fs-5" id="addModalLabel">Add Voucher</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
-                  <form action="addVoucher" method="POST" id="addVoucherForm" enctype="multipart/form-data">
+                  <form action="Vouchers/addVoucher" method="POST" id="addVoucherForm" enctype="multipart/form-data">
                     <div class="modal-body">
                       <div>
                         <div class="input-group" style="margin-top: 10px;">
-                          <span class="input-group-text" style="width: 100px;">id</span>
+                          <span class="input-group-text" style="width: 100px;">Ma voucher</span>
                           <input type="text" aria-label="First name" class="form-control" name="id" id="addidname">
+                          <div id="addidnameError" class="error-message"></div>
                         </div>
                         <div class="input-group" style="margin-top: 10px;">
                           <span class="input-group-text" style="width: 100px;">From</span>
                           <input type="text" aria-label="First name" class="form-control" name="from" id="addFrom">
+                          <div id="addFromError" class="error-message"></div>
                         </div>
                         <div class="input-group" style="margin-top: 10px;">
                           <span class="input-group-text" style="width: 100px;">Discount</span>
                           <input type="text" aria-label="First name" class="form-control" name="Discount" id="addDiscount">
+                          <div id="addDiscountError" class="error-message"></div>
                         </div>
 
                         <div class="input-group" style="margin-top: 10px;">
                           <span class="input-group-text" style="width: 100px;">Title</span>
                           <input type="text" aria-label="First name" class="form-control" name="Title" id="addTitle">
+                          <div id="addTitleError" class="error-message"></div>
                         </div>
 
 
@@ -271,31 +275,43 @@ const IdInput = editForm.querySelector('#idname');
 
     <!--script add-->
     <script>
-      const addVoucherButton = document.querySelectorAll('.btn.btn-add');
-      const addVoucherModal = new bootstrap.Modal(document.getElementById('addvcModal'));
-      const AddForm = document.getElementById('addVoucherForm');
-      addVoucherButton.forEach(button => {
-        button.addEventListener('click', function () {
-          const id = this.getAttribute('data-item-id');
-          const discount = this.getAttribute('data-item-Discount');
-          const title = this.getAttribute('data-item-Title');
-          const from = this.getAttribute('data-item-From');
+      // const addVoucherButton = document.querySelectorAll('.btn.btn-add');
+      // const addVoucherModal = new bootstrap.Modal(document.getElementById('addvcModal'));
+      // const AddForm = document.getElementById('addVoucherForm');
+      // addVoucherButton.forEach(button => {
+      //   button.addEventListener('click', function () {
+      //     const id = this.getAttribute('data-item-id');
+      //     const discount = this.getAttribute('data-item-Discount');
+      //     const title = this.getAttribute('data-item-Title');
+      //     const from = this.getAttribute('data-item-From');
 
-          const modalBody = AddForm._element.querySelector('.modal-body');
-          const IdInput = AddForm.querySelector('#addidname');
-          const DiscountInput = AddForm.querySelector('#Discount');
-          const TitleInput = AddForm.querySelector('#Title');
-          const fromInput = AddForm.querySelector('#Fromm');
+      //     const modalBody = AddForm._element.querySelector('.modal-body');
+      //     const IdInput = AddForm.querySelector('#addidname');
+      //     const DiscountInput = AddForm.querySelector('#Discount');
+      //     const TitleInput = AddForm.querySelector('#Title');
+      //     const fromInput = AddForm.querySelector('#Fromm');
 
-          IdInput.value = id;
-          DiscountInput.value = discount;
-          TitleInput.value = title;
-          fromInput.value = from;
+      //     IdInput.value = id;
+      //     DiscountInput.value = discount;
+      //     TitleInput.value = title;
+      //     fromInput.value = from;
 
-          AddForm.action = `addVoucher`
-        });
-      })
+      //     AddForm.action = `Vouchers/addVoucher`
+      //   });
+      // })
+        // Lắng nghe sự kiện submit của form
+   // Lắng nghe sự kiện submit của form
+   document.getElementById("addvcModal").addEventListener("click", function(event) {
+       
 
+ 
+    });
+   document.getElementById("addVoucherForm").addEventListener("submit", function(event) {
+        
+
+ 
+    });
+            
     </script>
 
 
@@ -304,3 +320,5 @@ const IdInput = editForm.querySelector('#idname');
 </html>
 
 <%- include('../inc/footer.ejs') %>
+<link rel="stylesheet" href="https://unpkg.com/@adminkit/core@latest/dist/css/app.css">
+<link rel="stylesheet" href="./style.css">

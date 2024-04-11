@@ -51,16 +51,34 @@ exports.delete=async(req,res,next)=>{
 }
 
 exports.addVoucher = async (req, res, next) => {
-  
+
+
     try {
-        var addlist = null;
-        addlist =  await admin.firestore().collection('Vouchers').add({
+        const collectionRef = admin.firestore().collection('Vouchers');
+        const Id = collectionRef.doc().id;
+        let data = ({
+            id: Id,
             Discount: req.body.Discount,
-            id: req.body.id,
             Title: req.body.Title,
             From: req.body.from
         });
-        console.log('danhsachvoucher:',addlist);
+        const docID = Id ? collectionRef.doc(Id) : collectionRef.doc();
+        docID.set(data)
+        .then(() => {
+            res.redirect('/Vouchers');
+            return collectionRef.doc().id;
+        })
+        .catch(error => {
+            console.error('Lỗi khi thêm tài liệu:', error);
+            res.status(500).json({message: 'Lỗi khi thêm tài liệu'});
+        });
+        //   await admin.firestore().collection('Vouchers').doc().set({
+        //     Discount: req.body.Discount,
+        //     id: req.params.id,
+        //     Title: req.body.Title,
+        //     From: req.body.from
+        // });
+
         res.redirect('/Vouchers')
     } catch (error) {
         console.error('Error adding data:', error);
