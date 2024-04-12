@@ -30,6 +30,9 @@ const Payment = ({ navigation, route }) => {
   const gotoBack = () => {
     navigation.goBack();
   };
+  const gotoPaymentVnPay=()=>{
+    navigation.navigate('PaymentVNPayScreen',{totalPayment:totalPayment});
+  };
   const gotoPaymentMethod = () => {
     navigation.navigate("Payment_Method", { paymentMethod: paymentMethod });
   };
@@ -140,112 +143,88 @@ const Payment = ({ navigation, route }) => {
   };
   const totalPayment = calculateTotalPayment(totalPrice, transportMethod);
 
-  const handlePayment = () => {
-    let paymentMethodValue = {};
-    if (paymentMethod === "option1") {
-      paymentMethodValue = { phuongthucthanhtoan: "Thanh toán khi nhận hàng" };
-    } else if (paymentMethod === "option2") {
-      paymentMethodValue = { phuongthucthanhtoan: "Ví MoMo" };
+  const handlePayment = async () => {
+    try {
+      let paymentMethodValue = {};
+      if (paymentMethod === "option1") {
+        paymentMethodValue = { phuongthucthanhtoan: "Thanh toán khi nhận hàng" };
+      } else if (paymentMethod === "option2") {
+        paymentMethodValue = { phuongthucthanhtoan: "Ví VNPay" };
+      }
+      let transportMethodValue = {};
+      if (transportMethod === "option1") {
+        transportMethodValue = { phuongthucvanchuyen: "Tiết kiệm" };
+      } else if (transportMethod === "option2") {
+        transportMethodValue = { phuongthucvanchuyen: "Nhanh" };
+      } else if (transportMethod === "option3") {
+        transportMethodValue = { phuongthucvanchuyen: "Hỏa tốc" };
+      }
+      let vouchersMethod = "";
+      if (voucher) {
+        vouchersMethod = { id_voucher: voucher.id };
+      } else {
+        vouchersMethod = { id_voucher: "" };
+      }
+      let formData = {
+        id_user: userId,
+        product: products.map((product) => ({
+          id_product: product.id,
+          image: product.ImgProduct,
+          name: product.NameProduct,
+          size: product.sizeInCart,
+          price: product.PriceProduct - product.SaleProduct,
+          soluong: product.quantityInCart,
+          tongtien:
+            product.quantityInCart * (product.PriceProduct - product.SaleProduct),
+        })),
+        diachinhanhang: addressorder,
+        tongsanpham: totalQuantity,
+        ...paymentMethodValue,
+        ...transportMethodValue,
+        status: "Chờ xác nhận",
+        ...vouchersMethod,
+        ngaydat: currentDate.format("DD MMM YYYY"),
+        totalPayment: totalPayment,
+      };
+      const response = await axios.post(`http://${IP}:3000/API/donhang/add`, formData);
+      const createdDocumentID = response.data.split(": ")[1];
+      setVisible(true);
+  
+      // Lặp qua từng sản phẩm để cập nhật số lượng tồn kho
+      for (const product of products) {
+        const productId = product.id;
+        const sizeOrdered = product.sizeInCart;
+        const quantityOrdered = product.quantityInCart;
+        const responseProduct = await axios.get(`http://${IP}:3000/API/product/?id=${productId}`);
+        const productData = responseProduct.data[0];
+        if (productData && productData.Size && productData.Size[sizeOrdered.toString()]) {
+          const currentStock = productData.Size[sizeOrdered.toString()];
+          if (currentStock >= quantityOrdered) {
+            const newStock = currentStock - quantityOrdered;
+            productData.Size[sizeOrdered.toString()] = newStock;
+            await axios.put(
+              `http://${IP}:3000/API/product/update/${productData.id}`,
+              { Size: productData.Size }
+            );
+          }
+        }
+      }
+  
+      // Thêm thông báo khi đơn hàng được đặt thành công
+      let data = {
+        Img: "",
+        Time: currentDate.format("DD/MM"),
+        Title: "Đã đặt",
+        TypeNotification: `Đơn hàng với mã đơn ${createdDocumentID} đã được đặt thành công`,
+        id_DonHang: createdDocumentID,
+        id_user: userId,
+      };
+      await axios.post(`http://${IP}:3000/API/ntf/add`, data);
+    } catch (error) {
+      console.error("Error handling payment:", error);
     }
-    let transportMethodValue = {};
-    if (transportMethod === "option1") {
-      transportMethodValue = { phuongthucvanchuyen: "Tiết kiệm" };
-    } else if (transportMethod === "option2") {
-      transportMethodValue = { phuongthucvanchuyen: "Nhanh" };
-    } else if (transportMethod === "option3") {
-      transportMethodValue = { phuongthucvanchuyen: "Hỏa tốc" };
-    }
-    let vouchersMethod = "";
-    if (voucher) {
-      vouchersMethod = { id_voucher: voucher.id };
-    } else {
-      vouchersMethod = { id_voucher: "" };
-    }
-    let formData = {
-      id_user: userId,
-      product: products.map((product) => ({
-        id_product: product.id,
-        image: product.ImgProduct,
-        name: product.NameProduct,
-        size: product.sizeInCart,
-        price: product.PriceProduct - product.SaleProduct,
-        soluong: product.quantityInCart,
-        tongtien:
-          product.quantityInCart * (product.PriceProduct - product.SaleProduct),
-      })),
-      diachinhanhang: addressorder,
-      tongsanpham: totalQuantity,
-      ...paymentMethodValue,
-      ...transportMethodValue,
-      status: "Chờ xác nhận",
-      ...vouchersMethod,
-      ngaydat: currentDate.format("DD MMM YYYY"),
-      totalPayment: totalPayment,
-    };
-    axios
-      .post(`http://${IP}:3000/API/donhang/add`, formData)
-      .then((res) => {
-        const createdDocumentID = res.data.split(": ")[1];
-        setVisible(true);
-        products.forEach((product) => {
-          let productId = product.id; // Lấy ID của sản phẩm
-          let sizeOrdered = product.sizeInCart; // Số lượng đặt hàng
-          let quantityOrdered = product.quantityInCart; // Số lượng đặt hàng
-          axios
-            .get(`http://${IP}:3000/API/product/?id=${productId}`)
-            .then((response) => {
-              // Kiểm tra xem sản phẩm có tồn tại không
-              if (response.data) {
-                let productData = response.data[0]; // Lấy phần tử đầu tiên vì productData là một mảng chỉ chứa một phần tử
-                if (
-                  productData &&
-                  productData.Size &&
-                  productData.Size[sizeOrdered.toString()]
-                ) {
-                  let currentStock = productData.Size[sizeOrdered.toString()]; // Số lượng tồn kho hiện tại
-                  console.log(currentStock);
-                  if (currentStock >= quantityOrdered) {
-                    // Trừ số lượng đã đặt hàng ra khỏi số lượng tồn kho
-                    let newStock = currentStock - quantityOrdered;
-                    productData.Size[sizeOrdered.toString()] = newStock;
-                    axios
-                      .put(
-                        `http://${IP}:3000/API/product/update/${productData.id}`,
-                        {
-                          Size: productData.Size,
-                        }
-                      )
-                      .then((updateResponse) => {})
-                      .catch((error) => {
-                        console.error(`Lỗi khi cập nhật sản phẩm: ${error}`);
-                      });
-                  }
-                }
-              } else {
-                console.log(
-                  `Sản phẩm với ID ${productId} không tồn tại trong API sản phẩm.`
-                );
-              }
-            })
-            .catch((error) => {
-              console.error(`Lỗi khi truy cập API sản phẩm: ${error}`);
-            });
-        });
-        let data = {
-          Img: "",
-          Time: currentDate.format("DD/MM"),
-          Title: "Đã đặt",
-          TypeNotification: `Đơn hàng với mã đơn ${createdDocumentID} đã được đặt thành công`,
-          id_DonHang: createdDocumentID,
-          id_user: userId,
-        };
-        axios
-          .post(`http://${IP}:3000/API/ntf/add`, data)
-          .then((res) => {})
-          .catch((err) => console.log(err));
-      })
-      .catch((err) => console.log(err));
   };
+  
   useEffect(() => {
     getUserId();
   }, []);
@@ -464,7 +443,7 @@ const Payment = ({ navigation, route }) => {
                   )}
                   {paymentMethod === "option2" && (
                     <Text style={{ fontSize: 12, color: "#707070" }}>
-                      Ví MoMo
+                      Ví VNPay
                     </Text>
                   )}
                 </View>
@@ -685,7 +664,7 @@ const Payment = ({ navigation, route }) => {
           if (paymentMethod === "option1") {
             handlePayment();
           } else if (paymentMethod === "option2") {
-            console.log("Thanh toán bằng MoMo");
+            gotoPaymentVnPay();
           } else {
             console.log("No payment method selected");
           }

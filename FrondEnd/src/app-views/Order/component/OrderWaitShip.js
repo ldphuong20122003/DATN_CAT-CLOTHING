@@ -3,6 +3,7 @@ import { ActivityIndicator, View } from "react-native";
 import ListOrder from "./ListOrder";
 import config from "../../../../config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import NoOrder from "../../component/NoOrder";
 const IP = config.IP;
 
 const OrderWaitShip = ({}) => {
@@ -47,12 +48,16 @@ const OrderWaitShip = ({}) => {
   }, [userId, orderStatus]);
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
     {isLoading ? (
       <ActivityIndicator size="large" color="#1890ff" />
     ) : (
-      <View>
-        <ListOrder data={data} />
+      <View style={{ flex: 1 }}>
+        {data.length > 0 ? (
+          <ListOrder data={data} />
+        ) : (
+          <NoOrder />
+        )}
       </View>
     )}
   </View>

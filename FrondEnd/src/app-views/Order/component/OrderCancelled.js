@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Text, View } from "react-native";
+import { ActivityIndicator, View } from "react-native";
 import ListOrder from "./ListOrder";
 import config from "../../../../config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -48,21 +48,19 @@ const OrderCancelled = ({}) => {
   }, [userId, orderStatus]);
 
   return (
-    <View>
-  {isLoading ? (
-    <ActivityIndicator size="large" color="#1890ff" />
-  ) : (
-    <View style={{flex:1}}>
-      {data.length > 0 ? (
-        <ListOrder data={data} />
-      ) : (
-        
-          <NoOrder/>
-     
-      )}
-    </View>
-  )}
-</View>
+    <View style={{ flex: 1 }}>
+    {isLoading ? (
+      <ActivityIndicator size="large" color="#1890ff" />
+    ) : (
+      <View style={{ flex: 1 }}>
+        {data.length > 0 ? (
+          <ListOrder data={data} />
+        ) : (
+          <NoOrder />
+        )}
+      </View>
+    )}
+  </View>
   );
 };
 export default OrderCancelled;

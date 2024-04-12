@@ -13,7 +13,7 @@ const ModalFilter = ({ visible, children }) => {
       }
     }
     return (
-      <Modal transparent visible={showModal}>
+      <Modal transparent visible={showModal} animationType="slide">
         <View style={styles.modalBackground}>
           <View
             style={{

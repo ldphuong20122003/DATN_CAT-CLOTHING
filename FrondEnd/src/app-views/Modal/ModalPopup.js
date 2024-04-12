@@ -13,7 +13,7 @@ const ModalPopups = ({ visible, children }) => {
       }
     }
     return (
-      <Modal transparent visible={showModal}>
+      <Modal transparent visible={showModal} animationType="fade">
         <View style={styles.modalBackground}>
           <View
             style={{

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, View } from "react-native";
+import { ActivityIndicator, Text, View } from "react-native";
 import ListOrder from "./ListOrder";
 import config from "../../../../config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import NoOrder from "../../component/NoOrder";
 const IP = config.IP;
 
 const OrderDelivered = ({}) => {
@@ -47,17 +48,19 @@ const OrderDelivered = ({}) => {
   }, [userId, orderStatus]);
 
   return (
-    <View>
-       <View>
-      {isLoading ? (
-        <ActivityIndicator size="large" color="#1890ff" />
-      ) : (
-        <View>
+    <View style={{ flex: 1 }}>
+    {isLoading ? (
+      <ActivityIndicator size="large" color="#1890ff" />
+    ) : (
+      <View style={{ flex: 1 }}>
+        {data.length > 0 ? (
           <ListOrder data={data} />
-        </View>
-      )}
-    </View>
-    </View>
+        ) : (
+          <NoOrder />
+        )}
+      </View>
+    )}
+  </View>
   );
 };
 export default OrderDelivered;

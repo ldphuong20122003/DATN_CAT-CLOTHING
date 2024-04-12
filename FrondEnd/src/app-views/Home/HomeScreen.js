@@ -32,7 +32,7 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 0.93 }}>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.Banner}>
           <Swiper
             style={styles.wrapper}
