@@ -15,6 +15,8 @@ import TickSvg from "../../../../assets/Svg/TickSvg";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import config from "../../../../config";
 import EyeSvg from "../../../../assets/Svg/EyeSvg";
+import LottieView from "lottie-react-native";
+
 const IP = config.IP;
 const Update_Pass = ({ navigation }) => {
   const [userId, setUserId] = useState("");
@@ -120,7 +122,9 @@ const Update_Pass = ({ navigation }) => {
   useEffect(() => {
     getUserId();
   }, [userId]);
-  const gotoLogin = () => navigation.navigate("Login");
+  const gotoLogin = () => {
+    navigation.navigate("Login"), setVisible(false);
+  };
   const goBack = () => {
     navigation.goBack();
   };
@@ -256,7 +260,14 @@ const Update_Pass = ({ navigation }) => {
         </TouchableOpacity>
         <ModalPopups visible={visible}>
           <View style={{ alignItems: "center" }}>
-            <SvgXml xml={TickSvg()} />
+            <View style={{ width: 50, height: 70 }}>
+              <LottieView
+                source={require("../../../../assets/Animation - 1711695455244.json")}
+                style={{ width: "100%" }}
+                autoPlay
+                loop={false}
+              />
+            </View>
             <Text style={{ color: "#6AC259", fontSize: 16, fontWeight: 600 }}>
               Đổi mật khẩu thành công
             </Text>

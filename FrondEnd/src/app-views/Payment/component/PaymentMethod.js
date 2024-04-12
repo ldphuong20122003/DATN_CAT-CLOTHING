@@ -103,7 +103,7 @@ const PaymentMethod = ({ navigation, route }) => {
           >
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <SvgXml xml={iconWalletSvg()} />
-              <Text style={{ marginLeft: 12, fontSize: 14 }}>Ví MoMo</Text>
+              <Text style={{ marginLeft: 12, fontSize: 14 }}>Ví VNPay</Text>
             </View>
             <SvgXml xml={RadioButtonSvg("option2")} />
           </View>

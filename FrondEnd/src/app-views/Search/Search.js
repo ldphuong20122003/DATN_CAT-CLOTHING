@@ -24,12 +24,12 @@ const Search = ({ navigation }) => {
   const [text_search, setTextSearch] = useState("");
   const [searchHistory, setSearchHistory] = useState([]);
   const [showAllItems, setShowAllItems] = useState(false);
-  const [searchKeyword, setSearchKeyword] = useState('');
+  const [searchKeyword, setSearchKeyword] = useState("");
 
   const gotoBack = () => {
     navigation.goBack();
   };
- 
+
   useEffect(() => {
     loadSearchHistory();
   }, []);
@@ -95,7 +95,7 @@ const Search = ({ navigation }) => {
     : [];
 
   return (
-    <SafeAreaView >
+    <SafeAreaView>
       <View style={styles.Header}>
         <View
           style={{
@@ -121,7 +121,7 @@ const Search = ({ navigation }) => {
               justifyContent: "space-between",
             }}
           >
-            <View style={{ flexDirection: "row",alignItems:'center' }}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
               <SvgXml xml={SearchSvg()} />
               <TextInput
                 editable={true}
@@ -136,11 +136,7 @@ const Search = ({ navigation }) => {
             </View>
             <SvgXml xml={CameraSvg()} />
           </View>
-          <TouchableOpacity
-            onPress={
-              gotoProductSearch
-            }
-          >
+          <TouchableOpacity onPress={gotoProductSearch}>
             <Text style={{ fontSize: 14, fontWeight: 400, color: "#1890ff" }}>
               Tìm kiếm
             </Text>
@@ -188,9 +184,12 @@ const Search = ({ navigation }) => {
           </View>
         )}
         <View style={{ flex: 1 }}>
-          <Text  style={{ fontSize: 14, fontWeight: 600}}>Gợi ý dành cho bạn</Text>
+          <Text style={{ fontSize: 14, fontWeight: 600 }}>
+            Gợi ý dành cho bạn
+          </Text>
           <Recommend_Search />
         </View>
+      
       </View>
     </SafeAreaView>
   );
@@ -201,6 +200,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     paddingHorizontal: 16,
     marginTop: 30,
+    alignItems: "center",
   },
   Content: {
     height: "100%",

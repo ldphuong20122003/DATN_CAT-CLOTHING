@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { View } from "react-native";
+import { ActivityIndicator, View } from "react-native";
 import ListOrder from "./ListOrder";
 import config from "../../../../config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import NoOrder from "../../component/NoOrder";
 const IP = config.IP;
 
-const Order = () => {
+const OrderWaitCF = ({}) => {
+  const orderStatus = "Chờ xác nhận";
   const [userId, setUserId] = useState("");
-  const [data,setData]=useState([]);
-  const [isLoading,setIsLoading]=useState(false);
+  const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const getUserId = async () => {
     try {
       const userIdValue = await AsyncStorage.getItem("UserId");
@@ -24,9 +26,11 @@ const Order = () => {
     fetch(`http://${IP}:3000/API/donhang/`)
       .then((res) => res.json())
       .then((OrderList) => {
-        const Order = OrderList
-          .filter((Order) => Order.id_user === userId)
-        setData(Order);
+        // Lọc danh sách đơn hàng dựa trên trạng thái mong muốn
+        const filteredOrders = OrderList.filter(
+          (order) => order.id_user === userId && order.status === orderStatus
+        );
+        setData(filteredOrders);
         setIsLoading(false);
       })
       .catch((err) => {
@@ -34,16 +38,29 @@ const Order = () => {
         setIsLoading(false);
       });
   };
+
   useEffect(() => {
     getUserId();
-  }, [userId]);
+  }, []);
+
   useEffect(() => {
     fetchOrder();
-  }, [userId]);
+  }, [userId, orderStatus]);
+
   return (
-  <View>
-    <ListOrder data={data}/>
+    <View style={{ flex: 1 }}>
+    {isLoading ? (
+      <ActivityIndicator size="large" color="#1890ff" />
+    ) : (
+      <View style={{ flex: 1 }}>
+        {data.length > 0 ? (
+          <ListOrder data={data} />
+        ) : (
+          <NoOrder />
+        )}
+      </View>
+    )}
   </View>
   );
 };
-export default Order;
+export default OrderWaitCF;

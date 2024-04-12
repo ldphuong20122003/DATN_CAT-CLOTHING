@@ -23,11 +23,15 @@ import moment from "moment";
 import Voucher from "../../../assets/Svg/Voucher";
 import axios from "axios";
 import config from "../../../config";
+import LottieView from "lottie-react-native";
 
 const Payment = ({ navigation, route }) => {
   const IP = config.IP;
   const gotoBack = () => {
     navigation.goBack();
+  };
+  const gotoPaymentVnPay=()=>{
+    navigation.navigate('PaymentVNPayScreen',{totalPayment:totalPayment});
   };
   const gotoPaymentMethod = () => {
     navigation.navigate("Payment_Method", { paymentMethod: paymentMethod });
@@ -42,6 +46,7 @@ const Payment = ({ navigation, route }) => {
   };
   const gotoHome = () => {
     navigation.navigate("BottomTabScreen");
+    setVisible(false)
   };
   const gotoInforOder = () => {
     navigation.navigate("Information_Order");
@@ -59,7 +64,10 @@ const Payment = ({ navigation, route }) => {
   const [voucher, setVoucher] = useState(null);
   const [visible, setVisible] = useState(false);
   const [userId, setUserId] = useState("");
-  const totalQuantity = products.reduce((acc, curr) => acc + curr.quantityInCart, 0);
+  const totalQuantity = products.reduce(
+    (acc, curr) => acc + curr.quantityInCart,
+    0
+  );
 
   const getUserId = async () => {
     try {
@@ -135,66 +143,88 @@ const Payment = ({ navigation, route }) => {
   };
   const totalPayment = calculateTotalPayment(totalPrice, transportMethod);
 
-  const handlePayment = () => {
-    let paymentMethodValue = {};
-    if (paymentMethod === "option1") {
-      paymentMethodValue = { phuongthucthanhtoan: "Thanh toán khi nhận hàng" };
-    } else if (paymentMethod === "option2") {
-      paymentMethodValue = { phuongthucthanhtoan: "Ví MoMo" };
+  const handlePayment = async () => {
+    try {
+      let paymentMethodValue = {};
+      if (paymentMethod === "option1") {
+        paymentMethodValue = { phuongthucthanhtoan: "Thanh toán khi nhận hàng" };
+      } else if (paymentMethod === "option2") {
+        paymentMethodValue = { phuongthucthanhtoan: "Ví VNPay" };
+      }
+      let transportMethodValue = {};
+      if (transportMethod === "option1") {
+        transportMethodValue = { phuongthucvanchuyen: "Tiết kiệm" };
+      } else if (transportMethod === "option2") {
+        transportMethodValue = { phuongthucvanchuyen: "Nhanh" };
+      } else if (transportMethod === "option3") {
+        transportMethodValue = { phuongthucvanchuyen: "Hỏa tốc" };
+      }
+      let vouchersMethod = "";
+      if (voucher) {
+        vouchersMethod = { id_voucher: voucher.id };
+      } else {
+        vouchersMethod = { id_voucher: "" };
+      }
+      let formData = {
+        id_user: userId,
+        product: products.map((product) => ({
+          id_product: product.id,
+          image: product.ImgProduct,
+          name: product.NameProduct,
+          size: product.sizeInCart,
+          price: product.PriceProduct - product.SaleProduct,
+          soluong: product.quantityInCart,
+          tongtien:
+            product.quantityInCart * (product.PriceProduct - product.SaleProduct),
+        })),
+        diachinhanhang: addressorder,
+        tongsanpham: totalQuantity,
+        ...paymentMethodValue,
+        ...transportMethodValue,
+        status: "Chờ xác nhận",
+        ...vouchersMethod,
+        ngaydat: currentDate.format("DD MMM YYYY"),
+        totalPayment: totalPayment,
+      };
+      const response = await axios.post(`http://${IP}:3000/API/donhang/add`, formData);
+      const createdDocumentID = response.data.split(": ")[1];
+      setVisible(true);
+  
+      // Lặp qua từng sản phẩm để cập nhật số lượng tồn kho
+      for (const product of products) {
+        const productId = product.id;
+        const sizeOrdered = product.sizeInCart;
+        const quantityOrdered = product.quantityInCart;
+        const responseProduct = await axios.get(`http://${IP}:3000/API/product/?id=${productId}`);
+        const productData = responseProduct.data[0];
+        if (productData && productData.Size && productData.Size[sizeOrdered.toString()]) {
+          const currentStock = productData.Size[sizeOrdered.toString()];
+          if (currentStock >= quantityOrdered) {
+            const newStock = currentStock - quantityOrdered;
+            productData.Size[sizeOrdered.toString()] = newStock;
+            await axios.put(
+              `http://${IP}:3000/API/product/update/${productData.id}`,
+              { Size: productData.Size }
+            );
+          }
+        }
+      }
+  
+      // Thêm thông báo khi đơn hàng được đặt thành công
+      let data = {
+        Img: "",
+        Time: currentDate.format("DD/MM"),
+        Title: "Đã đặt",
+        TypeNotification: `Đơn hàng với mã đơn ${createdDocumentID} đã được đặt thành công`,
+        id_DonHang: createdDocumentID,
+        id_user: userId,
+      };
+      await axios.post(`http://${IP}:3000/API/ntf/add`, data);
+    } catch (error) {
+      console.error("Error handling payment:", error);
     }
-    let transportMethodValue = {};
-    if (transportMethod === "option1") {
-      transportMethodValue = { phuongthucvanchuyen: "Tiết kiệm" };
-    } else if (transportMethod === "option2") {
-      transportMethodValue = { phuongthucvanchuyen: "Nhanh" };
-    } else if (transportMethod === "option3") {
-      transportMethodValue = { phuongthucvanchuyen: "Hỏa tốc" };
-    }
-    let formData = {
-      id_user: userId,
-      product: products.map((product) => ({
-        id_product: product.id,
-        image: product.ImgProduct,
-        name: product.NameProduct,
-        size: product.sizeInCart,
-        price: product.PriceProduct - product.SaleProduct,
-        soluong: product.quantityInCart,
-        tongtien:
-          product.quantityInCart * (product.PriceProduct - product.SaleProduct),
-      })),
-      diachinhanhang: addressorder,
-      tongsanpham: totalQuantity,
-      ...paymentMethodValue,
-      ...transportMethodValue,
-      status: "Chờ xác nhận",
-      id_voucher: voucher.id,
-      ngaydat: currentDate.format("DD MMM YYYY"),
-      totalPayment: totalPayment,
-    };
-    axios
-      .post(`http://${IP}:3000/API/donhang/add`, formData)
-      .then((res) => {
-        const createdDocumentID = res.data.split(": ")[1];
-        console.log(createdDocumentID);
-        setVisible(true);
-        let data = {
-          Img: "",
-          Time: currentDate.format("DD/MM"),
-          Title: "Đã đặt",
-          TypeNotification: `Đơn hàng với mã đơn ${createdDocumentID} đã được đặt thành công`,
-          id_DonHang: createdDocumentID,
-          id_user: userId,
-        };
-        axios
-          .post(`http://${IP}:3000/API/ntf/add`, data)
-          .then((res) => {
-            console.log(res);
-          })
-          .catch((err) => console.log(err));
-      })
-      .catch((err) => console.log(err));
   };
-  console.log();
+  
   useEffect(() => {
     getUserId();
   }, []);
@@ -319,7 +349,7 @@ const Payment = ({ navigation, route }) => {
               </View>
               <Text style={{ marginTop: 8, fontSize: 12, color: "#707070" }}>
                 {addressorder && addressorder.address},{" "}
-                {addressorder && addressorder.country}
+                {addressorder && addressorder.ward},  {addressorder && addressorder.district},  {addressorder && addressorder.city}
               </Text>
             </View>
             <TouchableOpacity onPress={gotoChooseAddress}>
@@ -367,7 +397,9 @@ const Payment = ({ navigation, route }) => {
                       </Text>
                     </View>
                   ) : (
-                    <Text>Chọn Voucher</Text>
+                    <Text style={{ fontSize: 12, color: "#1890ff" }}>
+                      Chọn Voucher
+                    </Text>
                   )}
                   <SvgXml xml={CareRightSvg("#1890ff")} />
                 </View>
@@ -411,7 +443,7 @@ const Payment = ({ navigation, route }) => {
                   )}
                   {paymentMethod === "option2" && (
                     <Text style={{ fontSize: 12, color: "#707070" }}>
-                      Ví MoMo
+                      Ví VNPay
                     </Text>
                   )}
                 </View>
@@ -605,9 +637,7 @@ const Payment = ({ navigation, route }) => {
                 </View>
               ) : (
                 <View>
-                  <Text style={{ fontSize: 12, color: "#707070" }}>
-                    Chọn phương thức vận chuyển
-                  </Text>
+                  <Text style={{ fontSize: 12, color: "#707070" }}>0 đ</Text>
                 </View>
               )}
             </View>
@@ -634,7 +664,7 @@ const Payment = ({ navigation, route }) => {
           if (paymentMethod === "option1") {
             handlePayment();
           } else if (paymentMethod === "option2") {
-            console.log("Thanh toán bằng MoMo");
+            gotoPaymentVnPay();
           } else {
             console.log("No payment method selected");
           }
@@ -646,7 +676,14 @@ const Payment = ({ navigation, route }) => {
       </TouchableOpacity>
       <ModalPopups visible={visible}>
         <View style={{ alignItems: "center" }}>
-          <SvgXml xml={TickSvg()} />
+          <View style={{ width: 50, height: 70 }}>
+            <LottieView
+              source={require("../../../assets/Animation - 1711695455244.json")}
+              style={{ width: "100%" }}
+              autoPlay
+              loop={false}
+            />
+          </View>
           <Text style={{ color: "#6AC259", fontSize: 16, fontWeight: 600 }}>
             Đặt hàng thành công
           </Text>

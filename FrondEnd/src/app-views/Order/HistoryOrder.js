@@ -12,19 +12,23 @@ import BackSvg from "../../../assets/Svg/BackSvg";
 import SearchSvg from "../../../assets/Svg/SearchSvg";
 import FilterSvg from "../../../assets/Svg/FilterSvg";
 import { SceneMap, TabBar, TabView } from "react-native-tab-view";
-import Order from "./component/Order";
+import OrderWaitCF from "./component/OrderWaitCF";
+import OrderWaitDelivery from "./component/OrderWaitDelivery";
+import OrderWaitShip from "./component/OrderWaitShip";
+import OrderDelivered from "./component/OrderDelivered";
+import OrderCancelled from "./component/OrderCancelled";
 const renderScene = ({ route }) => {
   switch (route.key) {
     case "1":
-      return <Order />;
+      return <OrderWaitCF />;
     case "2":
-      return <Order />;
+      return <OrderWaitDelivery />;
     case "3":
-      return <Order />;
+      return <OrderWaitShip />;
     case "4":
-      return <Order />;
+      return <OrderDelivered />;
     case "5":
-      return <Order />;
+      return <OrderCancelled />;
     default:
       return null;
   }
@@ -56,7 +60,6 @@ const HistoryOrder = ({ navigation }) => {
               style={{
                 fontSize: 16,
                 color: "white",
-
                 fontWeight: "bold",
                 alignItems: "center",
               }}

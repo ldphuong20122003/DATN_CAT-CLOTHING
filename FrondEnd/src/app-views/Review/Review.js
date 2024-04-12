@@ -12,7 +12,7 @@ import {
 import SearchSvg from "../../../assets/Svg/SearchSvg";
 import FilterSvg from "../../../assets/Svg/FilterSvg";
 import { SceneMap, TabBar, TabView } from "react-native-tab-view";
-import Order from "../Order/component/Order";
+import Order from "../Order/component/OrderWaitCF";
 
 const renderScene = ({ route }) => {
     switch (route.key) {

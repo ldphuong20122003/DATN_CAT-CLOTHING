@@ -24,6 +24,7 @@ import ReOrder from "../Product/ReOrder/ReOder";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useIsFocused } from "@react-navigation/native";
 import config from "../../../config";
+import iconMapSvg from "../../../assets/Svg/iconMapSvg";
 const IP = config.IP;
 const AccountScreen = ({ navigation }) => {
   const isFocused = useIsFocused();
@@ -83,8 +84,8 @@ const AccountScreen = ({ navigation }) => {
   const gotoChangeAccount = () => {
     navigation.navigate("Update_Account");
   };
-  const gotoTransportMethod = () => {
-    navigation.navigate("Transport_Method");
+  const gotoMapView = () => {
+    navigation.navigate("MapViewScreen");
   };
   const gotoHisOrder = () => {
     navigation.navigate("History_Order");
@@ -298,7 +299,7 @@ const AccountScreen = ({ navigation }) => {
               </View>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={gotoTransportMethod}>
+          <TouchableOpacity onPress={gotoMapView}>
             <View
               style={{
                 paddingVertical: 16,
@@ -310,10 +311,7 @@ const AccountScreen = ({ navigation }) => {
               }}
             >
               <View style={{ flexDirection: "row" }}>
-                <Image
-                  source={require("../../../assets/Star.png")}
-                  style={{ width: 24, height: 24 }}
-                />
+                <SvgXml xml={iconMapSvg()} />
 
                 <Text
                   style={{
@@ -323,7 +321,7 @@ const AccountScreen = ({ navigation }) => {
                     marginLeft: 10,
                   }}
                 >
-                  Đánh giá của tôi
+                  Địa chỉ cửa hàng
                 </Text>
               </View>
 

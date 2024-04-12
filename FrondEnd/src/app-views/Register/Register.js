@@ -19,6 +19,7 @@ import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import { firebaseConfig } from "../../config";
 import firebase from "firebase/compat/app";
 import Hide_pass from "../../../assets/Svg/Hide_pass";
+import LottieView from "lottie-react-native";
 
 const Register = ({ navigation }) => {
   const [fullname, setFullname] = useState("");
@@ -88,7 +89,14 @@ const Register = ({ navigation }) => {
     <>
       <View style={{ flex: 1, width: "100%", backgroundColor: "#fff" }}>
         <View style={{ alignItems: "center" }}>
-          <SvgXml xml={BannerSvg()} />
+          <View style={{ height: 180, alignItems: "center" }}>
+            <LottieView
+              source={require("../../../assets/Animation - 1711700040611.json")}
+              style={{ width: "100%", height: 210 }}
+              autoPlay
+              loop
+            />
+          </View>
           <SvgXml style={{ marginTop: 10 }} xml={LogoCat()} />
           <Text style={{ fontSize: 32, fontWeight: 400, marginTop: 9 }}>
             Đăng ký
@@ -200,7 +208,11 @@ const Register = ({ navigation }) => {
               ></TextInput>
             </View>
             <TouchableOpacity onPress={toggleShowPassword}>
-            {showPassword? <SvgXml xml={Hide_pass()}/>:<SvgXml xml={EyeSvg()}/>}
+              {showPassword ? (
+                <SvgXml xml={Hide_pass()} />
+              ) : (
+                <SvgXml xml={EyeSvg()} />
+              )}
             </TouchableOpacity>
           </View>
         </View>

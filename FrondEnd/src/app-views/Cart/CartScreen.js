@@ -23,9 +23,6 @@ import DeleteSvg from "../../../assets/Svg/DeleteSvg";
 
 const CartScreen = ({ navigation }) => {
   const IP = config.IP;
-  const goBack = () => {
-    navigation.goBack();
-  };
   const [cartItems, setCartItems] = useState([]);
   const [userId, setUserId] = useState("");
   const [isLoading, setIsLoading] = useState(false);

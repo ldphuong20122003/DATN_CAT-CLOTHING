@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { View, Text } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 
 import ListRecommend_Home from "../Recommend/component/ListRecommend_Home";
 import config from "../../../../config";
+import Result_Product from "./Result_Product";
 
 const All_Products = ({ keyword, sortBy }) => {
   const IP = config.IP;
@@ -38,7 +39,7 @@ const All_Products = ({ keyword, sortBy }) => {
     }
   };
   return (
-    <View style={{ flex: 1, marginHorizontal: 16 }}>
+    <ScrollView style={{ flex: 1, marginHorizontal: 16 }}>
       <Text
         style={{
           marginTop: 10,
@@ -57,10 +58,10 @@ const All_Products = ({ keyword, sortBy }) => {
             paddingBottom: 7,
           }}
         >
-          <ListRecommend_Home data={sortData(data)} />
+          <Result_Product data={sortData(data)} />
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 export default All_Products;

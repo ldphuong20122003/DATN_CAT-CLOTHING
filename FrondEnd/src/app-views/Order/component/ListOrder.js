@@ -2,10 +2,13 @@ import React, { useState } from "react";
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import { SvgXml } from "react-native-svg";
 import iconDollarSvg from "../../../../assets/Svg/iconDollarSvg";
+import { useNavigation } from "@react-navigation/native";
 const ListOrder = ({ data, onPress }) => {
+  const navigation= useNavigation();
   const [isChecked, setChecked] = useState(false);
   const pressItem = (item) => {
-    onPress && onPress(item);
+    navigation.navigate('Information_Order',{item:item})
+
   };
 
   const _renderItem = ({ item, index }) => {

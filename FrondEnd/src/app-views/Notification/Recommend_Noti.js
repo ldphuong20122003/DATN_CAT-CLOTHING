@@ -5,10 +5,11 @@ import config from "../../../config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Recommend_Noti = () => {
-  const IP= config.IP
+  const IP = config.IP;
   const [userId, setUserId] = useState("");
-  const [data,setData]=useState([]);
-  const [isLoading,setIsLoading]=useState(false);
+  const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
   const getUserId = async () => {
     try {
       const userIdValue = await AsyncStorage.getItem("UserId");
@@ -19,13 +20,28 @@ const Recommend_Noti = () => {
       console.log(error);
     }
   };
+
   const fetchNotificationIDs = () => {
     setIsLoading(true);
     fetch(`http://${IP}:3000/API/ntf/`)
       .then((res) => res.json())
       .then((NotificationList) => {
-        const NotifiIDs = NotificationList
-          .filter((Notification) => Notification.id_user === userId)
+        const NotifiIDs = NotificationList.filter(
+          (Notification) => Notification.id_user === userId
+        );
+
+        // Chuyển đổi Time thành đối tượng ngày tháng và sắp xếp mảng
+        NotifiIDs.forEach((notification) => {
+          const [day, month] = notification.Time.split("/");
+          notification.parsedTime = new Date(
+            new Date().getFullYear(),
+            parseInt(month) - 1,
+            parseInt(day)
+          );
+        });
+
+        NotifiIDs.sort((a, b) => b.parsedTime - a.parsedTime);
+
         setData(NotifiIDs);
         setIsLoading(false);
       })
@@ -34,28 +50,27 @@ const Recommend_Noti = () => {
         setIsLoading(false);
       });
   };
+
   useEffect(() => {
     getUserId();
   }, []);
+
   useEffect(() => {
     fetchNotificationIDs();
   }, [userId]);
- 
+
   return (
-    <>
-      <View >
-        <View
-          style={{
-         
-            borderBottomWidth: 0.5,
-            borderColor: "#fff",
-            paddingBottom: 7,
-          }}
-        >
-          <ListReNoti data={data}/>
-        </View>
+    <View>
+      <View
+        style={{
+          borderBottomWidth: 0.5,
+          borderColor: "#fff",
+          paddingBottom: 7,
+        }}
+      >
+        <ListReNoti data={data} />
       </View>
-    </>
+    </View>
   );
 };
 export default Recommend_Noti;

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   Alert,
+  FlatList,
   StyleSheet,
   Text,
   TextInput,
@@ -11,16 +12,28 @@ import { SvgXml } from "react-native-svg";
 import BackSvg from "../../../assets/Svg/BackSvg";
 import ToggleSwitch from "toggle-switch-react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import ModalPopups from "../Modal/ModalPopup";
+import DeleteSvg from "../../../assets/Svg/DeleteSvg";
 
 const UpdateAddress = ({ navigation, route }) => {
   const { index, address } = route.params;
   const [isToggled, setIsToggled] = useState(address.isDefault); // State để theo dõi trạng thái bật/tắt
   const { item } = route.params;
+  console.log(address);
   const [fullname_update, setFullName] = useState(address.fullname); // State
   const [phone_update, setPhone] = useState(address.phone);
-  const [country_update, setCountry] = useState(address.country);
+  const [city_update, setCity] = useState("");
+  const [ward_update, setWard] = useState("");
+  const [district_update, setDistrict] = useState("");
   const [address_update, setAddress] = useState(address.address);
-
+  const [provinceId, setProvinceId] = useState("");
+  const [districtId, setDistrictId] = useState("");
+  const [visibleShowCity, setVisibleShowCity] = React.useState(false);
+  const [visibleShowDistrict, setVisibleShowDistrict] = React.useState(false);
+  const [visibleShowWard, setVisibleShowWard] = React.useState(false);
+  const [listCity, setListCity] = useState([]);
+  const [listDistrict, setListDistrict] = useState([]);
+ const [listWard, setListWard] = useState([]);
   const onToggle = (isOn) => {
     setIsToggled(isOn); // Cập nhật trạng thái dựa vào giá trị isOn
   };
@@ -86,7 +99,9 @@ const UpdateAddress = ({ navigation, route }) => {
       addressesArray[index] = {
         fullname: fullname_update,
         phone: phone_update,
-        country: country_update,
+        city: city_update,
+        district: district_update,
+        ward: ward_update,
         address: address_update,
         isDefault: isToggled,
       };
@@ -106,6 +121,108 @@ const UpdateAddress = ({ navigation, route }) => {
     }
   };
 
+  const getlistCity = () => {
+    const apiUrl =
+      "https://online-gateway.ghn.vn/shiip/public-api/master-data/province";
+
+    fetch(apiUrl, {
+      method: "GET",
+      headers: {
+        Token: "43c646fe-f185-11ee-962e-3e7deb519ac3", // Thay thế bằng token của bạn
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setListCity(data.data); // Ước lượng rằng setListCity là một hàm được sử dụng để cập nhật danh sách thành phố
+      })
+      .catch((error) => {
+        console.error("There was a problem with your fetch operation:", error);
+      });
+  };
+  const getlistDistrict = () => {
+    const apiUrl =
+      "https://online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id=" +
+      provinceId;
+
+    fetch(apiUrl, {
+      method: "GET",
+      headers: {
+        Token: "43c646fe-f185-11ee-962e-3e7deb519ac3", // Thay thế bằng token của bạn
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setListDistrict(data.data); // Ước lượng rằng setListCity là một hàm được sử dụng để cập nhật danh sách thành phố
+      })
+      .catch((error) => {
+        console.error("There was a problem with your fetch operation:", error);
+      });
+  };
+  const getlistWard = () => {
+    const apiUrl =
+      "https://online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id=" +
+      districtId;
+
+    fetch(apiUrl, {
+      method: "GET",
+      headers: {
+        Token: "43c646fe-f185-11ee-962e-3e7deb519ac3", // Thay thế bằng token của bạn
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setListWard(data.data); // Ước lượng rằng setListCity là một hàm được sử dụng để cập nhật danh sách thành phố
+      })
+      .catch((error) => {
+        console.error("There was a problem with your fetch operation:", error);
+      });
+  };
+  useEffect(() => {
+    getlistCity();
+  }, []);
+  useEffect(() => {
+    getlistDistrict();
+  }, [provinceId]);
+  useEffect(() => {
+    getlistWard();
+  }, [districtId]);
+  const renderItemCity = ({ item }) => (
+    <TouchableOpacity
+      style={{ padding: 8 }}
+      onPress={() => {
+        setCity(item.ProvinceName),
+          setVisibleShowCity(false),
+          setProvinceId(item.ProvinceID);
+          setDistrict("");
+          setWard("");
+      }}
+    >
+      <Text>{item.ProvinceName}</Text>
+    </TouchableOpacity>
+  );
+  const renderItemDistrict = ({ item }) => (
+    <TouchableOpacity
+      style={{ padding: 8 }}
+      onPress={() => {
+        setDistrict(item.DistrictName), setVisibleShowDistrict(false);
+        setDistrictId(item.DistrictID);
+        setWard("");
+      }}
+    >
+      <Text>{item.DistrictName}</Text>
+    </TouchableOpacity>
+  );
+  const renderItemWard = ({ item }) => (
+    <TouchableOpacity style={{ padding: 8 }} onPress={() => {
+      setWard(item.WardName);
+      setVisibleShowWard(false);
+    }}>
+      <Text>{item.WardName}</Text>
+    </TouchableOpacity>
+  );
   return (
     <View style={StyleSheet.Container}>
       <View style={styles.Header}>
@@ -122,7 +239,7 @@ const UpdateAddress = ({ navigation, route }) => {
                 alignItems: "center",
               }}
             >
-              Thêm địa chỉ mới
+              Cập nhật địa chỉ
             </Text>
           </View>
         </View>
@@ -174,20 +291,58 @@ const UpdateAddress = ({ navigation, route }) => {
         >
           <Text style={{ color: "#5A5A5A" }}>Địa chỉ</Text>
         </View>
-        <View
+
+        <TouchableOpacity
           style={{
             padding: 16,
             borderBottomWidth: 0.3,
             borderBottomColor: "#D4D4D4",
           }}
+          onPress={() => setVisibleShowCity(true)}
         >
           <TextInput
-            placeholder="Tỉnh/Thành Phố, Quận/Huyện, Phường/Xã"
+            placeholder="Tỉnh/Thành Phố"
             placeholderTextColor={"#D4D4D4"}
-            value={country_update}
-            onChangeText={(txt) => setCountry(txt)}
+            value={city_update}
+            editable={false}
+            onChangeText={(txt) => setCity(txt)}
+            color="#000"
           />
-        </View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            padding: 16,
+            borderBottomWidth: 0.3,
+            borderBottomColor: "#D4D4D4",
+          }}
+          onPress={() => setVisibleShowDistrict(true)}
+        >
+          <TextInput
+            placeholder="Quận/Huyện"
+            placeholderTextColor={"#D4D4D4"}
+            value={district_update}
+            editable={false}
+            onChangeText={(txt) => setDistrict(txt)}
+            color="#000"
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            padding: 16,
+            borderBottomWidth: 0.3,
+            borderBottomColor: "#D4D4D4",
+          }}
+          onPress={() => setVisibleShowWard(true)}
+        >
+          <TextInput
+            placeholder="Phường/Xã"
+            placeholderTextColor={"#D4D4D4"}
+            value={ward_update}
+            editable={false}
+            onChangeText={(txt) => setWard(txt)}
+            color="#000"
+          />
+        </TouchableOpacity>
         <View
           style={{
             padding: 16,
@@ -266,16 +421,23 @@ const UpdateAddress = ({ navigation, route }) => {
         <TouchableOpacity onPress={handleDeleteAddress}>
           <View
             style={{
-              marginHorizontal: 16,
-              paddingVertical: 10,
-              borderWidth: 0.5,
-              justifyContent: "center",
-              alignItems: "center",
-              borderRadius: 8,
               borderColor: "#1890ff",
+              marginTop: 16,
+              paddingVertical: 10,
+              marginHorizontal: 16,
+              borderRadius: 8,
+              alignItems: "center",
+              borderWidth:1
             }}
           >
-            <Text>Xóa địa chỉ</Text>
+            <Text
+              style={{
+                fontWeight: 600,
+                color:'#1890ff'
+              }}
+            >
+             Xóa địa chỉ
+            </Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity onPress={handleUpdateAddress}>
@@ -292,7 +454,7 @@ const UpdateAddress = ({ navigation, route }) => {
             <Text
               style={{
                 fontWeight: 600,
-                color: "#fff",
+                color: "white",
               }}
             >
               Hoàn thành
@@ -300,6 +462,81 @@ const UpdateAddress = ({ navigation, route }) => {
           </View>
         </TouchableOpacity>
       </View>
+      <ModalPopups visible={visibleShowCity}>
+        <View style={{ height: 350 }}>
+          <View
+            style={{
+              marginBottom: 10,
+              alignItems: "center",
+              flexDirection: "row",
+            }}
+          >
+            <View style={{ flex: 1, alignItems: "center" }}>
+              <Text style={{ fontSize: 16, fontWeight: 600 }}>
+                Chọn Tỉnh/Thành Phố
+              </Text>
+            </View>
+            <TouchableOpacity onPress={() => setVisibleShowCity(false)}>
+              <SvgXml xml={DeleteSvg()} />
+            </TouchableOpacity>
+          </View>
+          <FlatList
+            data={listCity}
+            renderItem={renderItemCity}
+            keyExtractor={(item) => item.ProvinceID.toString()}
+          />
+        </View>
+      </ModalPopups>
+      <ModalPopups visible={visibleShowDistrict}>
+        <View style={{ height: 350 }}>
+          <View
+            style={{
+              marginBottom: 10,
+              alignItems: "center",
+              flexDirection: "row",
+            }}
+          >
+            <View style={{ flex: 1, alignItems: "center" }}>
+              <Text style={{ fontSize: 16, fontWeight: 600 }}>
+                Chọn Quận/Huyện
+              </Text>
+            </View>
+            <TouchableOpacity onPress={() => setVisibleShowDistrict(false)}>
+              <SvgXml xml={DeleteSvg()} />
+            </TouchableOpacity>
+          </View>
+          <FlatList
+            data={listDistrict}
+            renderItem={renderItemDistrict}
+            keyExtractor={(item) => item.DistrictID.toString()}
+          />
+        </View>
+      </ModalPopups>
+      <ModalPopups visible={visibleShowWard}>
+        <View style={{ height: 350 }}>
+          <View
+            style={{
+              marginBottom: 10,
+              alignItems: "center",
+              flexDirection: "row",
+            }}
+          >
+            <View style={{ flex: 1, alignItems: "center" }}>
+              <Text style={{ fontSize: 16, fontWeight: 600 }}>
+                Chọn Phường/Xã
+              </Text>
+            </View>
+            <TouchableOpacity onPress={() => setVisibleShowWard(false)}>
+              <SvgXml xml={DeleteSvg()} />
+            </TouchableOpacity>
+          </View>
+          <FlatList
+            data={listWard}
+            renderItem={renderItemWard}
+            keyExtractor={(item) => item.WardCode.toString()}
+          />
+        </View>
+      </ModalPopups>
     </View>
   );
 };
