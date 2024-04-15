@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link rel="stylesheet" href="../css/app.css">
+
+</head>
+ <style>
+    .label-width{
+            width: 140px;
+    }
+ </style>
+<body class="m-0 p-0 container-fluid ">
+    
+
+    <%- include('../inc/header') %>
+        <div class="m-4">
+            <div class="input-group" style="width: 1480px;">
+                <span class="input-group-text col-md-1">Search</span>
+                  <input type="text" class="form-control" placeholder="Name" name="q" id="searchInput" onkeyup="searchData()">
+               
+                
+              </div>
+            <% if (listOrderDetail) { %>
+                <table class="table table-hover table-bordered mt-2 " id="resultTable">
+                    <thead>
+                        <tr class="text-center">
+                            <th scope="col">ID Đơn Hàng</th>
+                            <th scope="col">Sản Phẩm</th>
+                            <th scope="col">Số Lượng</th>
+                            <th scope="col">Tổng Tiền</th>
+                            <th scope="col">Tên Nhân Viên</th>
+                            <th scope="col">Tên Người Dùng</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% listOrderDetail.forEach((item)=>{ %>
+                            <tr class="align-middle">
+                                <td class="text-center">
+                                    <%= item.DonHang %>
+                                </td>
+                                <td class="text-center">
+                                    <%= item.Product %>
+                                </td>
+                                <td class="text-center">
+                                    <%= item.SoLuong %>
+                                </td>
+                                <td class="text-center">
+                                    <%= item.TongTien %>
+                                </td>
+                                <td class="text-center">
+                                    <%= item.Staff_name %>
+                                </td>
+                                <td class="text-center">
+                                    <%= item.Username %>
+                                </td>
+                                <td class="text-center">
+                                    <button data-item-id="<%= item.id %>" data-item-idDonHang="<%= item.DonHang %>"
+                                        data-item-Product="<%= item.Product %>" data-item-SoLuong="<%= item.SoLuong %>"
+                                        data-item-TongTien="<%= item.TongTien %>" data-item-Staff="<%= item.Staff_name %>"
+                                        data-item-User="<%= item.Username %>" type="button" data-bs-toggle="modal"
+                                        class="btn btn-success m-2" data-bs-target="#updateModal">edit
+                                    </button>
+
+                                    <!-- <button data-item-id="<%= item.id %>" data-item-Product="<%= item.Product %>"
+                                        class="btn btn-danger" data-bs-toggle="modal"
+                                        data-bs-target="#deleteModal">Delete</button> -->
+                                </td>
+
+                            </tr>
+                            <% }) %>
+
+                    </tbody>
+                </table>
+                <% }else{ %>
+                    <h3>Không có dữ liệu</h3>
+                    <% } %>
+                        <!--modal-edit-->
+                        <div class="modal fade" id="updateModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editModalLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="editModalLabel">Update </h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <form id="editform" action="OrderDetails/edit" method="post">
+                                        <div class="modal-body">
+                                            <div class="input-group mb-3">
+                                                <label for="idDonHang" class="input-group-text label-width">IdDonHang</label>
+                                                <input type="text" name="idDonHang" id="idDonHang" class="form-control" required>
+                                            </div>
+                                            <div class="input-group mb-3">
+                                                <label for="idProduct" class="input-group-text label-width">Sản Phẩm</label>
+                                                <input type="text" name="sanpham" id="idProduct" class="form-control" required>
+                                            </div>
+                                            <div class="input-group mb-3">
+                                                <label for="Soluong" class="input-group-text label-width">Số Lượng</label>
+                                                <input type="number" name="soluong" id="Soluong" class="form-control" required>
+                                            </div>
+                                            <div class="input-group mb-3">
+                                                <label for="Tongtien" class="input-group-text label-width">Tổng Tiền</label>
+                                                <input type="text" name="sotien" id="Tongtien" class="form-control" required>
+                                            </div>
+                                            <div class="input-group mb-3">
+                                                <label for="Tennhanvien" class="input-group-text label-width">Tên Nhân Viên</label>
+                                                <input type="text" name="tennhanvien" id="Tennhanvien"
+                                                    class="form-control" required>
+                                            </div>
+                                            <div class="input-group mb-3">
+                                                <label for="Tennguoidung" class="input-group-text label-width">Tên Người Dùng</label>
+                                                <input type="text" name="nguoidung" id="Tennguoidung"
+                                                    class="form-control" required>
+                                            </div>
+
+
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">No</button>
+                                            <button type="submit" class="btn btn-primary">update</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <!--modal-delete-->
+                        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="deleteModalLabel">Delete</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <form action="OrderDetails/delete" method="post">
+                                        <div class="modal-body">
+                                            Bạn chắc chắn muốn xóa?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">No</button>
+                                            <button type="submit" class="btn btn-primary">Yes</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+        </div>
+        <%- include('../inc/footer') %>
+            <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+                integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+                crossorigin="anonymous"></script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"
+                integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS"
+                crossorigin="anonymous"></script>
+            <!--script delete-->
+            <script>
+                const btnDelete = document.querySelectorAll('.btn.btn-danger');
+                const deletemodal = new bootstrap.Modal(document.getElementById('deleteModal'));
+                const deleteform = document.querySelector('form[action="OrderDetails/delete"]');
+
+                //click vào button Xóa sẽ mở modal
+                btnDelete.forEach(button => {
+                    button.addEventListener('click', function () {
+                        const itemId = this.getAttribute('data-item-id');
+                        const itemproduct = this.getAttribute('data-item-Product');
+                        console.log(`Item Id: ${itemId}`);
+
+                        // Truy xuất phần tử trong modal để cập nhật nội dung
+                        const modalBody = deletemodal._element.querySelector('.modal-body');
+                        modalBody.textContent = `Bạn có chắc muốn xóa ${itemproduct} ? `;
+                        // Thay đổi giá trị của thuộc tính action của form khi nút "Delete" được nhấn
+                        deleteform.action = `/OrderDetails/delete/${itemId}`;
+                    })
+                })
+            </script>
+            <!--script edit-->
+            <script>
+                const btnEdit = document.querySelectorAll('.btn.btn-success');
+                const editmodal = new bootstrap.Modal(document.getElementById("updateModal"));
+                const editForm = document.getElementById('editform');
+
+                btnEdit.forEach(button => {
+                    button.addEventListener('click', function () {
+                        const itemId = this.getAttribute('data-item-id');
+                        const itemDonhang = this.getAttribute('data-item-idDonHang');
+                        const itemProduct = this.getAttribute('data-item-Product');
+                        const itemSoluong = this.getAttribute('data-item-SoLuong');
+                        const itemTongTien = this.getAttribute('data-item-TongTien');
+                        const itemStaff = this.getAttribute('data-item-Staff');
+                        const itemUser = this.getAttribute('data-item-User');
+                        console.log('itemuser:', itemUser);
+                        // Truy xuất phần tử trong modal để cập nhật nội dung
+                        const modalbody = editmodal._element.querySelector('.modal-body');
+                        const inputIdDonhang = editForm.querySelector('#idDonHang');
+                        const inputProduct = editForm.querySelector('#idProduct');
+                        const inputsoluong = editForm.querySelector('#Soluong');
+                        const inputTongTien = editForm.querySelector('#Tongtien');
+                        const inputTenNhanVien = editForm.querySelector('#Tennhanvien');
+                        const inputUsername = editForm.querySelector('#Tennguoidung');
+                            
+                        inputIdDonhang.value = itemDonhang;
+                        inputProduct.value = itemProduct;
+                        inputsoluong.value = itemSoluong;
+                        inputTongTien.value = itemTongTien;
+                        inputTenNhanVien.value = itemStaff;
+                        inputUsername.value = itemUser;
+
+                        editForm.action = `OrderDetails/update/${itemId}`;
+                    })
+                })
+            </script>
+
+
+<script>
+    // Hàm search sẽ được gọi khi người dùng nhập vào ô tìm kiếm
+    function searchData() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("searchInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("resultTable");
+        tr = table.getElementsByTagName("tr");
+  
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[1]; // chỉ tìm kiếm trong cột ID
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = ""; // Hiển thị hàng nếu có từ khóa tìm kiếm
+                } else {
+                    tr[i].style.display = "none"; // Ẩn hàng nếu không phù hợp với từ khóa tìm kiếm
+                }
+            }
+        }
+    }
+  </script>
+</body>
+
+</html>
+<link rel="stylesheet" href="https://unpkg.com/@adminkit/core@latest/dist/css/app.css">
+<link rel="stylesheet" href="./style.css">
