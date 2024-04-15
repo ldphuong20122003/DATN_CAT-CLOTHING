@@ -58,9 +58,10 @@ exports.addVoucher = async (req, res, next) => {
         const Id = collectionRef.doc().id;
         let data = ({
             id: Id,
-            Discount: req.body.Discount,
-            Title: req.body.Title,
-            From: req.body.from
+            From: req.body.from,
+            Discount: req.body.discount,
+            Title: req.body.title,
+            
         });
         const docID = Id ? collectionRef.doc(Id) : collectionRef.doc();
         docID.set(data)
@@ -78,7 +79,6 @@ exports.addVoucher = async (req, res, next) => {
         //     Title: req.body.Title,
         //     From: req.body.from
         // });
-
         res.redirect('/Vouchers')
     } catch (error) {
         console.error('Error adding data:', error);

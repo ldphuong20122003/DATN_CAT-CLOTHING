@@ -48,23 +48,38 @@ exports.delete = async(req,res,next)=>{
 };
 
 exports.put = async(req,res,next)=>{
-    let newdata = {
-        Address: req.body.DiaChi,
-        Name_Staff:req.body.NhanVien,
-        Name_User:req.body.NguoiDung,
-        Name_product:req.body.TenSanPham,
-        NgayDat:req.body.NgayDat,
-        Status:req.body.Status,
-        TenDonHang:req.body.TenDonHang
-    }
+    
     try {
-        console.log(newdata);
         const id = req.params.id;
-        await firestore.collection('DonHang').doc(id).set(newdata,{merge:true});
+        // const status = req.body.Status;
+        const querySnapshot = await firestore.collection('DonHang').where('id', '==', id).get();
+        if (querySnapshot.empty) {
+            return res.status(404).json({ success: false, message: 'Không tìm thấy đơn hàng.' });
+        }
+        const newdata = {
+            status:req.body.Status,
+            // address: req.body.DiaChi,
+            // diachinhanhang:{[req.body.address]:req.body.Diachi,
+            //     [req.body.country]:req.body.thanhpho,
+            //     [req.body.fullname]:req.body.fullten,
+            //     [req.body.phone]:req.body.sodienthoai,},
+            // phuongthucthanhtoan:req.body.NguoiDung,
+            // phuongthucvanchuyen:req.body.TenSanPham,
+            // ngaydat:req.body.NgayDat,
+            
+            // totalPayment:req.body.TenDonHang
+        }
+        
+        const docRef = querySnapshot.docs[0].ref;
+        await docRef.update(newdata);
+        console.log(newdata);
+       
+        // await firestore.collection('DonHang').doc(id).set(newdata,{merge:true});
+        // res.json({ success: true, message: 'Đã cập nhật trạng thái đơn hàng.' });
         res.redirect('/Orders');
     } catch (error) {
-        console.error('Error deleting data:',error);
-        res.status(500).send('Error deleting data from Firestore');  
+        console.error('Error updating data:',error);
+        res.status(500).send('Error updating data from Firestore');  
     }
 }
 
