@@ -14,11 +14,17 @@
     .label-width{
             width: 140px;
     }
+    .btn-add{
+            background-color: rgb(0, 26, 255) !important;
+            color: white !important;
+        }
  </style>
 <body class="m-0 p-0 container-fluid ">
     
 
     <%- include('../inc/header') %>
+    <a href="/products" type="button" class="btn btn-add fw-medium float-end mb-2" data-bs-toggle="modal"
+                data-bs-target="#addDonHangTaiQuay" style="margin-left: 950px; width: 100px; height: 35px; background-color: blue;" >New Bill</a>
         <div class="m-4">
             <div class="input-group" style="width: 1480px;">
                 <span class="input-group-text col-md-1">Search</span>
@@ -27,7 +33,7 @@
                 
               </div>
             <% if (listOrderDetail) { %>
-                <table class="table table-striped" id="resultTable">
+                <table class="table table-hover table-bordered mt-2 " id="resultTable">
                     <thead>
                         <tr class="text-center">
                             <th scope="col">ID Đơn Hàng</th>
@@ -36,13 +42,14 @@
                             <th scope="col">Tổng Tiền</th>
                             <th scope="col">Tên Nhân Viên</th>
                             <th scope="col">Tên Người Dùng</th>
+                            <th scope="col">Time</th>
                         </tr>
                     </thead>
                     <tbody>
                         <% listOrderDetail.forEach((item)=>{ %>
                             <tr class="align-middle">
                                 <td class="text-center">
-                                    <%= item.DonHang %>
+                                    <%= item.id %>
                                 </td>
                                 <td class="text-center">
                                     <%= item.Product %>
@@ -58,6 +65,9 @@
                                 </td>
                                 <td class="text-center">
                                     <%= item.Username %>
+                                </td>
+                                <td class="text-center">
+                                    <%= item.Time %>
                                 </td>
                                 <td class="text-center">
                                     <button data-item-id="<%= item.id %>" data-item-idDonHang="<%= item.DonHang %>"
@@ -80,6 +90,74 @@
                 <% }else{ %>
                     <h3>Không có dữ liệu</h3>
                     <% } %>
+</div>
+                        <div class="modal fade" id="addDonHangTaiQuay" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="addModalLabel">New Bill</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <form action="OrderDetails/newbill" method="post" >
+                                    <div class="modal-body">
+                                        
+                                        <label for="Product" class="form-label" style="margin-top: 10px;">Sản Phẩm</label>
+                                        <select class="form-select mt-2" aria-label="Pick Product" name="Product" id="Product" multiple >
+                                            <% product.forEach(item=> { %>
+                                                <option >
+                                                    <%= item.Name %>
+                                                </option>
+                                                <% }) %>
+                                        </select>
+                                        <div style="display: flex; margin-top: 10px;">
+                                            <label style="width: 100px; font-size: medium;" for="SLSP">
+                                            Số Lượng
+                                        </label >
+                                            <input name="SLSP" type="text" id="SLSP" class="form-control" >
+                                            </div>
+                                        
+                                        <div style="display: flex; margin-top: 10px;">
+                                            <label style="width: 100px; font-size: medium;" for="TongTien">
+                                                Tổng tiền
+                                            </label >
+                                            <input name="TongTien" type="text" id="TongTien" class="form-control">
+                                        </div>
+                                        <label for="Staff_name" class="form-label">Nhân Viên</label>
+                                        <select class="form-select mt-2" aria-label="Pick Staff" name="Staff_name" required >
+                                            <% Staff.forEach(item=> { %>
+                                                <option value="<%= item.Fullname %>">
+                                                    <%= item.Fullname %>
+                                                </option>
+                                                <% }) %>
+                                        </select>
+                                        <label for="Username" class="form-label">Người Mua Hàng</label>
+                                        <input name="Username" type="text" id="Username" class="form-control">
+                                        <div  style=" display: flex; ">
+                                            <div style=" display: flex;">
+                                            <input class="form-check-input"  type="checkbox" value="Tiền Mặt" id="tienmat" name="tienmat" checked>
+                                            <label style="margin-left: 10px; width: 100px;" for="tienmat">
+                                                Tiền Mặt
+                                            </label>
+                                            </div>
+                                            <input class="form-check-input"  type="checkbox" value="Chuyển Khoản" id="ck" name="ck" style="margin-left: 50px;" >
+                                            <label style="margin-left: 10px;" for="ck">
+                                                Chuyển Khoản
+                                            </label>
+                                            
+                                            </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary" >Save</button>
+                                    </div>
+                                </form>
+                        
+                            </div>
+
+                            </div>
+
+                        </div>
+                
                         <!--modal-edit-->
                         <div class="modal fade" id="updateModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editModalLabel"
                             aria-hidden="true">
@@ -154,7 +232,7 @@
                                 </div>
                             </div>
                         </div>
-        </div>
+        
         <%- include('../inc/footer') %>
             <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
                 integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
@@ -242,6 +320,32 @@
             }
         }
     }
+  </script>
+
+  <script>
+   
+    function displayData() {
+        
+    // Get the selected value from the select box
+    var selectedId = document.getElementById('PRDID').value;
+
+    // Reference to the document in Firestore based on the selected ID
+    var docRef = product.doc(selectedId);
+
+    // Get the document data and display it in the inputs
+    docRef.get().then(function(doc) {
+        if (doc.exists) {
+            var data = doc.data();
+            document.getElementById('TongTien').value = data.TongTien;
+            // document.getElementById('ageInput').value = data.age;
+            // document.getElementById('addressInput').value = data.address;
+        } else {
+            console.log('No such document!');
+        }
+    }).catch(function(error) {
+        console.log('Error getting document:', error);
+    });
+}
   </script>
 </body>
 
