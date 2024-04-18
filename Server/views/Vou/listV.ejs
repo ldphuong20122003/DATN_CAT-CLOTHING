@@ -15,6 +15,10 @@
   .label-width {
     width: 100px;
   }
+  .btn-add{
+            background-color: rgb(0, 26, 255) !important;
+            color: white !important;
+        }
 </style>
 
 <body class="m-0 p-0 container-fluid">
@@ -23,8 +27,8 @@
 
       <div style="display: flex;">
         <h1>QUẢN LÝ VOUCHER</h1>
-        <a href="/Vouchers" type="button"  data-bs-toggle="modal"
-          data-bs-target="#addvcModal" style="margin-left: 950px; width: 150px; height: 40px; margin-top: 10px;">Thêm
+        <a href="/Vouchers" type="button" class="btn btn-add fw-medium float-end mb-2" data-bs-toggle="modal"
+          data-bs-target="#addvcModal" style="margin-left: 1050px; width: 150px; height: 35px; margin-top: 10px;">Thêm
           Voucher</a>
       </div>
 
@@ -84,36 +88,41 @@
                     <h1 class="modal-title fs-5" id="addModalLabel">Add Voucher</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
-                  <form action="Vouchers/addVoucher" method="POST" id="addVoucherForm" enctype="multipart/form-data">
+                  <form action="Vouchers/addVoucher" method="POST"  >
                     <div class="modal-body">
                       <div>
                         <div class="input-group" style="margin-top: 10px;">
                           <span class="input-group-text" style="width: 100px;">Ma voucher</span>
-                          <input type="text" aria-label="First name" class="form-control" name="id" id="addidname">
+                          <input type="text" aria-label="First name" class="form-control" name="addidname" id="addidname">
                           <div id="addidnameError" class="error-message"></div>
                         </div>
                         <div class="input-group" style="margin-top: 10px;">
+                          <span class="input-group-text" style="width: 100px;">Số Lượng voucher</span>
+                          <input type="number" aria-label="First name" class="form-control" name="addSLV" id="addSLV">
+                          <div id="addSLVError" class="error-message"></div>
+                        </div>
+                        <div class="input-group" style="margin-top: 10px;">
                           <span class="input-group-text" style="width: 100px;">From</span>
-                          <input type="text" aria-label="First name" class="form-control" name="from" id="addFrom">
+                          <input type="text" aria-label="First name" class="form-control" name="addFrom" id="addFrom">
                           <div id="addFromError" class="error-message"></div>
                         </div>
                         <div class="input-group" style="margin-top: 10px;">
                           <span class="input-group-text" style="width: 100px;">Discount</span>
-                          <input type="text" aria-label="First name" class="form-control" name="discount" id="addDiscount">
+                          <input type="text" aria-label="First name" class="form-control" name="addDiscount" id="addDiscount">
                           <div id="addDiscountError" class="error-message"></div>
                         </div>
 
                         <div class="input-group" style="margin-top: 10px;">
                           <span class="input-group-text" style="width: 100px;">Title</span>
-                          <input type="text" aria-label="First name" class="form-control" name="title" id="addTitle">
+                          <input type="text" aria-label="First name" class="form-control" name="addTitle" id="addTitle">
                           <div id="addTitleError" class="error-message"></div>
                         </div>
 
 
 
 
-                       <button type="submit"  style="margin-top: 10px;">Update</button>
-               <a href="/users"> <button class="btn btn-primary end" style="margin-top: 10px;">Back</button></a>
+                        <!-- <button type="submit"  style="margin-top: 10px;">Update</button>
+               <a href="/users"> <button class="btn btn-primary end" style="margin-top: 10px;">Back</button></a> -->
                       </div>
 
                     </div>

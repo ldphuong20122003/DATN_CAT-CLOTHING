@@ -55,16 +55,16 @@ exports.addVoucher = async (req, res, next) => {
 
     try {
         const collectionRef = admin.firestore().collection('Vouchers');
-        const Id = collectionRef.doc().id;
+       const docID = req.body.addidname;
         let data = ({
-            id: Id,
-            From: req.body.from,
-            Discount: req.body.discount,
-            Title: req.body.title,
-            
+            id: docID,
+            Discount: req.body.addDiscount,
+            SoLuong:req.body.addSLV,
+            Title: req.body.addTitle,
+            From: req.body.addFrom
         });
-        const docID = Id ? collectionRef.doc(Id) : collectionRef.doc();
-        docID.set(data)
+        
+        await  collectionRef.doc(docID).set(data)
         .then(() => {
             res.redirect('/Vouchers');
             return collectionRef.doc().id;
@@ -79,7 +79,7 @@ exports.addVoucher = async (req, res, next) => {
         //     Title: req.body.Title,
         //     From: req.body.from
         // });
-        res.redirect('/Vouchers')
+
     } catch (error) {
         console.error('Error adding data:', error);
         res.status(500).send('Error adding data from Firestore');
