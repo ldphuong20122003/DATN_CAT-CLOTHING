@@ -11,7 +11,6 @@ import {
 import { SvgXml } from "react-native-svg";
 import CareRightSvg from "../../../assets/Svg/CareRightSvg";
 import Shop from "../Product/FlashSale/Shop";
-
 import ShopSvg from "../../../assets/Svg/ShopSvg";
 import EditSvg from "../../../assets/Svg/EditSvg";
 import OrderSvg from "../../../assets/Svg/OrderSvg";
@@ -89,9 +88,6 @@ const AccountScreen = ({ navigation }) => {
   };
   const gotoHisOrder = () => {
     navigation.navigate("History_Order");
-  };
-  const gotoReview = () => {
-    navigation.navigate("Review");
   };
   return (
     <SafeAreaView style={{ flex: 0.93 }}>
