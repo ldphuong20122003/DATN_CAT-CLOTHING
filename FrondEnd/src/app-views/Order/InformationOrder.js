@@ -23,6 +23,9 @@ import DeleteSvg from "../../../assets/Svg/DeleteSvg";
 import config from "../../../config";
 import moment from "moment";
 import axios from "axios";
+import ModalPopups from "../Modal/ModalPopup";
+import LottieView from "lottie-react-native";
+
 const IP = config.IP;
 const InformationOrder = ({ navigation, route }) => {
   const [cancleOrder, setCancleOrder] = useState(false);
@@ -32,6 +35,7 @@ const InformationOrder = ({ navigation, route }) => {
   const item = route.params.item;
   const products = route.params.item.product;
   const [selectedOption, setSelectedOption] = useState(null);
+  const [visible, setVisible] = useState(false);
 
   const handleSelect = (option) => {
     setSelectedOption(option);
@@ -39,6 +43,7 @@ const InformationOrder = ({ navigation, route }) => {
   const gotoHome = () => {
     navigation.navigate("BottomTabScreen");
     setCancleOrder(false);
+    setVisible(false);
   };
   const currentDate = moment();
 
@@ -77,6 +82,7 @@ const InformationOrder = ({ navigation, route }) => {
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
+      setVisible(true);
       for (const product of products) {
         const productId = product.id_product;
         const sizeOrdered = product.size;
@@ -111,8 +117,6 @@ const InformationOrder = ({ navigation, route }) => {
         id_user: item.id_user,
       };
       await axios.post(`http://${IP}:3000/API/ntf/add`, data);
-
-      gotoHome();
     } catch (error) {
       console.error("Error cancelling order:", error.message);
     }
@@ -127,7 +131,7 @@ const InformationOrder = ({ navigation, route }) => {
   if (item.phuongthucvanchuyen === "Nhanh") {
     shippingCost = 50000;
   } else if (item.phuongthucvanchuyen === "Tiết kiệm") {
-    shippingCost = 20000;
+    shippingCost = 25000;
   } else if (item.phuongthucvanchuyen === "Hỏa tốc") {
     shippingCost = 70000;
   }
@@ -473,6 +477,43 @@ const InformationOrder = ({ navigation, route }) => {
           </Text>
         </TouchableOpacity>
       </ModalFilter>
+      <ModalPopups visible={visible}>
+        <View style={{ alignItems: "center" }}>
+          <View style={{ width: 50, height: 70 }}>
+            <LottieView
+              source={require("../../../assets/Animation - 1711695455244.json")}
+              style={{ width: "100%" }}
+              autoPlay
+              loop={false}
+            />
+          </View>
+          <Text style={{ color: "#6AC259", fontSize: 16, fontWeight: 600 }}>
+            Hủy đơn hàng thành công
+          </Text>
+          <Text style={{ fontSize: 12, fontWeight: 400, color: "#707070" }}>
+            Quay trở lại trang chủ để tiếp tục mua hàng
+          </Text>
+
+          <TouchableOpacity onPress={gotoHome}>
+            <View
+              style={{
+                width: 180,
+                paddingHorizontal: 14,
+                paddingVertical: 12,
+                borderColor: "#1890FF",
+                alignItems: "center",
+                marginTop: 30,
+                borderRadius: 6,
+                borderWidth: 1,
+              }}
+            >
+              <Text style={{ color: "#1890ff", fontSize: 14, fontWeight: 600 }}>
+                Trang chủ
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      </ModalPopups>
     </View>
   );
 };

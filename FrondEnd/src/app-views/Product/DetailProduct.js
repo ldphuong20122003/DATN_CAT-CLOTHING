@@ -34,14 +34,15 @@ import config from "../../../config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import FullFavouriteSvg from "../../../assets/Svg/FullFavouriteSvg";
+import ItemReview from "../Review/component/ItemReview";
 
 const Detail_Product = ({ navigation }) => {
   const gotoBack = () => {
     navigation.goBack();
   };
-  const gotoPayment = () => {
-    navigation.navigate("Payment");
-  };
+  const gotoAllReview=()=>{
+    navigation.navigate('AllReview',{id_product:productId});
+  }
   const route = useRoute();
   const IP = config.IP;
   const { productId } = route.params;
@@ -55,6 +56,7 @@ const Detail_Product = ({ navigation }) => {
   const [favouriteID, setFavouriteID] = useState("");
   const [visibleAddtoCart, setVisibleAddtoCart] = useState(false);
   const [visibleBuy, setVisibleBuy] = useState(false);
+  const [data_review, setDataReview] = useState([]);
   const getUserId = async () => {
     try {
       const userIdValue = await AsyncStorage.getItem("UserId");
@@ -269,8 +271,7 @@ const Detail_Product = ({ navigation }) => {
         await AsyncStorage.setItem('@buy_product', jsonValue);
         
         // Chuyển hướng sang màn hình Payment và truyền danh sách sản phẩm đã chọn
-        navigation.navigate('Payment', { data: newItem });
-        console.log(jsonValue);
+        navigation.navigate('Payment', { sourcePage: 'buyProduct', data: newItem });
       } catch (error) {
         // Xử lý lỗi khi lưu dữ liệu
         console.error("Error saving data", error);
@@ -278,8 +279,26 @@ const Detail_Product = ({ navigation }) => {
      
   };
 }
+const getReview = async () => {
+  try {
+    // Kiểm tra xem đã có đánh giá cho sản phẩm, người dùng và đơn hàng cụ thể hay chưa
+    const response = await axios.get(`http://${IP}:3000/API/Rating`);
+    const filteredReviews = response.data.filter(review => review.id_product === productId);
+    const sortedReviews = filteredReviews.sort((a, b) => new Date(b.date) - new Date(a.date));
+    const latestReviews = sortedReviews.slice(0, 2); // Lấy hai đánh giá gần nhất
+    setDataReview(latestReviews); // Hiển thị hai đánh giá gần nhất
+  } catch (error) {
+    console.error("Error handling review:", error);
+  }
+}
+  const totalRating = data_review.reduce((acc, curr) => acc + curr.rating, 0);
+  const totalReviews = data_review.length;
   
-
+  // Tránh chia cho 0
+  const averageRating = totalReviews > 0 ? totalRating / totalReviews : 0;
+  useEffect(()=>{
+    getReview();
+  },[])
   return (
     <View style={styles.Container}>
       <ScrollView style={{ marginBottom: 50 }}>
@@ -376,7 +395,7 @@ const Detail_Product = ({ navigation }) => {
             >
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <SvgXml xml={iconStarSvg()} />
-                <Text style={{ fontSize: 12, marginLeft: 4 }}>4.6/5</Text>
+                <Text style={{ fontSize: 12, marginLeft: 4 }}>{averageRating.toFixed(1)}/5</Text>
                 <Text style={{ fontSize: 12, marginLeft: 8 }}>Đã bán 12</Text>
               </View>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -467,54 +486,14 @@ const Detail_Product = ({ navigation }) => {
             >
               <View>
                 <Text style={{ fontWeight: 500 }}>Đánh giá sản phẩm</Text>
-                <Text style={{ fontWeight: 600 }}>4.6/5.0</Text>
+                <Text style={{ fontWeight: 600 }}>{averageRating.toFixed(1)}/5.0</Text>
               </View>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <TouchableOpacity onPress={gotoAllReview} style={{ flexDirection: "row", alignItems: "center" }}>
                 <Text style={{ fontSize: 12, color: "#1890ff" }}>Xem thêm</Text>
                 <SvgXml xml={CareRightSvg("#1980ff")} />
-              </View>
+              </TouchableOpacity>
             </View>
-            <View style={{ marginTop: 16 }}>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Image
-                  source={require("../../../assets/anhdaidien.jpg")}
-                  style={{ width: 24, height: 24, borderRadius: 12 }}
-                />
-                <Text style={{ fontSize: 12, marginLeft: 10 }}>
-                  Lê Đức Phương
-                </Text>
-              </View>
-              <View style={{ marginTop: 8 }}>
-                <SvgXml xml={FourStarSvg()} />
-                <Text style={{ fontSize: 12, color: "#707070", marginTop: 8 }}>
-                  Phân loại: Đen , M
-                </Text>
-                <Text style={{ fontSize: 12, marginTop: 8 }}>
-                  Ép dẻo, ép dẻo, ép plastic lấy ngayĐể đảm bảo cho tất cả các
-                  loại giấy tờ không bị mục nát, chúng tôi chuyên ép dẻo, ép
-                  plastic công nghệ cao.
-                </Text>
-              </View>
-              <View style={{ marginTop: 8, flexDirection: "row" }}>
-                <Image
-                  source={require("../../../assets/anhdaidien.jpg")}
-                  style={{ width: 80, height: 80, marginRight: 8 }}
-                />
-                <Image
-                  source={require("../../../assets/anhdaidien.jpg")}
-                  style={{ width: 80, height: 80, marginRight: 8 }}
-                />
-                <Image
-                  source={require("../../../assets/anhdaidien.jpg")}
-                  style={{ width: 80, height: 80, marginRight: 8 }}
-                />
-              </View>
-              <View style={{ marginTop: 8 }}>
-                <Text style={{ fontSize: 10, color: "#707070" }}>
-                  30/12/2003 10:53
-                </Text>
-              </View>
-            </View>
+           <ItemReview data={data_review} />
           </View>
           <View
             style={{

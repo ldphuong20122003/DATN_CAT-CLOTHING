@@ -264,7 +264,7 @@ const CartScreen = ({ navigation }) => {
       await AsyncStorage.setItem('@selected_products', jsonValue);
       
       // Chuyển hướng sang màn hình Payment và truyền danh sách sản phẩm đã chọn
-      navigation.navigate('Payment', { data: selectedProducts });
+      navigation.navigate('Payment',{ sourcePage: 'selectedProduct', data: selectedProducts });
     } catch (error) {
       // Xử lý lỗi khi lưu dữ liệu
       console.error("Error saving data", error);

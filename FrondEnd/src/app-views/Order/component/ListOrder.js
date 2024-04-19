@@ -10,7 +10,9 @@ const ListOrder = ({ data, onPress }) => {
     navigation.navigate('Information_Order',{item:item})
 
   };
-
+   const gotoReview= (item)=>{
+    navigation.navigate('Review',{item:item});
+   };
   const _renderItem = ({ item, index }) => {
     return (
       <View style={{ borderBottomWidth: 10, borderBottomColor: "#dadada" }}>
@@ -234,7 +236,7 @@ const ListOrder = ({ data, onPress }) => {
                       >
                         Đơn hàng đã được giao đến bạn
                       </Text>
-                      <View
+                      <TouchableOpacity onPress={() => gotoReview(item)}
                         style={{
                           padding: 4,
                           backgroundColor: "#1890ff",
@@ -242,9 +244,9 @@ const ListOrder = ({ data, onPress }) => {
                         }}
                       >
                         <Text style={{ fontSize: 12, color: "#fff" }}>
-                          Đã giao
+                          Đánh giá
                         </Text>
-                      </View>
+                      </TouchableOpacity>
                     </View>
                   </View>
                 )}

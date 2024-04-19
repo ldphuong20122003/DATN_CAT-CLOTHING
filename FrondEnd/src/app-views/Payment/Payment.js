@@ -30,8 +30,8 @@ const Payment = ({ navigation, route }) => {
   const gotoBack = () => {
     navigation.goBack();
   };
-  const gotoPaymentVnPay=()=>{
-    navigation.navigate('PaymentVNPayScreen',{totalPayment:totalPayment});
+  const gotoPaymentVnPay = () => {
+    navigation.navigate("PaymentVNPayScreen", { totalPayment: totalPayment });
   };
   const gotoPaymentMethod = () => {
     navigation.navigate("Payment_Method", { paymentMethod: paymentMethod });
@@ -46,7 +46,7 @@ const Payment = ({ navigation, route }) => {
   };
   const gotoHome = () => {
     navigation.navigate("BottomTabScreen");
-    setVisible(false)
+    setVisible(false);
   };
   const gotoInforOder = () => {
     navigation.navigate("Information_Order");
@@ -64,10 +64,11 @@ const Payment = ({ navigation, route }) => {
   const [voucher, setVoucher] = useState(null);
   const [visible, setVisible] = useState(false);
   const [userId, setUserId] = useState("");
-  const totalQuantity = products.reduce(
-    (acc, curr) => acc + curr.quantityInCart,
-    0
-  );
+  const sourcePage = route.params.sourcePage;
+  const calculateQuantity = () => {
+    return products.reduce((acc, curr) => acc + curr.quantityInCart, 0);
+  };
+  const totalQuantity = calculateQuantity();
 
   const getUserId = async () => {
     try {
@@ -103,8 +104,6 @@ const Payment = ({ navigation, route }) => {
   };
   const calculateTotalPrice = (products) => {
     let totalPrice = 0;
-
-    // Duyệt qua mỗi sản phẩm trong danh sách
     products.forEach((product) => {
       // Tính giá bán sau khi áp dụng giảm giá (nếu có)
       const salePrice =
@@ -147,7 +146,9 @@ const Payment = ({ navigation, route }) => {
     try {
       let paymentMethodValue = {};
       if (paymentMethod === "option1") {
-        paymentMethodValue = { phuongthucthanhtoan: "Thanh toán khi nhận hàng" };
+        paymentMethodValue = {
+          phuongthucthanhtoan: "Thanh toán khi nhận hàng",
+        };
       } else if (paymentMethod === "option2") {
         paymentMethodValue = { phuongthucthanhtoan: "Ví VNPay" };
       }
@@ -175,7 +176,8 @@ const Payment = ({ navigation, route }) => {
           price: product.PriceProduct - product.SaleProduct,
           soluong: product.quantityInCart,
           tongtien:
-            product.quantityInCart * (product.PriceProduct - product.SaleProduct),
+            product.quantityInCart *
+            (product.PriceProduct - product.SaleProduct),
         })),
         diachinhanhang: addressorder,
         tongsanpham: totalQuantity,
@@ -186,18 +188,27 @@ const Payment = ({ navigation, route }) => {
         ngaydat: currentDate.format("DD MMM YYYY"),
         totalPayment: totalPayment,
       };
-      const response = await axios.post(`http://${IP}:3000/API/donhang/add`, formData);
+      const response = await axios.post(
+        `http://${IP}:3000/API/donhang/add`,
+        formData
+      );
       const createdDocumentID = response.data.split(": ")[1];
       setVisible(true);
-  
+
       // Lặp qua từng sản phẩm để cập nhật số lượng tồn kho
       for (const product of products) {
         const productId = product.id;
         const sizeOrdered = product.sizeInCart;
         const quantityOrdered = product.quantityInCart;
-        const responseProduct = await axios.get(`http://${IP}:3000/API/product/?id=${productId}`);
+        const responseProduct = await axios.get(
+          `http://${IP}:3000/API/product/?id=${productId}`
+        );
         const productData = responseProduct.data[0];
-        if (productData && productData.Size && productData.Size[sizeOrdered.toString()]) {
+        if (
+          productData &&
+          productData.Size &&
+          productData.Size[sizeOrdered.toString()]
+        ) {
           const currentStock = productData.Size[sizeOrdered.toString()];
           if (currentStock >= quantityOrdered) {
             const newStock = currentStock - quantityOrdered;
@@ -209,7 +220,7 @@ const Payment = ({ navigation, route }) => {
           }
         }
       }
-  
+
       // Thêm thông báo khi đơn hàng được đặt thành công
       let data = {
         Img: "",
@@ -224,16 +235,35 @@ const Payment = ({ navigation, route }) => {
       console.error("Error handling payment:", error);
     }
   };
-  
+
   useEffect(() => {
     getUserId();
   }, []);
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const jsonValue = await AsyncStorage.getItem("@selected_products");
-        const retrievedProducts =
-          jsonValue != null ? JSON.parse(jsonValue) : [];
+        let key = "@selected_products"; // Key mặc định
+        // Kiểm tra nếu sourcePage là buyProduct thì sử dụng key mới
+        if (sourcePage === "buyProduct") {
+          key = "@buy_product";
+        }
+
+        const jsonValue = await AsyncStorage.getItem(key);
+        let retrievedProducts = [];
+
+        if (jsonValue) {
+          // Nếu có dữ liệu từ AsyncStorage, kiểm tra xem dữ liệu có phải là một mảng không
+          const parsedData = JSON.parse(jsonValue);
+          if (Array.isArray(parsedData)) {
+            // Nếu dữ liệu là một mảng, sử dụng nó như là danh sách sản phẩm
+            retrievedProducts = parsedData;
+          } else {
+            // Nếu dữ liệu không phải là một mảng, tạo một mảng mới chứa dữ liệu này
+            retrievedProducts = [parsedData];
+          }
+        }
+
+        // Cập nhật state với danh sách sản phẩm đã lấy được
         setProducts(retrievedProducts);
       } catch (error) {
         console.error("Error reading data", error);
@@ -304,6 +334,7 @@ const Payment = ({ navigation, route }) => {
 
     return unsubscribe; // Cleanup function
   }, [navigation]);
+  console.log(products);
   return (
     <View style={styles.Container}>
       <View style={styles.Header}>
@@ -349,7 +380,9 @@ const Payment = ({ navigation, route }) => {
               </View>
               <Text style={{ marginTop: 8, fontSize: 12, color: "#707070" }}>
                 {addressorder && addressorder.address},{" "}
-                {addressorder && addressorder.ward},  {addressorder && addressorder.district},  {addressorder && addressorder.city}
+                {addressorder && addressorder.ward},{" "}
+                {addressorder && addressorder.district},{" "}
+                {addressorder && addressorder.city}
               </Text>
             </View>
             <TouchableOpacity onPress={gotoChooseAddress}>

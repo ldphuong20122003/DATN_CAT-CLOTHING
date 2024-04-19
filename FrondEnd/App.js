@@ -30,6 +30,9 @@ import Voucher_Payment from "./src/app-views/Payment/component/Voucher_Payment";
 import ProductByCategory from "./src/app-views/Product/Category/ProductByCategory";
 import MapView from "./src/app-views/MapView/MapViewScreen";
 import PaymentVNPayScreen from "./src/app-views/Payment/component/PaymentVNPay";
+import Review from "./src/app-views/Review/Review";
+import ProductReview from "./src/app-views/Review/ProductReview";
+import AllReview from "./src/app-views/Review/AllReview";
 
 const Stack = createStackNavigator();
 
@@ -192,6 +195,21 @@ export default function App() {
         <Stack.Screen
           name="PaymentVNPayScreen"
           component={PaymentVNPayScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Review"
+          component={Review}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ProductReview"
+          component={ProductReview}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="AllReview"
+          component={AllReview}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
