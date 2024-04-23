@@ -149,40 +149,20 @@
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Update Don Hang</h5>
+                  <h5 class="modal-title" id="exampleModalLabel">Update Trạng Thái</h5>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form id="editform" action="Orders/edit" method="POST" >
                 <div class="modal-body">
-                    <div class="input-group mb-3">
-                        <label for="TenDonHang" class="input-group-text label-width">tên đơn hàng</label>
-                        <input type="text" id="TenDonHang" class="form-control" name="TenDonHang" required disabled>
-                    </div>
-                    <div class="input-group mb-3">
-                        <label for="DiaChi" class="input-group-text label-width">Địa chỉ</label>
-                        <input type="text" id="DiaChi" class="form-control" name="DiaChi" required disabled>
-                    </div>
-                    <div class="input-group mb-3">
-                        <label for="NguoiDung" class="input-group-text label-width">Người Dùng</label>
-                        <input type="text" id="NguoiDung" class="form-control" name="NguoiDung" required disabled>
-                    </div>
-                    <div class="input-group mb-3">
-                        <label for="TenSanPham" class="input-group-text label-width">Tên Sản Phẩm</label>
-                        <input type="text" id="TenSanPham" class="form-control" name="TenSanPham" required disabled>
-                    </div>
-                    <div class="input-group mb-3">
-                        <label for="NgayDat" class="input-group-text label-width">Ngày Đặt</label>
-                        <input type="date" id="NgayDat" class="form-control" name="NgayDat" required disabled>
-                    </div>
-                    <div class="input-group mb-3">
-                        <label for="NhanVien" class="input-group-text label-width">Nhân Viên</label>
-                        <input type="text" id="NhanVien" class="form-control" name="NhanVien" required disabled>
-                    </div>
-                    <div class="input-group mb-3">
-                        <label for="Status" class="input-group-text label-width">Status</label>
-                        <input id="Status" type="text" class="form-control" aria-label="Status" name="Status" required> </input>
                     
-                    </div>
+                        <label for="Status" class="input-group-text label-width">Status</label>
+                        <!-- <input id="Status" type="text" class="form-control" aria-label="Status" name="Status" required> </input> -->
+                        <select id="Status" class="form-select mt-1" aria-label="Status" name="Status" required>
+                            <% options.forEach(option => { %>
+                                <option value="<%= option.value %>"><%= option.label %></option>
+                            <% }); %>
+                          </select>
+                    
                    
                 </div>
                 <div class="modal-footer">
@@ -267,7 +247,7 @@
                         // const input_NguoiDung = editForm.querySelector('#NguoiDung');
                         // const input_NgayDat = editForm.querySelector('#NgayDat');
                         // const input_NhanVien = editForm.querySelector('#NhanVien');
-                        const input_Status = editForm.querySelector('#Status');
+                        const input_Status = editForm.querySelector('[name="Status"]');
                         // const input_TenSanPham = editForm.querySelector('#TenSanPham');
 
                        
@@ -278,7 +258,14 @@
                         // input_NguoiDung.value = item_tenNguoiDung;
                         // input_NgayDat.value = item_NgayDat;
                         // input_NhanVien.value = item_NhanVien;
-                        input_Status.value = item_Status;
+                        const StatusOptions = input_Status.querySelectorAll('option');
+                        StatusOptions.forEach(option => {
+                            if (option.value === item_Status) {
+                                option.setAttribute('selected', 'selected');
+                            } else {
+                                option.removeAttribute('selected');
+                            }
+                        });
                         // input_TenSanPham.value = item_tenSanPham;
                         
                         editForm.action = `Orders/update/${itemid}`;

@@ -10,8 +10,18 @@ exports.OrderDanhSach = async (req, res, next) => {
     let listDonHang = null;
     let listDonHangJson = [];
     
-
+const options = [
+            { value: 'Chờ xác nhận', label: 'Chờ xác nhận' },
+            { value: 'Xác Nhận', label: 'Xác Nhận' },
+            { value: 'Đang Xử Lý', label: 'Đang Xử Lý ' },
+            { value: 'Đang Vận Chuyển', label: 'Đang Vận Chuyển ' },
+            { value: 'Đã Giao Hàng Thành Công', label: 'Đã Giao Hàng Thành Công' },
+            
+            
+            // Thêm các option khác nếu cần
+        ];
     try {
+        
         listDonHang = await firestore.collection('DonHang').get();
         if (listDonHang.empty) {
             console.log('No matching listDonHang.');
@@ -31,7 +41,7 @@ exports.OrderDanhSach = async (req, res, next) => {
     }
 
     res.render('order/donhang', {
-        title: "Order", listdonhang: listDonHangJson 
+        title: "Order", listdonhang: listDonHangJson ,options : options
     });
 };
 exports.delete = async(req,res,next)=>{
