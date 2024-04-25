@@ -79,36 +79,66 @@ router.get('/getbyid', async (req, res, next) => {
     res.status(500).send('Error fetching data from Firestore');
   }
 });
+const fs = require('fs');
+const path = require('path');
+const multer = require('multer');
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, './public/uploads');
+  },
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    const uniqueSuffix = Date.now()  + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + ext);
+  }
+});
+const upload = multer({ storage: storage });
+const bucket = admin.storage().bucket();
   router.post('/add',async(req,res,next)=>{
-    try {
-       // Dữ liệu từ request body
-      const collectionRef = admin.firestore().collection('Users');
-            const Id = collectionRef.doc().id;
-          
-            const docID = Id ? collectionRef.doc(Id) : collectionRef.doc();
+    upload.single('avatar')(req, res, async (err) => {
+      if (err) {
+        console.error('Lỗi tải lên tệp tin:', err);
+        res.status(500).json({ message: 'Lỗi tải lên tệp tin' });
+        return;
+      }
+      const fileName=req.file.filename;
+      const filePath = path.resolve(req.file.path);
+      const options = {
+        destination: fileName
+      };
+      await bucket.upload(filePath, options);
+      const UrlFile='https://firebasestorage.googleapis.com/v0/b/produc-e30a9.appspot.com/o/'+fileName+'?alt=media&token=1f7538b4-68a2-408e-8bc6-96f8f5a51650';
+      try {
+        const collectionRef = admin.firestore().collection('Users');
+        const Id = collectionRef.doc().id;
 
-            const data2={
-              id:Id,
-              Address: req.body.Address,
-              Phone:  req.body.Phone,
-              FullName: req.body.FullName,
-              Avatar:req.body.Avatar,
-              Email: req.body.Email,
-              Password: req.body.Password
-            }
-             docID.set(data2).then(() => {
-              res.status(200).send(`Document with ID: add successfully`);
-              return collectionRef.doc().id;
-          })
-          .catch(error => {
+        const docID = Id ? collectionRef.doc(Id) : collectionRef.doc();
+
+        const data2={
+          id:Id,
+          Img: UrlFile,
+          Address: req.body.Address,
+          Phone:  req.body.Phone,
+          FullName: req.body.FullName,
+          Email: req.body.Email,
+          Password: req.body.Password
+
+        }
+        docID.set(data2).then(() => {
+          res.status(202).send(`Document with ID: add successfully`);
+          return collectionRef.doc().id;
+        })
+            .catch(error => {
               console.error('Lỗi khi thêm tài liệu:', error);
               res.status(500).json({message: 'Lỗi khi thêm tài liệu'});
-          });
-     
-    } catch (error) {
-      console.error('Error adding data:', error);
-      res.status(500).send('Error adding data to Firestore');
-    }
+            });
+
+      } catch (error) {
+        console.error('Error adding data:', error);
+
+      }
+
+    });
   });
 
   router.delete('/delete/:id',async(req,res,next)=>{
