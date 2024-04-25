@@ -3,7 +3,7 @@
         <a href="/" class="navbar-brand col-md-2">
             <img class="logo-footer" src="/images/logo.png" alt="Ảnh lỗi">
         </a>
-        <div class="collapse navbar-collapse col-md-7" id="navbarNavDropdown">
+        <div class="collapse navbar-collapse col-md-3" id="navbarNavDropdown">
             
             <ul class="w-100 navbar-nav d-flex justify-content-evenly">
               
@@ -45,12 +45,27 @@
                     <a class="nav-link fw-medium fs-5" href="/staffs">Staff</a>
                 </li>
                 <% } %>
+
+              
+                
+
+               
             </ul>
         
 
         </div>
-        <!-- Dùng lớp "d-none d-md-block" để ẩn user-info khi ở kích cỡ điện thoại (nhỏ hơn "md") -->
         <div class="user-info col-md-2">
+            <img style="margin-left: 20px; width: 30px; height: 30px; margin-top: 5px;" alt="Notification Bell" onclick="toggleNotifications()" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAADj0lEQVR4nO2ZS2xNQRjHf95KQ1gQpSnxKhVtIhEWFqQkUol4rdrETjyChUfFO7WS2FiQCAsRDSpE65FoNEI9Nyp9oCwsCEUbjwpVgkzyn2Rycu/tvefec4/G/SWTtOec+e73PzPzzTffgQwZMvRWJgJVQAfwBbgATOYfoR+wBDgGNAEfgB9AG3ADKAdygfHAe+CPpxlRY8MWsQx4EsE5b+sGXurvy8AYOX9F186FJaA/cNhx9JnefBEwHBgIjANWAJXAL+fZEsdOrq59CkOEcbJaDnwH1klYLPKBu+pj1sYMXR+na2bKpV1EjX68HZiTQN9BwFn1fQHMBK7pfzNqoYkojLBeaoFOoD6GmHue9fMGmMA/IGKY82Ztux3D1jRnzVwE8kgTWTFEjAIade8dsBYYGYfNM+qzlTQJWK35HE1Es+61JPhmV6nfdQIiW+HxlKKLnSr1TqSxIpp0r1n/J0Ke+r5KleNmka0EDgEPgZ+euf4IKAP6RhHR5EOEXfR/FBh8MQTYqB21I8oOfB/YDUyJ0D8VItA68r0RDgUeexx/K1H7gWI9Ew2TT7WmQIRhlmMnYfY4m1FpnInaFI1OiyO+IUkRhp2ydRwf2AgzP8YzU4E1wGngtWf0PgIVwGCSY4ATCd28K27smjBJXSS8O67NgUwEW5oCAZZNsv3cE0Tipl0GcqLcv6M1Y/Kh9UAB0IfUMhfokh9mzfnilgwsJhwKnZd5NBlDB2TkBOmnyBFxKY60v8czgY3dJtELQ0S1EtCkuSmDe+nFIgzznFFJdi/oielBibBclXFTlgkyc24NUgQqy3TqR0xxIAg2O0WJLAJkg7NbTwrAvk1pTOYcKGajO68fa+whWUyUAtn9HPRoWEwIfurM46Rie4Tk9CRpJN+JLKdSlJI8CCuDmO0ca48kKSZbh7PuFE/XuFmgqqEdGb/TbKFsmFNmaBQDX+VIjc83WqH+BwmZHc5ZpNFHaLaFuuWEyC7gd4RTYSKbZpv6mU03FBZJhPlAs11fkSodQVVx5Ga2sm6iYGjUyoktnuulSjDtBrcvxhGgTM+ZqkxotMuJ0VEqKe50+6TD2WJVYkYoUNiCgkl/QuOLnDCfxLzk6N4357gcrTWkKy2JRp0c2RbhXrnumQ+btmRUoUNauz5+NilYhLIJupTI2S4t9hy1cgWAMIsWvosTkZoZgV5FiaZZp1pdbxqJDBn+N/4CZAtEGKGBS68AAAAASUVORK5CYII=">
+           <span id="unreadCount" class="unread-count"></span>
+            <p style="margin-top: 10px;" onclick="toggleNotifications()">Thông Báo</p>
+            
+            <ul id="notificationList" class="dropdown-menu "  style="display: none; max-height: 400px; overflow: auto; background-color: white;">
+              
+            </ul>
+            
+        </div>
+        <!-- Dùng lớp "d-none d-md-block" để ẩn user-info khi ở kích cỡ điện thoại (nhỏ hơn "md") -->
+        <div class="user-info col-md-1">
             <div class="dropdown">
                 <div class="dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                     <img class="user-avatar" src="/images/images.jpg" alt="Avatar">
@@ -65,19 +80,24 @@
                 </div>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                     <li><a class="dropdown-item" href="/personal-information">Personal information</a></li>
-                    <li><hr class="dropdown-divider"></li>
+                    
                     <li><a class="dropdown-item" href="/change-password">Change password</a></li>
-                    <li><hr class="dropdown-divider"></li>
+                    
                     <li><a class="dropdown-item" href="/logout">Log out</a></li>
                 </ul>
             </div>
         </div>
+        
+        
       
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
     </div>
 </nav>
+
+
+
 
 <script src="/socket.io/socket.io.js"></script>
   <script>
@@ -88,3 +108,152 @@
       // You can also trigger some UI changes like showing an icon or playing a sound here
     });
   </script>
+
+<script>
+    // Sử dụng JavaScript để thực hiện yêu cầu AJAX khi nhấn vào icon chuông
+    let isNotificationVisible = false;
+    let allData = [];
+    let unreadCount = 0;
+function toggleNotifications() {
+  const notificationList = document.getElementById('notificationList');
+
+  if (!isNotificationVisible) {
+    
+    fetchData(); // Nếu danh sách không hiển thị, lấy dữ liệu và hiển thị
+    notificationList.style.display = 'block';
+    
+  } else {
+    
+    notificationList.style.display = 'none'; 
+     // Nếu danh sách đang hiển thị, ẩn nó
+  }
+
+  isNotificationVisible = !isNotificationVisible; // Đảo ngược trạng thái của biến cờ
+}
+
+function fetchData() {
+  fetch('/Notification/data')
+    .then(response => response.json())
+    .then(data => {
+      allData = data; // Lưu trữ tất cả dữ liệu thông báo
+      const notificationList = document.getElementById('notificationList');
+      // Xóa bất kỳ mục nào cũ đã hiển thị
+      notificationList.innerHTML = '';
+      // Thêm mỗi thông báo vào danh sách
+      for (let i = 0; i < Math.min(4, allData.length); i++) {
+        const listItem = document.createElement('li');
+        listItem.textContent =  allData[i].TypeNotification + " - Vào Lúc : " + allData[i].Time ; // Thay "notificationText" bằng trường dữ liệu thực tế trong Firestore
+        // listItem.style.marginTop = '5px';
+        const image = document.createElement('img'); // Tạo phần tử img
+        image.src = 'data:image/png;base64,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';
+         // Đặt văn bản thay thế
+         image.style.width='20px';
+         image.style.marginLeft='15px';
+         if (!i.read) { // Nếu item chưa đọc, thêm lớp "unread"
+          listItem.classList.add('unread');
+         // Tăng số lượng item chưa đọc
+        }
+        listItem.appendChild(image);
+        listItem.style.margin='5px'
+        listItem.style.padding = '5px';
+        
+        listItem.style.height='50px'
+        listItem.classList.add('unread');
+
+        // Thêm lớp "unread" cho mỗi mục thông báo
+        listItem.addEventListener('click', () => markAsRead(listItem));// Thêm margin-left 5px cho mỗi item
+        notificationList.appendChild(listItem);
+        // const separator = document.createElement('hr'); // Tạo một đường ngang phân cách
+        // notificationList.appendChild(separator);
+      }
+      const viewAllButton = document.createElement('button');
+      viewAllButton.classList="btn btn-info";
+      viewAllButton.style.width='100%';
+      viewAllButton.style.marginTop='5px';
+      viewAllButton.style.backgroundColor='#87CEFA';
+      viewAllButton.textContent = 'VIEW ALL';
+      viewAllButton.onclick = viewAll;
+      notificationList.appendChild(viewAllButton);
+      updateUnreadCount();
+    })
+    .catch(error => console.error('Error fetching data:', error));
+}
+
+
+function viewAll() {
+  const notificationList = document.getElementById('notificationList');
+  notificationList.innerHTML = ''; // Xóa nội dung hiện tại
+
+  // Hiển thị tất cả các thông báo
+  allData.forEach(item => {
+    const listItem = document.createElement('li');
+    listItem.textContent = item.TypeNotification + " - Vào Lúc : " + item.Time; // Thay "notificationText" bằng trường dữ liệu thực tế trong Firestore
+    
+    listItem.style.margin='5px'
+        listItem.style.padding = '5px';
+    const image = document.createElement('img'); // Tạo phần tử img
+        image.src = 'data:image/png;base64,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';
+         // Đặt văn bản thay thế
+         image.style.width='20px';
+         image.style.marginLeft='15px';
+        listItem.appendChild(image); // Thêm margin-left 5px cho mỗi item
+    notificationList.appendChild(listItem);
+    // const separator = document.createElement('hr'); // Tạo một đường ngang phân cách
+    // notificationList.appendChild(separator);
+  });
+
+  // Ẩn nút "View All"
+  document.querySelector('button').style.display = 'none';
+ 
+
+}
+
+
+function markAsRead(item) {
+    item.classList.remove('unread');
+    unreadCount--; // Giảm số lượng item chưa đọc khi đánh dấu là đã đọc
+  updateUnreadCount();
+  
+}
+
+function updateUnreadCount() {
+  const unreadCountElement = document.getElementById('unreadCount');
+  if (unreadCount > 0) {
+    unreadCountElement.style.display = 'block'; // Hiển thị số lượng item chưa đọc
+    unreadCountElement.textContent = unreadCount; // Cập nhật số lượng trong chuông
+  } else {
+    unreadCountElement.style.display = 'none'; // Ẩn nếu không có item chưa đọc
+  }
+}
+  </script>
+
+<style>
+    
+    .dropdown-menu li {
+  background-color:#E0FFFF;
+  transform: translateY(-3px); /* Di chuyển mục lên trên một chút khi hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Đổ bóng mục */
+ /* Màu nền khi hover */
+}
+
+.dropdown-menu li:hover {
+  background-color: #E0FFFF;
+  transform: translateY(-3px); /* Di chuyển mục lên trên một chút khi hover */
+  box-shadow: 0 4px 8px ; /* Đổ bóng mục */
+ /* Màu nền khi hover */
+}
+
+
+
+.unread-count {
+  display: none; /* Ẩn ban đầu */
+  background-color: red;
+  color: white;
+  font-size: 12px;
+  padding: 4px;
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+</style>

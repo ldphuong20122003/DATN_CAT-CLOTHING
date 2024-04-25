@@ -15,6 +15,8 @@ var staffRouter = require('./routes/WebServer/staff');
 var ordersRouter = require('./routes/WebServer/donhang');
 var orderdetail = require('./routes/WebServer/chitietdonhang');
 var VRouter = require('./routes/WebServer/voucher');
+var NotifiRT=require('./routes/WebServer/Notification');
+
 
 //API ROuter
 var indexRouter = require('./routes/API/index');
@@ -59,6 +61,7 @@ app.use('/Orders',ordersRouter);
 app.use('/OrderDetails',orderdetail);
 app.use('/Vouchers',VRouter);
 app.use('/Statistics',satisticsRouter);
+app.use('/Notification',NotifiRT);
 //API
 app.use('/API/product', indexRouter);
 app.use('/API/users', usersRouter);
