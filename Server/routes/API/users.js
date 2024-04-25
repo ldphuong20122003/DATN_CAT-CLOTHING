@@ -116,7 +116,7 @@ const bucket = admin.storage().bucket();
 
         const data2={
           id:Id,
-          Img: UrlFile,
+          Avatar: UrlFile,
           Address: req.body.Address,
           Phone:  req.body.Phone,
           FullName: req.body.FullName,
