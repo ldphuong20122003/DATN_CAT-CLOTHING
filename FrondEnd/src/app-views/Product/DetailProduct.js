@@ -40,9 +40,9 @@ const Detail_Product = ({ navigation }) => {
   const gotoBack = () => {
     navigation.goBack();
   };
-  const gotoAllReview=()=>{
-    navigation.navigate('AllReview',{id_product:productId});
-  }
+  const gotoAllReview = () => {
+    navigation.navigate("AllReview", { id_product: productId });
+  };
   const route = useRoute();
   const IP = config.IP;
   const { productId } = route.params;
@@ -247,7 +247,7 @@ const Detail_Product = ({ navigation }) => {
       }
     }
   };
-  const handleBuy=async()=>{
+  const handleBuy = async () => {
     if (selectedSize === "") {
       Alert.alert(
         "Thông báo",
@@ -268,37 +268,43 @@ const Detail_Product = ({ navigation }) => {
       try {
         // Chuyển đổi danh sách sản phẩm đã chọn thành chuỗi JSON để lưu trữ
         const jsonValue = JSON.stringify(newItem);
-        await AsyncStorage.setItem('@buy_product', jsonValue);
-        
+        await AsyncStorage.setItem("@buy_product", jsonValue);
+
         // Chuyển hướng sang màn hình Payment và truyền danh sách sản phẩm đã chọn
-        navigation.navigate('Payment', { sourcePage: 'buyProduct', data: newItem });
+        navigation.navigate("Payment", {
+          sourcePage: "buyProduct",
+          data: newItem,
+        });
       } catch (error) {
         // Xử lý lỗi khi lưu dữ liệu
         console.error("Error saving data", error);
       }
-     
+    }
   };
-}
-const getReview = async () => {
-  try {
-    // Kiểm tra xem đã có đánh giá cho sản phẩm, người dùng và đơn hàng cụ thể hay chưa
-    const response = await axios.get(`http://${IP}:3000/API/Rating`);
-    const filteredReviews = response.data.filter(review => review.id_product === productId);
-    const sortedReviews = filteredReviews.sort((a, b) => new Date(b.date) - new Date(a.date));
-    const latestReviews = sortedReviews.slice(0, 2); // Lấy hai đánh giá gần nhất
-    setDataReview(latestReviews); // Hiển thị hai đánh giá gần nhất
-  } catch (error) {
-    console.error("Error handling review:", error);
-  }
-}
+  const getReview = async () => {
+    try {
+      // Kiểm tra xem đã có đánh giá cho sản phẩm, người dùng và đơn hàng cụ thể hay chưa
+      const response = await axios.get(`http://${IP}:3000/API/Rating`);
+      const filteredReviews = response.data.filter(
+        (review) => review.id_product === productId
+      );
+      const sortedReviews = filteredReviews.sort(
+        (a, b) => new Date(b.date) - new Date(a.date)
+      );
+      const latestReviews = sortedReviews.slice(0, 2); // Lấy hai đánh giá gần nhất
+      setDataReview(latestReviews); // Hiển thị hai đánh giá gần nhất
+    } catch (error) {
+      console.error("Error handling review:", error);
+    }
+  };
   const totalRating = data_review.reduce((acc, curr) => acc + curr.rating, 0);
   const totalReviews = data_review.length;
-  
+
   // Tránh chia cho 0
   const averageRating = totalReviews > 0 ? totalRating / totalReviews : 0;
-  useEffect(()=>{
+  useEffect(() => {
     getReview();
-  },[])
+  }, []);
   return (
     <View style={styles.Container}>
       <ScrollView style={{ marginBottom: 50 }}>
@@ -395,7 +401,9 @@ const getReview = async () => {
             >
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <SvgXml xml={iconStarSvg()} />
-                <Text style={{ fontSize: 12, marginLeft: 4 }}>{averageRating.toFixed(1)}/5</Text>
+                <Text style={{ fontSize: 12, marginLeft: 4 }}>
+                  {averageRating.toFixed(1)}/5
+                </Text>
                 <Text style={{ fontSize: 12, marginLeft: 8 }}>Đã bán 12</Text>
               </View>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -461,10 +469,6 @@ const getReview = async () => {
               }}
             >
               <Text style={{ fontWeight: 500 }}>Chi tiết sản phẩm</Text>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Text style={{ fontSize: 12, color: "#1890ff" }}>Xem thêm</Text>
-                <SvgXml xml={CareRightSvg("#1980ff")} />
-              </View>
             </View>
             <View style={{ paddingHorizontal: 16, marginVertical: 12 }}>
               <Text style={{ fontSize: 12 }}>CHI TIẾT SẢN PHẨM</Text>
@@ -486,14 +490,19 @@ const getReview = async () => {
             >
               <View>
                 <Text style={{ fontWeight: 500 }}>Đánh giá sản phẩm</Text>
-                <Text style={{ fontWeight: 600 }}>{averageRating.toFixed(1)}/5.0</Text>
+                <Text style={{ fontWeight: 600 }}>
+                  {averageRating.toFixed(1)}/5.0
+                </Text>
               </View>
-              <TouchableOpacity onPress={gotoAllReview} style={{ flexDirection: "row", alignItems: "center" }}>
+              <TouchableOpacity
+                onPress={gotoAllReview}
+                style={{ flexDirection: "row", alignItems: "center" }}
+              >
                 <Text style={{ fontSize: 12, color: "#1890ff" }}>Xem thêm</Text>
                 <SvgXml xml={CareRightSvg("#1980ff")} />
               </TouchableOpacity>
             </View>
-           <ItemReview data={data_review} />
+            <ItemReview data={data_review} />
           </View>
           <View
             style={{
@@ -507,10 +516,6 @@ const getReview = async () => {
               style={{ flexDirection: "row", justifyContent: "space-between" }}
             >
               <Text style={{ fontWeight: 500 }}>Sản phẩm liên quan</Text>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Text style={{ fontSize: 12, color: "#1890ff" }}>Xem thêm</Text>
-                <SvgXml xml={CareRightSvg("#1980ff")} />
-              </View>
             </View>
             <Recommend_Home />
           </View>

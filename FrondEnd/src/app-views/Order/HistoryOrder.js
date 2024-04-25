@@ -10,8 +10,7 @@ import React from "react";
 import { Svg, SvgXml } from "react-native-svg";
 import BackSvg from "../../../assets/Svg/BackSvg";
 import SearchSvg from "../../../assets/Svg/SearchSvg";
-import FilterSvg from "../../../assets/Svg/FilterSvg";
-import { SceneMap, TabBar, TabView } from "react-native-tab-view";
+import { TabBar, TabView } from "react-native-tab-view";
 import OrderWaitCF from "./component/OrderWaitCF";
 import OrderWaitDelivery from "./component/OrderWaitDelivery";
 import OrderWaitShip from "./component/OrderWaitShip";
@@ -36,7 +35,7 @@ const renderScene = ({ route }) => {
 
 const HistoryOrder = ({ navigation }) => {
   const gotoBack = () => {
-    navigation.goBack();
+    navigation.replace('BottomTabScreen');
   };
   const layout = useWindowDimensions();
 

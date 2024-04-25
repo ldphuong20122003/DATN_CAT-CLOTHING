@@ -20,6 +20,7 @@ const Voucher_Payment = ({ navigation, route }) => {
   const [userId, setUserId] = useState("");
   const [voucherData, setVoucherData] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
+  
   const RadioButtonSvg = (voucher) => {
     const uncheckedSvg = `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
       <circle cx="10" cy="10" r="9.5" stroke="#BDBCDB"/>
@@ -82,6 +83,7 @@ const Voucher_Payment = ({ navigation, route }) => {
         await AsyncStorage.setItem("@voucher_order", selectedItemString);
         // Chuyển sang màn hình Payment và truyền giá trị selectedOption qua props
         navigation.navigate("Payment", { voucherorder: selectedItem });
+        console.log(selectedItem);
       } catch (error) {
         console.error("Error saving selected shipping method:", error);
       }

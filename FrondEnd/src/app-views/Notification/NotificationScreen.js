@@ -33,8 +33,7 @@ const NotificationScreen = ({}) => {
         </View>
         <SvgXml xml={CheckSvg("white")} />
       </View>
-      <View style={{          height:'87%'
-}}>
+      <View style={{ height: "87%" }}>
         <Recommend_Noti />
       </View>
     </SafeAreaView>
