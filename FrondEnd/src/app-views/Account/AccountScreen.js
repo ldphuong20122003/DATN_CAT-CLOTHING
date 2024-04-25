@@ -102,7 +102,7 @@ const AccountScreen = ({ navigation }) => {
           <View style={styles.Voucher}>
             <View style={{ flexDirection: "row" }}>
               <Image
-                source={require("../../../assets/anhdaidien.jpg")}
+                source={{uri:data_User.length > 0 ? data_User[0].Avatar : "https://chungcuhatecolaroma.net.vn/wp-content/uploads/2022/10/anh-avatar-dep-cho-con-gai-5.jpg"}}
                 style={{
                   width: 60,
                   height: 60,
@@ -115,25 +115,11 @@ const AccountScreen = ({ navigation }) => {
                 >
                   {data_User.length > 0 ? data_User[0].FullName : ""}
                 </Text>
-                <View
-                  style={{
-                    backgroundColor: "#D1E9FF",
-                    alignItems: "center",
-                    padding: 4,
-                    marginTop: 4,
-                    borderRadius: 50,
-                  }}
+                <Text
+                  style={{ fontSize: 16, fontWeight: "bold", color: "white" }}
                 >
-                  <Text
-                    style={{
-                      color: "#1890FF",
-                      fontWeight: "bold",
-                      fontSize: 14,
-                    }}
-                  >
-                    Quản trị viên
-                  </Text>
-                </View>
+                  {data_User.length > 0 ? data_User[0].Email : ""}
+                </Text>
               </View>
             </View>
             <TouchableOpacity onPress={gotoChangeAccount}>

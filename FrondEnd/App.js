@@ -33,6 +33,8 @@ import PaymentVNPayScreen from "./src/app-views/Payment/component/PaymentVNPay";
 import Review from "./src/app-views/Review/Review";
 import ProductReview from "./src/app-views/Review/ProductReview";
 import AllReview from "./src/app-views/Review/AllReview";
+import AllFlashSale from "./src/app-views/FlashSale/AllFlashSale";
+import AllVoucher from "./src/app-views/Voucher/AllVoucher";
 
 const Stack = createStackNavigator();
 
@@ -210,6 +212,16 @@ export default function App() {
         <Stack.Screen
           name="AllReview"
           component={AllReview}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="AllFlashSale"
+          component={AllFlashSale}
+          options={{ headerShown: false }}
+        />
+         <Stack.Screen
+          name="AllVoucher"
+          component={AllVoucher}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

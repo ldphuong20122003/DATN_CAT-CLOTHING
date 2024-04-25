@@ -16,6 +16,9 @@ import ModalPopups from "../../Modal/ModalPopup";
 import TickSvg from "../../../../assets/Svg/TickSvg";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import config from "../../../../config";
+import * as ImagePicker from 'expo-image-picker';
+import * as FileSystem from 'expo-file-system';
+
 const IP = config.IP;
 import LottieView from "lottie-react-native";
 
@@ -53,6 +56,28 @@ const Update_Account = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
+  const [image, setImage] = useState(null);
+  useEffect(() => {
+    if (data_User.length > 0 && data_User[0].Avatar) {
+      setImage(data_User[0].Avatar);
+    }
+  }, [data_User]);
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
+
   useEffect(() => {
     getUserId();
   }, [userId]);
@@ -65,39 +90,86 @@ const Update_Account = ({ navigation }) => {
       setPhone(user.Phone);
     }
   }, [data_User]);
+  // const updateUserInfo = async () => {
+  //   if (!fullname || !email) {
+  //     Alert.alert("Error", "Không được để trống tên và email");
+  //     return;
+  //   }
+  //   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  //   if (!emailPattern.test(email)) {
+  //     Alert.alert("Error", "Vui lòng nhập đúng định dạng email");
+  //     return;
+  //   }
+  //   try {
+  //     const response = await fetch(
+  //       `http://${IP}:3000/API/users/update/` + userId,
+  //       {
+  //         method: "PUT",
+  //         headers: {
+  //           Accept: "application/json",
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({
+  //           id: userId,
+  //           FullName: fullname,
+  //           Email: email,
+  //           Address: address,
+  //           Phone: phone,
+  //         }),
+  //       }
+  //     );
+  //     setVisible(true);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
   const updateUserInfo = async () => {
     if (!fullname || !email) {
-      Alert.alert("Error", "Không được để trống tên và email");
-      return;
+        Alert.alert("Error", "Không được để trống tên và email");
+        return;
     }
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailPattern.test(email)) {
-      Alert.alert("Error", "Vui lòng nhập đúng định dạng email");
-      return;
+        Alert.alert("Error", "Vui lòng nhập đúng định dạng email");
+        return;
     }
+
+    // Chuyển đổi đường dẫn hình ảnh thành đối tượng File
+    const imageFile = await FileSystem.getInfoAsync(image);
+    const imageUri = {
+        uri: image,
+        name: 'avatar.jpg', // Tên của file khi được gửi lên máy chủ
+        type: 'image/jpeg', // Định dạng của file (jpeg, png, ...)
+    };
+
+    const formData = new FormData();
+    formData.append('id', userId);
+    formData.append('FullName', fullname);
+    formData.append('Email', email);
+    formData.append('Address', address);
+    formData.append('Phone', phone);
+    // Thêm hình ảnh vào formData
+    formData.append('Avatar', imageUri);
+
     try {
-      const response = await fetch(
-        `http://${IP}:3000/API/users/update/` + userId,
-        {
-          method: "PUT",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            id: userId,
-            FullName: fullname,
-            Email: email,
-            Address: address,
-            Phone: phone,
-          }),
-        }
-      );
-      setVisible(true);
+        const response = await fetch(
+            `http://${IP}:3000/API/users/update/` + userId,
+            {
+                method: "PUT",
+                body: formData,
+                headers: {
+                    Accept: 'application/json',
+                    // Không cần set Content-Type, fetch sẽ tự động set nếu sử dụng formData
+                },
+            }
+        );
+        setVisible(true);
     } catch (error) {
-      console.log(error);
+        console.log(error);
     }
-  };
+};
+
+  console.log(image);
   const [visible, setVisible] = React.useState(false);
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
@@ -145,16 +217,16 @@ const Update_Account = ({ navigation }) => {
             style={{ position: "absolute", top: 102, left: 160, right: 160 }}
           >
             <Image
-              source={require("../../../../assets/anhdaidien.jpg")}
-              style={{
+            source={{ uri: image }}
+            style={{
                 width: 80,
                 height: 80,
                 borderRadius: 40,
                 borderWidth: 1,
                 borderColor: "#fff",
-              }}
-            />
-            <View
+            }}
+        />
+            <TouchableOpacity onPress={pickImage}
               style={{
                 position: "absolute",
                 bottom: 0,
@@ -165,7 +237,7 @@ const Update_Account = ({ navigation }) => {
               }}
             >
               <SvgXml xml={CameraSvg()} />
-            </View>
+            </TouchableOpacity>
           </View>
         </View>
         <View style={styles.Infor}>

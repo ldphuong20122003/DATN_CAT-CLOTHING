@@ -10,15 +10,12 @@ import React, { useState } from "react";
 import { Svg, SvgXml } from "react-native-svg";
 import BackSvg from "../../../assets/Svg/BackSvg";
 import AddressSvg from "../../../assets/Svg/AddressSvg";
-
 import iconPaymentMethod from "../../../assets/Svg/iconPaymentMethod";
-import CareRightSvg from "../../../assets/Svg/CareRightSvg";
 import CarSvg from "../../../assets/Svg/CarSvg";
 import OrderSvg from "../../../assets/Svg/OrderSvg";
 import ChatSvg from "../../../assets/Svg/ChatSvg";
 import iconDollarSvg from "../../../assets/Svg/iconDollarSvg";
 import ModalFilter from "../Modal/ModalFilter";
-import iconDeleteSvg from "../../../assets/Svg/iconDeleteSvg";
 import DeleteSvg from "../../../assets/Svg/DeleteSvg";
 import config from "../../../config";
 import moment from "moment";
@@ -30,9 +27,10 @@ const IP = config.IP;
 const InformationOrder = ({ navigation, route }) => {
   const [cancleOrder, setCancleOrder] = useState(false);
   const gotoBack = () => {
-    navigation.goBack();
+    navigation.replace('History_Order');
   };
   const item = route.params.item;
+  console.log(item);
   const products = route.params.item.product;
   const [selectedOption, setSelectedOption] = useState(null);
   const [visible, setVisible] = useState(false);

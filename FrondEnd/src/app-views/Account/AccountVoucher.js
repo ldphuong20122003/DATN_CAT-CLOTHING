@@ -7,11 +7,13 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ScrollView,
+  Alert,
 } from "react-native";
 import { Svg, SvgXml } from "react-native-svg";
 import BackSvg from "../../../assets/Svg/BackSvg";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Voucher from "../../../assets/Svg/Voucher";
+import iconDeleteSvg from "../../../assets/Svg/iconDeleteSvg";
 
 const AccountVoucher = ({ navigation, item }) => {
   const [userId, setUserId] = useState("");
@@ -53,6 +55,20 @@ const AccountVoucher = ({ navigation, item }) => {
   }, [userId, navigation]);
   const goBack = () => {
     navigation.goBack();
+  };
+  const deleteVoucher = async (voucherId) => {
+    try {
+      // Xóa voucher từ AsyncStorage
+      const updatedVouchers = voucherData.filter((voucher) => voucher.id !== voucherId);
+      setVoucherData(updatedVouchers);
+      await AsyncStorage.setItem(`Voucher${userId}`, JSON.stringify(updatedVouchers));
+
+      // Gọi API để cập nhật số lượng voucher trên máy chủ (nếu cần)
+
+      Alert.alert("Thông báo", "Voucher đã được xóa thành công");
+    } catch (error) {
+      console.log("Error deleting voucher:", error);
+    }
   };
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -103,10 +119,11 @@ const AccountVoucher = ({ navigation, item }) => {
                     backgroundColor: "white",
                     paddingVertical: 8,
                     alignItems: "center",
+                    justifyContent:'space-between'
                   }}
                 >
                   <SvgXml style={{}} xml={Voucher()} />
-                  <View style={{ marginLeft: 22 }}>
+                  <View style={{flex:1, marginLeft: 22 }}>
                     <Text
                       style={{
                         fontSize: 14,
@@ -130,6 +147,9 @@ const AccountVoucher = ({ navigation, item }) => {
                       {voucher.Title}
                     </Text>
                   </View>
+                  <TouchableOpacity onPress={()=>deleteVoucher(voucher.id)}>
+                  <SvgXml xml={iconDeleteSvg()}/>
+                  </TouchableOpacity>
                 </View>
               ))}
             </View>

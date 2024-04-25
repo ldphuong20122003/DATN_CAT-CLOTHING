@@ -15,12 +15,9 @@ import CareRightSvg from "../../../assets/Svg/CareRightSvg";
 import CarSvg from "../../../assets/Svg/CarSvg";
 import OrderSvg from "../../../assets/Svg/OrderSvg";
 import ModalPopups from "../Modal/ModalPopup";
-import TickSvg from "../../../assets/Svg/TickSvg";
 import ListPayment_Product from "../Product/Payment/component/ListPayment_Product";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import VoucherSvg from "../../../assets/Svg/VoucherSvg";
 import moment from "moment";
-import Voucher from "../../../assets/Svg/Voucher";
 import axios from "axios";
 import config from "../../../config";
 import LottieView from "lottie-react-native";
@@ -49,7 +46,7 @@ const Payment = ({ navigation, route }) => {
     setVisible(false);
   };
   const gotoInforOder = () => {
-    navigation.navigate("Information_Order");
+    navigation.navigate("Information_Order", { item: item });
   };
   const gotoVoucher_Payment = () => {
     navigation.navigate("Voucher_Payment", {
@@ -64,6 +61,20 @@ const Payment = ({ navigation, route }) => {
   const [voucher, setVoucher] = useState(null);
   const [visible, setVisible] = useState(false);
   const [userId, setUserId] = useState("");
+  const [item, setItem] = useState(null);
+
+  // Hàm để tạo và lưu item vào state
+  const createAndSetItem = (responseData, createdDocumentID) => {
+    // Tạo item với createdDocumentID làm giá trị cho trường id
+    const newItem = {
+      id: createdDocumentID,
+      ...responseData,
+    };
+
+    // Lưu item vào state
+    setItem(newItem);
+  };
+
   const sourcePage = route.params.sourcePage;
   const calculateQuantity = () => {
     return products.reduce((acc, curr) => acc + curr.quantityInCart, 0);
@@ -193,6 +204,7 @@ const Payment = ({ navigation, route }) => {
         formData
       );
       const createdDocumentID = response.data.split(": ")[1];
+      createAndSetItem(formData, createdDocumentID);
       setVisible(true);
 
       // Lặp qua từng sản phẩm để cập nhật số lượng tồn kho
@@ -239,6 +251,7 @@ const Payment = ({ navigation, route }) => {
   useEffect(() => {
     getUserId();
   }, []);
+  console.log(item);
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -334,7 +347,7 @@ const Payment = ({ navigation, route }) => {
 
     return unsubscribe; // Cleanup function
   }, [navigation]);
-  console.log(products);
+
   return (
     <View style={styles.Container}>
       <View style={styles.Header}>

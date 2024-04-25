@@ -29,6 +29,12 @@ const HomeScreen = ({ navigation }) => {
   const gotoChat = () => {
     navigation.navigate("Chat");
   };
+  const gotoAllFlashSale = () => {
+    navigation.navigate("AllFlashSale");
+  };
+  const gotoAllVoucher = () => {
+    navigation.navigate("AllVoucher");
+  };
 
   return (
     <SafeAreaView style={{ flex: 0.93 }}>
@@ -121,7 +127,7 @@ const HomeScreen = ({ navigation }) => {
               <Text style={{ fontSize: 12, fontWeight: 500, color: "#5A5A5A" }}>
                 Mã giảm giá & khuyến mại
               </Text>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={gotoAllVoucher}>
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                   <Text
                     style={{ fontSize: 12, fontWeight: 400, color: "#1890ff" }}
@@ -141,14 +147,14 @@ const HomeScreen = ({ navigation }) => {
               <Text style={{ fontSize: 14, fontWeight: 500, color: "#1890ff" }}>
                 Flash Sale
               </Text>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <TouchableOpacity onPress={gotoAllFlashSale} style={{ flexDirection: "row", alignItems: "center" }}>
                 <Text
                   style={{ fontSize: 12, fontWeight: 400, color: "#1890ff" }}
                 >
                   Xem thêm
                 </Text>
                 <SvgXml xml={CareRightSvg("#1890ff")} />
-              </View>
+              </TouchableOpacity>
             </View>
             <FlashSale_Home />
           </View>

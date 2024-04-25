@@ -6,8 +6,9 @@ import VoucherSvg from "../../../../assets/Svg/VoucherSvg";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import config from "../../../../config";
 import axios from "axios";
+import Voucher from "../../../../assets/Svg/Voucher";
 
-const ListVoucher_Home = ({ data, onPress }) => {
+const ListAllVoucher = ({ data, onPress }) => {
   const IP = config.IP;
   const [userId, setUserId] = useState("");
   const getUserId = async () => {
@@ -68,36 +69,91 @@ const ListVoucher_Home = ({ data, onPress }) => {
   const _renderItem = ({ item }) => {
    
     return (
-      <View style={{ marginRight: 8 }}>
-        <SvgXml xml={BackgroundVoucherSvg()} />
-        <View
-          style={{
-            width: "100%",
-            position: "absolute",
-            flexDirection: "row",
-            alignItems: "center",
-            paddingHorizontal: 14,
-          }}
-        >
-          <SvgXml style={{}} xml={VoucherSvg()} />
-          <View style={{ marginLeft: 22, paddingVertical: 6 }}>
-            <Text style={{ fontSize: 12, fontWeight: 600, color: "#707070" }}>
-              Giảm{" "}
-              {item.Discount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") +
-                " đ"}
-            </Text>
-            <Text
-              style={{
-                width: 120,
-                fontSize: 10,
-                fontWeight: 400,
-                color: "#707070",
-              }}
-            >
-              {item.Title}
-            </Text>
-          </View>
-          <View
+    //   <View style={{ }}>
+    //     <SvgXml xml={BackgroundVoucherSvg()} style={{width:'100%'}} />
+    //     <View
+    //       style={{
+    //         width: "100%",
+    //         position: "absolute",
+    //         flexDirection: "row",
+    //         alignItems: "center",
+    //         paddingHorizontal: 14,
+    //       }}
+    //     >
+    //       <SvgXml style={{}} xml={VoucherSvg()} />
+    //       <View style={{ marginLeft: 22, paddingVertical: 6 }}>
+    //         <Text style={{ fontSize: 12, fontWeight: 600, color: "#707070" }}>
+    //           Giảm{" "}
+    //           {item.Discount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") +
+    //             " đ"}
+    //         </Text>
+    //         <Text
+    //           style={{
+    //             width: 120,
+    //             fontSize: 10,
+    //             fontWeight: 400,
+    //             color: "#707070",
+    //           }}
+    //         >
+    //           {item.Title}
+    //         </Text>
+    //       </View>
+    //       <View
+    //         style={{
+    //           justifyContent: "flex-end",
+    //           marginLeft: "auto",
+    //           borderWidth: 1,
+    //           padding: 4,
+    //           borderRadius: 4,
+    //           borderColor: "#1890ff",
+    //         }}
+    //       >
+    //         <TouchableOpacity onPress={() => saveVoucher(item)}>
+    //           <Text style={{ fontSize: 12, fontWeight: 400, color: "#1890FF" }}>
+    //             Lưu
+    //           </Text>
+    //         </TouchableOpacity>
+    //       </View>
+    //     </View>
+    //   </View>
+    <View
+    
+    style={{
+    marginHorizontal:16,
+      width: "400",
+      height: "150",
+      flexDirection: "row",
+      marginTop: 10,
+      backgroundColor: "white",
+      paddingVertical: 8,
+      alignItems: "center",
+      justifyContent:'space-between'
+    }}
+  >
+    <SvgXml style={{}} xml={Voucher()} />
+    <View style={{flex:1, marginLeft: 22 }}>
+      <Text
+        style={{
+          fontSize: 14,
+          fontWeight: 600,
+          color: "#1890FF",
+        }}
+      >
+        Giảm{" "}
+        {item.Discount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") +
+                 " đ"}
+      </Text>
+      <Text
+        style={{
+          fontSize: 12,
+          fontWeight: 400,
+          color: "#707070",
+        }}
+      >
+        {item.Title}
+      </Text>
+    </View>
+    <View
             style={{
               justifyContent: "flex-end",
               marginLeft: "auto",
@@ -113,13 +169,12 @@ const ListVoucher_Home = ({ data, onPress }) => {
               </Text>
             </TouchableOpacity>
           </View>
-        </View>
-      </View>
+  </View>
     );
   };
   return (
     <FlatList
-      horizontal={true}
+     
       data={data}
       renderItem={_renderItem}
       keyExtractor={(item, index) => index.toString()}
@@ -129,4 +184,4 @@ const ListVoucher_Home = ({ data, onPress }) => {
     />
   );
 };
-export default ListVoucher_Home;
+export default ListAllVoucher;
