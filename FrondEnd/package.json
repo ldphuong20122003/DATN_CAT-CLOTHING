@@ -19,12 +19,11 @@
     "axios": "^1.6.7",
     "expo": "~49.0.15",
     "expo-checkbox": "~2.4.0",
-    "expo-file-system": "^16.0.9",
+    "expo-file-system": "~15.4.5",
     "expo-firebase-recaptcha": "^2.3.1",
-    "expo-image-picker": "^14.7.1",
+    "expo-image-picker": "~14.3.2",
     "expo-status-bar": "~1.6.0",
     "firebase": "^10.8.0",
-    "fsevents": "^2.3.3",
     "lottie-react-native": "^5.1.6",
     "moment": "^2.30.1",
     "native-base": "^3.4.28",
@@ -43,10 +42,11 @@
     "react-native-swipeout": "^2.3.6",
     "react-native-swiper": "^1.6.0",
     "react-native-tab-view": "^3.5.2",
-    "react-native-vnpay-merchant": "^1.0.0",
     "react-native-webview": "13.2.2",
     "toggle-switch-react-native": "^3.3.0",
-    "typescript": "^5.1.3"
+    "typescript": "^5.1.3",
+    "@expo/config-plugins": "7.2.2",
+    "expo-constants": "~14.4.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
