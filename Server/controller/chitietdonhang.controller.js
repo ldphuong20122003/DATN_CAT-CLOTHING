@@ -108,3 +108,46 @@ exports.put = async(req,res,next) =>{
     
 
 }
+
+exports.tinhtongtien= async(req, res,next) => {
+    const cacMucDaChon = req.body.items;
+    const quantities = req.body.quantities;
+
+    // Lấy giá của các mục đã chọn từ Firestore và tính tổng tiền
+    let tongTien = 0;
+    const promises = []; 
+    // cacMucDaChon.forEach(muc => {
+    //     const mucRef = admin.firestore().collection('products').doc(muc);
+    //     promises.push(mucRef.get().then(doc => {
+            
+    //         if (doc.exists) {
+    //             tongTien += parseInt (doc.data().Price) * parseInt(quantities); // Giả sử mỗi mục có trường "gia"
+    //         }
+    //     }));
+
+    // });
+
+    cacMucDaChon.forEach((item, index) => {
+        const itemRef = admin.firestore().collection('products').doc(item);
+        promises.push(itemRef.get().then(doc => {
+            if (doc.exists) {
+                const price = parseInt (doc.data().Price); // Assuming each item has a "price" field
+                const quantity = parseInt(quantities[index], 10); // Parse quantity as integer
+                tongTien += price * quantity;
+            }
+        }));
+    });
+
+    
+
+    Promise.all(promises)
+    .then(() => {
+        res.json({ total: tongTien });
+    })
+    .catch(error => {
+        console.error('Lỗi khi tính tổng tiền:', error);
+        res.status(500).json({ error: 'Lỗi máy chủ nội bộ' });
+    });
+
+    
+}

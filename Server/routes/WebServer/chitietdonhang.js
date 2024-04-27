@@ -9,5 +9,6 @@ router.post('/newbill',orderdetail.newbill);
 router.post('/delete/:id',orderdetail.delete);
 //update
 router.post('/update/:id',orderdetail.put);
+router.post('/tinhTongTien', orderdetail.tinhtongtien);
 //Xuất router
 module.exports = router;
