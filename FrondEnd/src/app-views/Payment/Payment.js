@@ -28,7 +28,7 @@ const Payment = ({ navigation, route }) => {
     navigation.goBack();
   };
   const gotoPaymentVnPay = () => {
-    navigation.navigate("PaymentVNPayScreen", { totalPayment: totalPayment });
+    navigation.navigate("PaymentVNPayScreen", { userId:userId,products:products,addressorder:addressorder,totalQuantity:totalQuantity,paymentMethod:paymentMethod,transportMethod:transportMethod,voucher:voucher,totalPayment:totalPayment });
   };
   const gotoPaymentMethod = () => {
     navigation.navigate("Payment_Method", { paymentMethod: paymentMethod });
@@ -152,7 +152,7 @@ const Payment = ({ navigation, route }) => {
     return totalPayment;
   };
   const totalPayment = calculateTotalPayment(totalPrice, transportMethod);
-
+   
   const handlePayment = async () => {
     try {
       let paymentMethodValue = {};
@@ -251,7 +251,7 @@ const Payment = ({ navigation, route }) => {
   useEffect(() => {
     getUserId();
   }, []);
-  console.log(item);
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {

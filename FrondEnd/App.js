@@ -35,6 +35,8 @@ import ProductReview from "./src/app-views/Review/ProductReview";
 import AllReview from "./src/app-views/Review/AllReview";
 import AllFlashSale from "./src/app-views/FlashSale/AllFlashSale";
 import AllVoucher from "./src/app-views/Voucher/AllVoucher";
+import WebviewPayment from "./src/app-views/Payment/component/WebviewPayment";
+import OrderPayment from "./src/app-views/Payment/component/OrderPayment";
 
 const Stack = createStackNavigator();
 
@@ -222,6 +224,16 @@ export default function App() {
          <Stack.Screen
           name="AllVoucher"
           component={AllVoucher}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="WebviewPayment"
+          component={WebviewPayment}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="OrderPayment"
+          component={OrderPayment}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

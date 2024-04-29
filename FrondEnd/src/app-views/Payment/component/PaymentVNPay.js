@@ -16,6 +16,13 @@ import config from "../../../../config";
 const IP = config.IP;
 
 const PaymentVNPayScreen = ({ navigation, route }) => {
+  const userId = route.params.userId;
+  const products = route.params.products;
+  const addressorder = route.params.addressorder;
+  const totalQuantity = route.params.totalQuantity;
+  const paymentMethod = route.params.paymentMethod;
+  const transportMethod = route.params.transportMethod;
+  const voucher = route.params.voucher;
   const totalPayment = route.params.totalPayment;
   const [total, setTotal] = useState(
     totalPayment.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " đ"
@@ -25,23 +32,27 @@ const PaymentVNPayScreen = ({ navigation, route }) => {
     navigation.goBack();
   };
 
-  const [paymentUrl, setPaymentUrl] = useState("");
-  const [order_Des,setOrder_Des] = useState("");
+  const [order_Des, setOrder_Des] = useState("Thanh toán đơn hàng");
 
   const createPaymentUrl = async () => {
     try {
-      const response = await axios.post(`http://${IP}:3000/API/Order/create_payment_url`, {
-        amount: totalPayment,
-      });
-      const url = response.data.data; // Assuming the URL is in the 'data' field of the response
-      setPaymentUrl(url);
-      console.log(paymentUrl);
+      const response = await axios.post(
+        `http://${IP}:3000/API/Order/create_payment_url`,
+        {
+          amount: totalPayment,
+          orderDescription: order_Des,
+          bankCode: "NCB",
+          orderType: "Thanh toán",
+          language: "vn",
+        }
+      );
+      navigation.navigate("WebviewPayment",{url:response.data,userId:userId,products:products,addressorder:addressorder,totalQuantity:totalQuantity,paymentMethod:paymentMethod,transportMethod:transportMethod,voucher:voucher,totalPayment:totalPayment});
       // Rest of your code
     } catch (error) {
       // Error handling
     }
-};
-  
+  };
+
   const handlePressPayment = () => {
     createPaymentUrl(); // Gọi hàm tạo URL thanh toán khi người dùng nhấn nút "Thanh toán"
   };
@@ -80,7 +91,9 @@ const PaymentVNPayScreen = ({ navigation, route }) => {
           <TextInput
             style={styles.orderInfoInput}
             placeholder="Nhập thông tin đơn hàng"
-            onChangeText={setOrder_Des}
+            value={order_Des}
+            editable={false}
+            
           />
         </View>
       </View>
