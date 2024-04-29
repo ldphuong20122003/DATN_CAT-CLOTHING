@@ -18,9 +18,9 @@
     <h1 style="margin-left:20px ;">DANH SÁCH KHÁCH HÀNG</h1>
         <div class="m-4">
           
-            <div class="input-group" style="width: 1480px;">
-              <span class="input-group-text col-md-1">Search</span>
-                <input type="text" class="form-control" placeholder="Name" name="q" id="searchUser" onkeyup="searchData()">
+            <div class="input-group">
+              <span  style="width: 80px" class="input-group-text col-md-1">Search</span>
+                <input style="width: 80px" type="text" class="form-control" placeholder="Name" name="q" id="searchUser" onkeyup="searchData()">
              
               
             </div>
@@ -33,21 +33,31 @@
     <thead>
      <tr class="text-center">
 
-        <th scope="col">Img</th> <th scope="col">UserName</th> <th scope="col">Email</th>  <th scope="col">Phone</th>  
+        <th scope="col">Img</th> <th scope="col">UserName</th> <th scope="col">Email</th>  <th scope="col">Phone</th> <th scope="col">Status</th>
      </tr>
     </thead>
     <tbody id="tableBody">
          <% listUser.forEach((item)=>{ %>
  <tr class="align-middle">
       
-      <td><img src="<%= item.Avatar  %>" style="width: 100px; height: 100px;" alt=""></td>
-       <td  ><%= item.FullName %></td>
-        <td><%= item.Email %></td>
+      <td  class="text-center" style="width: 15%"><img src="<%= item.Avatar  %>" style="width: 100px; height: 100px;" alt=""></td>
+       <td  class="text-center" style="width: 15%" ><%= item.FullName %></td>
+        <td class="text-center" style="width: 15%"><%= item.Email %></td>
      
-        <td><%= item.Phone %></td>
-       
-        <td>
-       <!-- <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-item-id="<%= item.id %>">Xóa</button>--> 
+        <td  class="text-center" style="width: 15%"><%= item.Phone %></td>
+     <td class="text-center" style="width: 15%">
+  <span class="outer-value" style="color: white;background-color: <%= typeof item.Trangthai === 'undefined' ? 'green' : 'red' %>; border-radius: 15px; width: 60px; display: inline-block; padding: 5px;">
+      <% if (typeof item.Trangthai === 'undefined') { %>
+          Active
+      <% } else { %>
+          <span style="color: white;"><%= item.Trangthai %></span>
+      <% } %>
+  </span>
+     </td>
+        <td style="width: 140px" >
+            <button type="button" class="btn <%= item.Trangthai === undefined ? 'btn-danger' : 'btn-primary' %>" data-bs-toggle="modal" data-item-id="<%= item.id %>" data-item-trangthai="<%=item.Trangthai%>" data-bs-target="<%= item.Trangthai === undefined ? '#deleteModal' : '#deleteModal' %>">
+                <%= item.Trangthai === undefined ? 'Khóa tài khoản' : 'Mở khóa tài khoản' %>
+            </button>
         </td>
  </tr>
       <%   }) %>
@@ -60,26 +70,25 @@
 
    
    <!-- Modal -->
-<div class="modal fade" id="deleteModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-   <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-          <h1 class="modal-title fs-5" id="deleteModalLabel">Delete users</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  <div class="modal fade" id="deleteModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="deleteModalLabel">Khóa tài khoản user</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <form action="users/delete" method="POST">
+                  <div id="bodytext" class="modal-body">
+                      Bạn chắc chắn muốn khóa tài khoản này?
+                  </div>
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                      <button type="submit" class="btn btn-primary">Yes</button>
+                  </div>
+              </form>
+          </div>
       </div>
-      <form action="users/delete" method="POST">
-          <div class="modal-body">
-              Bạn chắc chắn muốn xóa?
-          </div>
-          <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-              <button type="submit" class="btn btn-primary">Yes</button>
-          </div>
-      </form>
   </div>
-   </div>
- </div>
-
 
  
 
@@ -92,20 +101,37 @@
  integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS"
  crossorigin="anonymous"></script>
  <script>
-  //Gán biến deleteButtons bằng đối tượng có class là '.btn.btn-danger' , tức là nút bấm xóa
-  const deleteButtons = document.querySelectorAll('.btn.btn-danger');
-  //Gán biến deleteForm bằng form có action="users/delete" , trong modal xóa, nhớ truyền chuẩn 
-  const deleteForm = document.querySelector('form[action="users/delete"]');
 
+  //Gán biến deleteButtons bằng đối tượng có class là '.btn.btn-danger' , tức là nút bấm xóa
+  const deleteButtons = document.querySelectorAll('.btn.btn-danger, .btn.btn-primary');
+  //Gán biến deleteForm bằng form có action="users/delete" , trong modal xóa, nhớ truyền chuẩn
+  const deleteForm = document.querySelector('form[action="users/delete"]');
+  const deleteModalLabel = document.getElementById('deleteModalLabel');
+  const bd = document.getElementById('bodytext');
+  const yesButton = document.querySelector('button[type="submit"]');
   deleteButtons.forEach(button => {
+
     //Sự kiện ấn vào nút xóa
       button.addEventListener('click', function () {
           //Lấy ra id theo tên getAttribute đã đặt ở button xóa data-item-id
           const itemId = this.getAttribute('data-item-id');
-          //Sửa lại action của form trong modal xóa bằng đường dẫn khai báo trong router /delete/:id_u 
-          deleteForm.action = `users/delete/${itemId}`;
+          const itemTT = this.getAttribute('data-item-trangthai');
+          if (itemTT === '') {
+              deleteModalLabel.textContent = "Khóa tài khoản user";
+              bd.textContent= "Bạn có muốn khóa tài khoản này?";
+          } else {
+              deleteModalLabel.textContent = "Mở khóa tài khoản user";
+              bd.textContent= "Bạn có muốn mở khóa tài khoản này?";
+          }
+          yesButton.addEventListener('click', function() {
+              deleteForm.action = `users/delete?id=${itemId}&tt=${itemTT}`;
+          });
+
+
       });
   });
+
+
 </script>
 
 
@@ -119,7 +145,7 @@
       tr = table.getElementsByTagName("tr");
 
       for (i = 0; i < tr.length; i++) {
-          td = tr[i].getElementsByTagName("td")[3]; // chỉ tìm kiếm trong cột ID
+          td = tr[i].getElementsByTagName("td")[4]; // chỉ tìm kiếm trong cột ID
           if (td) {
               txtValue = td.textContent || td.innerText;
               if (txtValue.toUpperCase().indexOf(filter) > -1) {
