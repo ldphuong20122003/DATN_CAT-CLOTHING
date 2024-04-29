@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const db = require('../../model/firebaseConfig'); 
-
+const admin = require('firebase-admin');
 
 /* GET home page. */
 router.get('/', async(req, res, next) =>{
@@ -25,16 +25,40 @@ router.get('/', async(req, res, next) =>{
 
   router.post('/add',async(req,res,next)=>{
     try {
-      const data = req.body; // Dữ liệu từ request body
-  
-      // Thêm dữ liệu vào collection cụ thể (ví dụ: 'your-collection-name')
-      const docRef = await db.collection('DonHang').add(data);
-  
-      res.status(201).send(`Document created with ID: ${docRef.id}`);
-    } catch (error) {
-      console.error('Error adding data:', error);
-      res.status(500).send('Error adding data to Firestore');
-    }
+      // Dữ liệu từ request body
+     const collectionRef = admin.firestore().collection('DonHang');
+           const Id = collectionRef.doc().id;
+         
+           const docID = Id ? collectionRef.doc(Id) : collectionRef.doc();
+
+           let data2 = {
+            id: Id,
+            diachinhanhang: req.body.diachinhanhang,
+            id_user: req.body.id_user,
+            id_voucher: req.body.id_voucher,
+            ngaydat: req.body.ngaydat,
+            phuongthucthanhtoan:req.body.phuongthucthanhtoan,
+            phuongthucvanchuyen: req.body.phuongthucvanchuyen,
+            product: req.body.product,
+            status :req.body.status,
+            tongsanpham :req.body.tongsanpham,
+            totalPayment :req.body.totalPayment,
+        }
+            docID.set(data2).then(() => {
+              const addedId = Id || docID.id; 
+             console.log('ID vừa được thêm vào:', addedId);
+            res.status(200).send(`Document with ID: ${addedId} added successfully`);
+             return collectionRef.doc().id;
+         })
+         .catch(error => {
+             console.error('Lỗi khi thêm tài liệu:', error);
+             res.status(500).json({message: 'Lỗi khi thêm tài liệu'});
+         });
+    
+   } catch (error) {
+     console.error('Error adding data:', error);
+     res.status(500).send('Error adding data to Firestore');
+   }
   });
 
   router.delete('/delete/:id',async(req,res,next)=>{

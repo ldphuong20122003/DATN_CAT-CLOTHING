@@ -7,7 +7,8 @@
     <title>Order Details</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-    <link rel="stylesheet" href="../css/app.css">
+     <link rel="stylesheet" href="../css/app.css">
+     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
 
 </head>
  <style>
@@ -42,6 +43,7 @@
                             <th scope="col">Tổng Tiền</th>
                             <th scope="col">Tên Nhân Viên</th>
                             <th scope="col">Tên Người Dùng</th>
+                            <th scope="col">Note</th>
                             <th scope="col">Time</th>
                         </tr>
                     </thead>
@@ -67,13 +69,16 @@
                                     <%= item.Username %>
                                 </td>
                                 <td class="text-center">
+                                    <%= item.note %>
+                                </td>
+                                <td class="text-center">
                                     <%= item.Time %>
                                 </td>
                                 <td class="text-center">
                                     <button data-item-id="<%= item.id %>" data-item-idDonHang="<%= item.DonHang %>"
                                         data-item-Product="<%= item.Product %>" data-item-SoLuong="<%= item.SoLuong %>"
                                         data-item-TongTien="<%= item.TongTien %>" data-item-Staff="<%= item.Staff_name %>"
-                                        data-item-User="<%= item.Username %>" type="button" data-bs-toggle="modal"
+                                        data-item-User="<%= item.Username %>" data-item-note="<%= item.note %>" type="button" data-bs-toggle="modal"
                                         class="btn btn-success m-2" data-bs-target="#updateModal">edit
                                     </button>
 
@@ -132,19 +137,30 @@
                                         </select>
                                         <label for="Username" class="form-label">Người Mua Hàng</label>
                                         <input name="Username" type="text" id="Username" class="form-control">
+                                        <label for="SIZEBill" class="form-label">Size</label>
                                         <div  style=" display: flex; ">
-                                            <div style=" display: flex;">
-                                            <input class="form-check-input"  type="checkbox" value="Tiền Mặt" id="tienmat" name="tienmat" checked>
-                                            <label style="margin-left: 10px; width: 100px;" for="tienmat">
-                                                Tiền Mặt
+                                            
+                                            <input class="form-check-input"  type="checkbox" value="S" id="Size" name="Size" checked>
+                                            <label style="margin-left: 10px;" for="tienmat">
+                                                S
                                             </label>
-                                            </div>
-                                            <input class="form-check-input"  type="checkbox" value="Chuyển Khoản" id="ck" name="ck" style="margin-left: 50px;" >
+                                            
+                                            <input class="form-check-input"  type="checkbox" value="M" id="Size" name="Size" style="margin-left: 50px;" >
                                             <label style="margin-left: 10px;" for="ck">
-                                                Chuyển Khoản
+                                                M
+                                            </label>
+                                            <input class="form-check-input"  type="checkbox" value="L" id="Size" name="Size" style="margin-left: 50px;" >
+                                            <label style="margin-left: 10px;" for="ck">
+                                                L
+                                            </label>
+                                            <input class="form-check-input"  type="checkbox" value="XL" id="Size" name="Size" style="margin-left: 50px;" >
+                                            <label style="margin-left: 10px;" for="ck">
+                                                XL
                                             </label>
                                             
                                             </div>
+                                            <label for="note" class="form-label">Note</label>
+                                        <input name="note" type="text" id="note" class="form-control">
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -170,32 +186,61 @@
                                     </div>
                                     <form id="editform" action="OrderDetails/edit" method="post">
                                         <div class="modal-body">
-                                            <div class="input-group mb-3">
-                                                <label for="idDonHang" class="input-group-text label-width">IdDonHang</label>
-                                                <input type="text" name="idDonHang" id="idDonHang" class="form-control" required>
+                                            <label for="Product" class="form-label" style="margin-top: 10px;">Sản Phẩm</label>
+                                        <select class="form-select mt-2" aria-label="Pick Product" name="Product" id="Product" multiple  onchange="tinhTongTien()">
+                                            <% product.forEach(item=> { %>
+                                                <option value="<%= item.Name %>" id="<%= item.id %>" >
+                                                     <%= item.Name %> 
+                                                </option>
+                                                <% }) %>
+                                        </select>
+                                        <div style="display: flex; margin-top: 10px;">
+                                            <label style="width: 100px; font-size: medium;" for="SLSP">
+                                            Số Lượng
+                                        </label >
+                                            <input name="SLSP" type="number" id="SLSP" class="form-control" >
                                             </div>
-                                            <div class="input-group mb-3">
-                                                <label for="idProduct" class="input-group-text label-width">Sản Phẩm</label>
-                                                <input type="text" name="sanpham" id="idProduct" class="form-control" required>
+                                        
+                                        <div style="display: flex; margin-top: 10px;">
+                                            <label style="width: 100px; font-size: medium;" for="TongTien">
+                                                Tổng tiền
+                                            </label >
+                                            <input name="TongTien" type="text" id="TongTien" class="form-control" readonly>
+                                        </div>
+                                        <label for="Staff_name" class="form-label">Nhân Viên</label>
+                                        <select class="form-select mt-2" aria-label="Pick Staff" name="Staff_name" required >
+                                            <% Staff.forEach(item=> { %>
+                                                <option value="<%= item.Fullname %>">
+                                                    <%= item.Fullname %>
+                                                </option>
+                                                <% }) %>
+                                        </select>
+                                        <label for="Username" class="form-label">Người Mua Hàng</label>
+                                        <input name="Username" type="text" id="Username" class="form-control">
+                                        <label for="SIZEBill" class="form-label">Size</label>
+                                        <div  style=" display: flex; ">
+                                            
+                                            <input class="form-check-input"  type="checkbox" value="S" id="Size" name="Size" checked>
+                                            <label style="margin-left: 10px;" for="tienmat">
+                                                S
+                                            </label>
+                                            
+                                            <input class="form-check-input"  type="checkbox" value="M" id="Size" name="Size" style="margin-left: 50px;" >
+                                            <label style="margin-left: 10px;" for="ck">
+                                                M
+                                            </label>
+                                            <input class="form-check-input"  type="checkbox" value="L" id="Size" name="Size" style="margin-left: 50px;" >
+                                            <label style="margin-left: 10px;" for="ck">
+                                                L
+                                            </label>
+                                            <input class="form-check-input"  type="checkbox" value="XL" id="Size" name="Size" style="margin-left: 50px;" >
+                                            <label style="margin-left: 10px;" for="ck">
+                                                XL
+                                            </label>
+                                            
                                             </div>
-                                            <div class="input-group mb-3">
-                                                <label for="Soluong" class="input-group-text label-width">Số Lượng</label>
-                                                <input type="number" name="soluong" id="Soluong" class="form-control" required>
-                                            </div>
-                                            <div class="input-group mb-3">
-                                                <label for="Tongtien" class="input-group-text label-width">Tổng Tiền</label>
-                                                <input type="text" name="sotien" id="Tongtien" class="form-control" required>
-                                            </div>
-                                            <div class="input-group mb-3">
-                                                <label for="Tennhanvien" class="input-group-text label-width">Tên Nhân Viên</label>
-                                                <input type="text" name="tennhanvien" id="Tennhanvien"
-                                                    class="form-control" required>
-                                            </div>
-                                            <div class="input-group mb-3">
-                                                <label for="Tennguoidung" class="input-group-text label-width">Tên Người Dùng</label>
-                                                <input type="text" name="nguoidung" id="Tennguoidung"
-                                                    class="form-control" required>
-                                            </div>
+                                            <label for="note" class="form-label">Note</label>
+                                        <input name="note" type="text" id="note" class="form-control">
 
 
 
@@ -270,28 +315,37 @@
                 btnEdit.forEach(button => {
                     button.addEventListener('click', function () {
                         const itemId = this.getAttribute('data-item-id');
-                        const itemDonhang = this.getAttribute('data-item-idDonHang');
+                        
                         const itemProduct = this.getAttribute('data-item-Product');
                         const itemSoluong = this.getAttribute('data-item-SoLuong');
                         const itemTongTien = this.getAttribute('data-item-TongTien');
                         const itemStaff = this.getAttribute('data-item-Staff');
                         const itemUser = this.getAttribute('data-item-User');
+                        const itemNote=this.getAttribute('data-item-note')
                         console.log('itemuser:', itemUser);
                         // Truy xuất phần tử trong modal để cập nhật nội dung
                         const modalbody = editmodal._element.querySelector('.modal-body');
-                        const inputIdDonhang = editForm.querySelector('#idDonHang');
-                        const inputProduct = editForm.querySelector('#idProduct');
-                        const inputsoluong = editForm.querySelector('#Soluong');
-                        const inputTongTien = editForm.querySelector('#Tongtien');
-                        const inputTenNhanVien = editForm.querySelector('#Tennhanvien');
-                        const inputUsername = editForm.querySelector('#Tennguoidung');
-                            
-                        inputIdDonhang.value = itemDonhang;
+                        const inputProduct = editForm.querySelector('#Product');
+                        const inputsoluong = editForm.querySelector('#SLSP');
+                        const inputTongTien = editForm.querySelector('#TongTien');
+                        const inputTenNhanVien = editForm.querySelector('[name="Staff_name"]');
+                        const inputUsername = editForm.querySelector('#Username');
+                        const inputNote = editForm.querySelector('#note');  
+                        
                         inputProduct.value = itemProduct;
                         inputsoluong.value = itemSoluong;
                         inputTongTien.value = itemTongTien;
                         inputTenNhanVien.value = itemStaff;
                         inputUsername.value = itemUser;
+                        inputNote.value = itemNote;
+                        const prdOptions = inputProduct.querySelectorAll('option');
+                        prdOptions.forEach(option => {
+                            if (option.value === itemProduct) {
+                                option.setAttribute('selected', 'selected');
+                            } else {
+                                option.removeAttribute('selected');
+                            }
+                        });
 
                         editForm.action = `OrderDetails/update/${itemId}`;
                     })
@@ -321,6 +375,8 @@
         }
     }
   </script>
+
+  
 
   <script>
    

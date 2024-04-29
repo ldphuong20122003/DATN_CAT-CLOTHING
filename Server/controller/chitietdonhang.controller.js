@@ -49,7 +49,8 @@ exports.newbill= async(req,res,next)=>{
 
     // Định dạng lại ngày tháng theo định dạng mong muốn
    var newdate= date.getDate()+'/' + (date.getMonth() + 1)   +  '/' +  date.getFullYear();;
-    let dataBill={
+   const Size= req.body.Size||[];
+   let dataBill={
         id:Id,
         Product : req.body.Product||[],
         SoLuong : req.body.SLSP,
@@ -57,6 +58,8 @@ exports.newbill= async(req,res,next)=>{
         Time: newdate,
         TongTien : req.body.TongTien,
         Username : req.body.Username,
+        Size :Size,
+        note: req.body.note,
     }
 
     const docId=Id? collectionRef.doc(Id):collectionRef.doc();
@@ -86,20 +89,26 @@ exports.delete = async (req, res, next) => {
 }
 
 exports.put = async(req,res,next) =>{
+    const date =  new Date();
     
-    let dataOrderdetail = {
-        DonHang: req.body.idDonHang,
-        Product: req.body.sanpham,
-        SoLuong:req.body.soluong,
-        Staff_name:req.body.tennhanvien,
-        TongTien:req.body.sotien,
-        Username:req.body.nguoidung
+    var newdate= date.getDate()+'/' + (date.getMonth() + 1)   +  '/' +  date.getFullYear();;
+   const Size= req.body.Size||[];
+   let dataBill={
+       
+        Product : req.body.Product||[],
+        SoLuong : req.body.SLSP,
+        Staff_name : req.body.Staff_name,
+        Time: newdate,
+        TongTien : req.body.TongTien,
+        Username : req.body.Username,
+        Size :Size,
+        note: req.body.note,
     }
     
     try {
-        console.log(dataOrderdetail);
+        console.log(dataBill);
         const id = req.params.id;
-        await firestore.collection('Order Details').doc(id).set(dataOrderdetail,{merge : true});
+        await firestore.collection('Order Details').doc(id).set(dataBill,{merge : true});
         res.redirect('/OrderDetails');
     } catch (error) {
         console.error('fetching error data',error);
