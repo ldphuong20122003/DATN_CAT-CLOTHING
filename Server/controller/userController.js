@@ -1,4 +1,6 @@
 const admin = require('firebase-admin');
+const db = require("../model/firebaseConfig");
+const { FieldValue } = require('firebase-admin/firestore');
 exports.listUsers = async (req, res, next) => {
     let msg = '';
     let list = null;
@@ -29,10 +31,18 @@ exports.listUsers = async (req, res, next) => {
 
 exports.delete=async(req,res,next)=>{
     try {
-        let id = req.params.id; // Lấy ID tài liệu từ URL
-    
-        // Xóa tài liệu dựa trên ID đã cung cấp
-        await admin.firestore().collection('Users').doc(id).delete();
+        let id = req.query.id; // Lấy ID tài liệu từ URL
+        let tt = req.query.tt;
+if(tt===''){
+     await db.collection('Users').doc(id).update({
+         Trangthai: 'Banned'
+     });
+}else{
+    await db.collection('Users').doc(id).update({
+        Trangthai: FieldValue.delete()
+    });
+}
+
     
         res.redirect('/users');
       } catch (error) {
