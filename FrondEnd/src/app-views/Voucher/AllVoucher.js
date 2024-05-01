@@ -3,8 +3,6 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import config from "../../../config";
 import { SvgXml } from "react-native-svg";
 import BackSvg from "../../../assets/Svg/BackSvg";
-import ListFlashSale_Home from "../Product/FlashSale/component/ListFlashSale_Home";
-import ListVoucher_Home from "./component/ListVoucher_Home";
 import ListAllVoucher from "./component/ListAllVoucher";
 const AllVoucher = ({navigation}) => {
   const IP= config.IP;

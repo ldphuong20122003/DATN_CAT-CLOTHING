@@ -1,4 +1,5 @@
 import {
+  Alert,
   Image,
   ScrollView,
   StyleSheet,
@@ -146,33 +147,45 @@ const InformationOrder = ({ navigation, route }) => {
     }
 
     const existingVouchers = await AsyncStorage.getItem(`Voucher${userId}`);
-    let newVoucherList = JSON.parse(existingVouchers) || [];
+let newVoucherList = JSON.parse(existingVouchers) || [];
 
-    // Kiểm tra xem voucher này đã tồn tại trong danh sách chưa
-    let voucherExists = false;
-    for (const item of newVoucherList) {
-      if (item.id === dataVoucher[0].id) {
-        voucherExists = true;
-        break;
-      }
+// Kiểm tra xem dataVoucher có dữ liệu không
+if (dataVoucher && dataVoucher.length > 0) {
+  // Kiểm tra xem voucher này đã tồn tại trong danh sách chưa
+  let voucherExists = false;
+  for (const item of newVoucherList) {
+    if (item.id === dataVoucher[0].id) {
+      voucherExists = true;
+      break;
     }
-    if (voucherExists) {
-      Alert.alert("Lỗi", "Tài khoản bạn đã có Voucher này.");
-      return;
-    }
+  }
+  if (voucherExists) {
+    console.log("Tài khoản bạn đã có Voucher này.");
+    return;
+  }
 
-    // Thêm voucher mới vào danh sách
-    newVoucherList.push(dataVoucher[0]);
+  // Thêm voucher mới vào danh sách
+  newVoucherList.push(dataVoucher[0]);
 
-    // Lưu danh sách voucher mới vào AsyncStorage
-    await AsyncStorage.setItem(
-      `Voucher${userId}`,
-      JSON.stringify(newVoucherList)
-    );
+  // Lưu danh sách voucher mới vào AsyncStorage
+  await AsyncStorage.setItem(
+    `Voucher${userId}`,
+    JSON.stringify(newVoucherList)
+  );
 
-    console.log("ok");
+  console.log("ok");
+} else {
+  console.log("Không có dữ liệu voucher.");
+}
   };
-
+  // const clearVoucherData = async (userId) => {
+  //   try {
+  //     await AsyncStorage.removeItem(`Voucher${userId}`);
+  //     console.log('Voucher data cleared successfully');
+  //   } catch (error) {
+  //     console.error('Error clearing voucher data:', error);
+  //   }
+  // };
   const product = item.product;
   let totalPayment = 0;
 

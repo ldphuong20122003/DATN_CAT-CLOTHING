@@ -58,10 +58,13 @@ const WebviewPayment = ({ navigation, route }) => {
   const transportMethod = route.params.transportMethod;
   const voucher = route.params.voucher;
   const totalPayment = route.params.totalPayment;
+  const [paymentHandled, setPaymentHandled] = useState(false); // Biến state để kiểm soát việc gọi hàm handlePayment
+
   const handleWebViewNavigationStateChange = (newState) => {
-    if (newState.url.includes(`http://192.168.1.7:3000/Success`)) {
+    if (!paymentHandled && newState.url.includes(`http://192.168.1.7:3000/Success`)) { // Kiểm tra biến state paymentHandled trước khi gọi hàm handlePayment
       handlePayment();
-  }
+      setPaymentHandled(true); // Đánh dấu rằng đã xử lý thanh toán
+    }
   };
   const removeVoucherById = async (userId, voucherIdToRemove) => {
     try {
