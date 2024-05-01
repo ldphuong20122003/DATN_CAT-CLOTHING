@@ -25,7 +25,6 @@ const ListAllVoucher = ({ data, onPress }) => {
     getUserId();
   }, [userId]);
   const saveVoucher = async (voucher) => {
-    console.log(voucher);
     try {
       const existingVouchers = await AsyncStorage.getItem(`Voucher${userId}`);
       let newVoucherList = JSON.parse(existingVouchers) || [];

@@ -147,7 +147,10 @@ const HomeScreen = ({ navigation }) => {
               <Text style={{ fontSize: 14, fontWeight: 500, color: "#1890ff" }}>
                 Flash Sale
               </Text>
-              <TouchableOpacity onPress={gotoAllFlashSale} style={{ flexDirection: "row", alignItems: "center" }}>
+              <TouchableOpacity
+                onPress={gotoAllFlashSale}
+                style={{ flexDirection: "row", alignItems: "center" }}
+              >
                 <Text
                   style={{ fontSize: 12, fontWeight: 400, color: "#1890ff" }}
                 >

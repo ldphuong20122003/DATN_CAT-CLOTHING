@@ -30,9 +30,6 @@ const Product_Search = ({ navigation }) => {
   const [visible, setVisible] = React.useState(false);
   const route = useRoute();
   const { keyword } = route.params;
-  const handleItemClick = (item) => {
-    console.log(item.Name);
-  };
   const [index, setIndex] = useState(0);
   const [routes] = React.useState([
     { key: "1", title: "Tất cả" },

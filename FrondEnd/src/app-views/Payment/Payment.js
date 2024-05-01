@@ -1,4 +1,5 @@
 import {
+  Alert,
   Image,
   ScrollView,
   StyleSheet,
@@ -28,7 +29,16 @@ const Payment = ({ navigation, route }) => {
     navigation.goBack();
   };
   const gotoPaymentVnPay = () => {
-    navigation.navigate("PaymentVNPayScreen", { userId:userId,products:products,addressorder:addressorder,totalQuantity:totalQuantity,paymentMethod:paymentMethod,transportMethod:transportMethod,voucher:voucher,totalPayment:totalPayment });
+    navigation.navigate("PaymentVNPayScreen", {
+      userId: userId,
+      products: products,
+      addressorder: addressorder,
+      totalQuantity: totalQuantity,
+      paymentMethod: paymentMethod,
+      transportMethod: transportMethod,
+      voucher: voucher,
+      totalPayment: totalPayment,
+    });
   };
   const gotoPaymentMethod = () => {
     navigation.navigate("Payment_Method", { paymentMethod: paymentMethod });
@@ -62,7 +72,6 @@ const Payment = ({ navigation, route }) => {
   const [visible, setVisible] = useState(false);
   const [userId, setUserId] = useState("");
   const [item, setItem] = useState(null);
-
   // Hàm để tạo và lưu item vào state
   const createAndSetItem = (responseData, createdDocumentID) => {
     // Tạo item với createdDocumentID làm giá trị cho trường id
@@ -74,7 +83,6 @@ const Payment = ({ navigation, route }) => {
     // Lưu item vào state
     setItem(newItem);
   };
-
   const sourcePage = route.params.sourcePage;
   const calculateQuantity = () => {
     return products.reduce((acc, curr) => acc + curr.quantityInCart, 0);
@@ -152,8 +160,57 @@ const Payment = ({ navigation, route }) => {
     return totalPayment;
   };
   const totalPayment = calculateTotalPayment(totalPrice, transportMethod);
-   
+  const removeVoucherById = async (userId, voucherIdToRemove) => {
+    try {
+      // Lấy dữ liệu của tất cả các voucher của người dùng từ AsyncStorage
+      const storedVouchers = await AsyncStorage.getItem(`Voucher${userId}`);
+
+      if (storedVouchers) {
+        // Chuyển dữ liệu thành mảng các voucher
+        const vouchers = JSON.parse(storedVouchers);
+
+        // Tìm và xóa voucher có id trùng khớp
+        const updatedVouchers = vouchers.filter(
+          (voucher) => voucher.id !== voucherIdToRemove
+        );
+
+        // Lưu lại danh sách voucher sau khi xóa vào AsyncStorage
+        await AsyncStorage.setItem(
+          `Voucher${userId}`,
+          JSON.stringify(updatedVouchers)
+        );
+      }
+    } catch (error) {
+      console.error("Lỗi khi xóa voucher:", error);
+    }
+  };
+  const removeOrderedProducts = async (userId, productsOrdered) => {
+    try {
+      const cartKey = `cartItems_${userId}`;
+      const cartItemsJSON = await AsyncStorage.getItem(cartKey);
+      let cartItems = cartItemsJSON ? JSON.parse(cartItemsJSON) : [];
+
+      // Lọc để loại bỏ các sản phẩm đã đặt hàng dựa trên id và sizeInCart
+      const updatedCartItems = cartItems.filter((cartItem) => {
+        return !productsOrdered.some(
+          (productOrdered) =>
+            productOrdered.id === cartItem.id &&
+            productOrdered.sizeInCart === cartItem.sizeInCart
+        );
+      });
+
+      // Lưu lại danh sách sản phẩm đã cập nhật vào AsyncStorage
+      await AsyncStorage.setItem(cartKey, JSON.stringify(updatedCartItems));
+      console.log("Updated cart items after order:", updatedCartItems);
+    } catch (error) {
+      console.error("Failed to update cart after order:", error);
+    }
+  };
   const handlePayment = async () => {
+    if (!addressorder) {
+      Alert.alert("Error", "Vui lòng chọn địa chỉ giao hàng");
+      return;
+    }
     try {
       let paymentMethodValue = {};
       if (paymentMethod === "option1") {
@@ -171,12 +228,15 @@ const Payment = ({ navigation, route }) => {
       } else if (transportMethod === "option3") {
         transportMethodValue = { phuongthucvanchuyen: "Hỏa tốc" };
       }
-      let vouchersMethod = "";
-      if (voucher) {
-        vouchersMethod = { id_voucher: voucher.id };
-      } else {
-        vouchersMethod = { id_voucher: "" };
+      let voucherId = "";
+      const storedVoucher = await AsyncStorage.getItem("@voucher_order");
+      if (storedVoucher) {
+        const voucherData = JSON.parse(storedVoucher);
+        voucherId = voucherData.id;
+        // Xóa voucher khỏi AsyncStorage
+        await AsyncStorage.removeItem("@voucher_order");
       }
+
       let formData = {
         id_user: userId,
         product: products.map((product) => ({
@@ -195,7 +255,7 @@ const Payment = ({ navigation, route }) => {
         ...paymentMethodValue,
         ...transportMethodValue,
         status: "Chờ xác nhận",
-        ...vouchersMethod,
+        id_voucher: voucherId,
         ngaydat: currentDate.format("DD MMM YYYY"),
         totalPayment: totalPayment,
       };
@@ -204,9 +264,12 @@ const Payment = ({ navigation, route }) => {
         formData
       );
       const createdDocumentID = response.data.split(": ")[1];
-      createAndSetItem(formData, createdDocumentID);
-      setVisible(true);
 
+      createAndSetItem(formData, createdDocumentID);
+      removeVoucherById(userId, voucherId);
+      removeOrderedProducts(userId, products);
+      setVisible(true);
+      await AsyncStorage.removeItem("@address_order");
       // Lặp qua từng sản phẩm để cập nhật số lượng tồn kho
       for (const product of products) {
         const productId = product.id;
@@ -329,7 +392,7 @@ const Payment = ({ navigation, route }) => {
           setVoucher(voucherObject);
         } else {
           // Nếu không tồn tại, xử lý theo logic của bạn
-          console.log("Không có địa chỉ đặt hàng được lưu trữ");
+          console.log("Không có Voucher được lưu trữ");
         }
       } catch (error) {
         console.error("Error retrieving voucher:", error);

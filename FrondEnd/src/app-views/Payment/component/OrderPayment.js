@@ -21,7 +21,6 @@ const OrderPayment = ({ navigation, route }) => {
         navigation.goBack();
       };
     const {url}=route.params;
-    console.log(url);
     
 
   return (

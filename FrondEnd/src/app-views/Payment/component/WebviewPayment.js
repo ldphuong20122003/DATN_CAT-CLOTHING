@@ -18,6 +18,7 @@ import IconTickSvg from "../../../../assets/Svg/IconTickSvg";
 import moment from "moment";
 import ModalPopups from "../../Modal/ModalPopup";
 import LottieView from "lottie-react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const IP = config.IP;
 
@@ -58,12 +59,34 @@ const WebviewPayment = ({ navigation, route }) => {
   const voucher = route.params.voucher;
   const totalPayment = route.params.totalPayment;
   const handleWebViewNavigationStateChange = (newState) => {
-    console.log("Navigated to:", newState.url);
     if (newState.url.includes(`http://192.168.1.7:3000/Success`)) {
       handlePayment();
   }
   };
- 
+  const removeVoucherById = async (userId, voucherIdToRemove) => {
+    try {
+      // Lấy dữ liệu của tất cả các voucher của người dùng từ AsyncStorage
+      const storedVouchers = await AsyncStorage.getItem(`Voucher${userId}`);
+
+      if (storedVouchers) {
+        // Chuyển dữ liệu thành mảng các voucher
+        const vouchers = JSON.parse(storedVouchers);
+
+        // Tìm và xóa voucher có id trùng khớp
+        const updatedVouchers = vouchers.filter(
+          (voucher) => voucher.id !== voucherIdToRemove
+        );
+
+        // Lưu lại danh sách voucher sau khi xóa vào AsyncStorage
+        await AsyncStorage.setItem(
+          `Voucher${userId}`,
+          JSON.stringify(updatedVouchers)
+        );
+      }
+    } catch (error) {
+      console.error("Lỗi khi xóa voucher:", error);
+    }
+  };
   const handlePayment = async () => {
     try {
       let paymentMethodValue = {};
@@ -82,12 +105,15 @@ const WebviewPayment = ({ navigation, route }) => {
       } else if (transportMethod === "option3") {
         transportMethodValue = { phuongthucvanchuyen: "Hỏa tốc" };
       }
-      let vouchersMethod = "";
-      if (voucher) {
-        vouchersMethod = { id_voucher: voucher.id };
-      } else {
-        vouchersMethod = { id_voucher: "" };
+      let voucherId = "";
+      const storedVoucher = await AsyncStorage.getItem("@voucher_order");
+      if (storedVoucher) {
+        const voucherData = JSON.parse(storedVoucher);
+        voucherId = voucherData.id;
+        // Xóa voucher khỏi AsyncStorage
+        await AsyncStorage.removeItem("@voucher_order");
       }
+
       let formData = {
         id_user: userId,
         product: products.map((product) => ({
@@ -106,7 +132,7 @@ const WebviewPayment = ({ navigation, route }) => {
         ...paymentMethodValue,
         ...transportMethodValue,
         status: "Chờ xác nhận",
-        ...vouchersMethod,
+        id_voucher: voucherId,
         ngaydat: currentDate.format("DD MMM YYYY"),
         totalPayment: totalPayment,
       };
@@ -116,12 +142,13 @@ const WebviewPayment = ({ navigation, route }) => {
       );
       const createdDocumentID = response.data.split(": ")[1];
       createAndSetItem(formData, createdDocumentID);
+      removeVoucherById(userId, voucherId);
       setVisible(true);
 
       // Lặp qua từng sản phẩm để cập nhật số lượng tồn kho
       for (const product of products) {
         const productId = product.id;
-        const sizeOrdered = product.sizeInCart;
+        const sizeOrdered = product.sizeInCart;  
         const quantityOrdered = product.quantityInCart;
         const responseProduct = await axios.get(
           `http://${IP}:3000/API/product/?id=${productId}`
@@ -158,6 +185,7 @@ const WebviewPayment = ({ navigation, route }) => {
       console.error("Error handling payment:", error);
     }
   };
+
 
   return (
     <View style={styles.container}>

@@ -20,13 +20,17 @@ import DownSvg from "../../../assets/Svg/DownSvg";
 import iconDeleteSvg from "../../../assets/Svg/iconDeleteSvg";
 import ModalFilter from "../Modal/ModalFilter";
 import DeleteSvg from "../../../assets/Svg/DeleteSvg";
+import axios from "axios";
+import { useIsFocused } from "@react-navigation/native";
 
 const CartScreen = ({ navigation }) => {
   const IP = config.IP;
+  const isFocused = useIsFocused();
+
   const [cartItems, setCartItems] = useState([]);
+  const [productInAPI, setProductInAPI] = useState([]);
   const [userId, setUserId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [isChecked, setChecked] = useState(false);
   const [selectedSize, setSelectedSize] = useState(""); // State lưu kích cỡ được chọn
   const [selectedSizeAmount, setSelectedSizeAmount] = useState(0); // State lưu số lượng tương ứng với kích cỡ được chọn
   const [visibleChangeProduct, setVisibleChangeProduct] = useState(false);
@@ -36,6 +40,32 @@ const CartScreen = ({ navigation }) => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [isCheckedAll, setIsCheckedAll] = useState(false);
   const gotoBack = () => navigation.goBack();
+  const openModal = (product) => {
+    setSelectedProduct(product);
+    setSelectedProductQuantity(product.quantityInCart.toString());
+    setVisibleChangeProduct(true);
+    setSelectedModalSize(product.sizeInCart); // Thêm dòng này
+    setSelectedSize(product.sizeInCart); // Thêm dòng này
+    setSelectedSizeAmount(product.SizeProduct[product.sizeInCart]); // Thêm dòng này
+  };
+  const closeModal = () => {
+    setVisibleChangeProduct(false);
+  };
+  const handleSizeSelection = (size, amount) => {
+    setSelectedSize(size);
+    setSelectedSizeAmount(amount);
+  };
+  const handleIncrementQuantity = () => {
+    const newQuantity = parseInt(selectedProductQuantity) + 1;
+    setSelectedProductQuantity(newQuantity.toString());
+  };
+
+  const handleDecrementQuantity = () => {
+    const newQuantity = parseInt(selectedProductQuantity) - 1;
+    if (newQuantity >= 1) {
+      setSelectedProductQuantity(newQuantity.toString());
+    }
+  };
   const getUserId = async () => {
     try {
       const userIdValue = await AsyncStorage.getItem("UserId");
@@ -46,15 +76,55 @@ const CartScreen = ({ navigation }) => {
       console.log(error);
     }
   };
-  useEffect(() => {
-    getUserId();
-  }, []);
+  const getProductInAPI = async () => {
+    try {
+      const response = await axios.get(`http://${IP}:3000/API/product`);
+      const data = response.data;
+      setProductInAPI(data);
+    } catch (error) {
+      console.error("Error fetching favourite list:", error);
+    }
+  };
+  const updateCartItemSizeProduct = async (userId, cartItems, productInAPI) => {
+    try {
+      // Lấy danh sách sản phẩm từ AsyncStorage
+      const cartItemsString = await AsyncStorage.getItem(`cartItems_${userId}`);
+      if (cartItemsString !== null) {
+        // Chuyển chuỗi JSON thành mảng cartItems
+        let updatedCartItems = JSON.parse(cartItemsString);
+
+        // Cập nhật thông tin SizeProduct của mỗi cartItem dựa trên productInAPI
+        updatedCartItems = updatedCartItems.map((cartItem) => {
+          const matchingProduct = productInAPI.find(
+            (product) => product.id === cartItem.id
+          );
+          if (matchingProduct) {
+            cartItem.SizeProduct = matchingProduct.Size || {};
+          }
+          return cartItem;
+        });
+
+        // Lưu lại danh sách cartItems đã cập nhật vào AsyncStorage
+        await AsyncStorage.setItem(
+          `cartItems_${userId}`,
+          JSON.stringify(updatedCartItems)
+        );
+
+        console.log("Cart items updated successfully in AsyncStorage");
+      } else {
+        console.log("No cart items found in AsyncStorage");
+      }
+    } catch (error) {
+      console.error("Error updating cart items in AsyncStorage:", error);
+    }
+  };
   const fetchCartItems = async () => {
     setIsLoading(true);
     try {
       const cartItemsString = await AsyncStorage.getItem(`cartItems_${userId}`);
       if (cartItemsString !== null) {
         const cartItemsArray = JSON.parse(cartItemsString);
+        // Cập nhật SizeProduct trong cartItems dựa trên dữ liệu từ ProductInAPI
         setCartItems(cartItemsArray);
       }
     } catch (error) {
@@ -63,6 +133,7 @@ const CartScreen = ({ navigation }) => {
       setIsLoading(false);
     }
   };
+
   const handleIncrement = (index) => {
     const updatedCartItems = [...cartItems];
     updatedCartItems[index].quantityInCart += 1;
@@ -121,33 +192,6 @@ const CartScreen = ({ navigation }) => {
       console.error("Error saving updated cart items to AsyncStorage: ", error);
     }
   };
-
-  const openModal = (product) => {
-    setSelectedProduct(product);
-    setSelectedProductQuantity(product.quantityInCart.toString());
-    setVisibleChangeProduct(true);
-    setSelectedModalSize(product.sizeInCart); // Thêm dòng này
-    setSelectedSize(product.sizeInCart); // Thêm dòng này
-    setSelectedSizeAmount(product.SizeProduct[product.sizeInCart]); // Thêm dòng này
-  };
-  const closeModal = () => {
-    setVisibleChangeProduct(false);
-  };
-  const handleSizeSelection = (size, amount) => {
-    setSelectedSize(size);
-    setSelectedSizeAmount(amount);
-  };
-  const handleIncrementQuantity = () => {
-    const newQuantity = parseInt(selectedProductQuantity) + 1;
-    setSelectedProductQuantity(newQuantity.toString());
-  };
-
-  const handleDecrementQuantity = () => {
-    const newQuantity = parseInt(selectedProductQuantity) - 1;
-    if (newQuantity >= 1) {
-      setSelectedProductQuantity(newQuantity.toString());
-    }
-  };
   const updateCartItem = async () => {
     if (selectedProduct) {
       // Tạo một bản sao của giỏ hàng
@@ -204,26 +248,6 @@ const CartScreen = ({ navigation }) => {
     // Đóng Modal
     closeModal();
   };
-
-  useEffect(() => {
-    fetchCartItems();
-  }, [userId]);
-
-  const handleCheckAll = () => {
-    setIsCheckedAll(!isCheckedAll);
-    if (!isCheckedAll) {
-      const allIndexes = cartItems.map((_, index) => index);
-      setSelectedItems(allIndexes);
-    } else {
-      setSelectedItems([]);
-    }
-  };
-  useEffect(() => {
-    // Kiểm tra xem tất cả các mục có được chọn không
-    const allSelected =
-      selectedItems.length === cartItems.length && cartItems.length > 0;
-    setIsCheckedAll(allSelected);
-  }, [selectedItems, cartItems]);
   const toggleCheckbox = (index) => {
     const newSelectedItems = [...selectedItems];
     if (newSelectedItems.includes(index)) {
@@ -250,26 +274,58 @@ const CartScreen = ({ navigation }) => {
     return totalPayment;
   };
   const handleBuy = async () => {
-    if(selectedItems.length === 0){
-      Alert.alert('Error', 'Bạn chưa chọn sản phẩm nào để đặt hàng');
+    if (selectedItems.length === 0) {
+      Alert.alert("Error", "Bạn chưa chọn sản phẩm nào để đặt hàng");
       return;
     }
-  
+
     // Lấy danh sách sản phẩm đã chọn từ cartItems dựa vào index đã chọn
     const selectedProducts = selectedItems.map((index) => cartItems[index]);
-    
+
     try {
       // Chuyển đổi danh sách sản phẩm đã chọn thành chuỗi JSON để lưu trữ
       const jsonValue = JSON.stringify(selectedProducts);
-      await AsyncStorage.setItem('@selected_products', jsonValue);
-      
+      await AsyncStorage.setItem("@selected_products", jsonValue);
+
       // Chuyển hướng sang màn hình Payment và truyền danh sách sản phẩm đã chọn
-      navigation.navigate('Payment',{ sourcePage: 'selectedProduct', data: selectedProducts });
+      navigation.navigate("Payment", {
+        sourcePage: "selectedProduct",
+        data: selectedProducts,
+      });
     } catch (error) {
       // Xử lý lỗi khi lưu dữ liệu
       console.error("Error saving data", error);
     }
   };
+  const handleCheckAll = () => {
+    setIsCheckedAll(!isCheckedAll);
+    if (!isCheckedAll) {
+      const allIndexes = cartItems.map((_, index) => index);
+      setSelectedItems(allIndexes);
+    } else {
+      setSelectedItems([]);
+    }
+  };
+  useEffect(() => {
+    getUserId();
+  }, []);
+  useEffect(() => {
+    getProductInAPI();
+  }, []);
+  useEffect(() => {
+    fetchCartItems();
+  }, [userId]);
+  useEffect(() => {
+    if (isFocused) {
+      updateCartItemSizeProduct(userId, cartItems, productInAPI);
+    }
+  }, [userId, productInAPI, isFocused]);
+  useEffect(() => {
+    const allSelected =
+      selectedItems.length === cartItems.length && cartItems.length > 0;
+    setIsCheckedAll(allSelected);
+  }, [selectedItems, cartItems]);
+
   return (
     <View style={{ flex: 1 }}>
       <View style={{ flex: 1 }}>
@@ -328,7 +384,6 @@ const CartScreen = ({ navigation }) => {
                                 fontSize: 12,
                                 color: "#5A5A5A",
                                 fontWeight: 400,
-                             
                               }}
                             >
                               Phân loại: {product.sizeInCart}
@@ -677,7 +732,7 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
     marginVertical: 4,
     paddingHorizontal: 4,
-    width:90,
+    width: 90,
   },
   itemInCart: {
     flex: 1,
