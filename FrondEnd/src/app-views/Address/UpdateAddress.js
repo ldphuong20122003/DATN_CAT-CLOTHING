@@ -19,7 +19,6 @@ const UpdateAddress = ({ navigation, route }) => {
   const { index, address } = route.params;
   const [isToggled, setIsToggled] = useState(address.isDefault); // State để theo dõi trạng thái bật/tắt
   const { item } = route.params;
-  console.log(address);
   const [fullname_update, setFullName] = useState(address.fullname); // State
   const [phone_update, setPhone] = useState(address.phone);
   const [city_update, setCity] = useState("");

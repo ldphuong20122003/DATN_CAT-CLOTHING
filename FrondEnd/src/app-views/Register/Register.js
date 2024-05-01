@@ -8,6 +8,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import LogoCat from "../../../assets/Svg/LogoCat";
 import PhoneSvg from "../../../assets/Svg/PhoneSvg";
@@ -20,7 +21,9 @@ import { firebaseConfig } from "../../config";
 import firebase from "firebase/compat/app";
 import Hide_pass from "../../../assets/Svg/Hide_pass";
 import LottieView from "lottie-react-native";
+import config from "../../../config";
 
+const IP = config.IP;
 const Register = ({ navigation }) => {
   const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
@@ -59,26 +62,41 @@ const Register = ({ navigation }) => {
     if (!validateForm()) {
       return;
     }
-    setLoading(true); // Bắt đầu loading
-    const fullPhoneNumber = `+84${phoneNumber.substring(1)}`; // Thêm mã quốc gia Việt Nam (+84)
-    const phoneProvider = new firebase.auth.PhoneAuthProvider();
-    try {
-      const verificationId = await phoneProvider.verifyPhoneNumber(
-        fullPhoneNumber,
-        recaptchaVerifierRef.current
-      );
-      navigation.navigate("OTPScreen", {
-        fullname,
-        email,
-        phoneNumber,
-        password,
-        verificationId,
+    let url_check_login = `http://${IP}:3000/API/users?Phone=` + phoneNumber;
+    fetch(url_check_login)
+      .then((res) => {
+        return res.json();
+      })
+      .then(async (res_login) => {
+        if (res_login.length == 1) {
+          Alert.alert(
+            "Error",
+            "Số điện thoại đã được đăng ký. Vui lòng kiểm tra lại"
+          );
+          return;
+        } else {
+          setLoading(true); // Bắt đầu loading
+          const fullPhoneNumber = `+84${phoneNumber.substring(1)}`; // Thêm mã quốc gia Việt Nam (+84)
+          const phoneProvider = new firebase.auth.PhoneAuthProvider();
+          try {
+            const verificationId = await phoneProvider.verifyPhoneNumber(
+              fullPhoneNumber,
+              recaptchaVerifierRef.current
+            );
+            navigation.navigate("OTPScreen", {
+              fullname,
+              email,
+              phoneNumber,
+              password,
+              verificationId,
+            });
+          } catch (error) {
+            console.log("Error sending verification code: ", error);
+          }
+          setLoading(false); // Kết thúc loading
+          setPhoneNumber("");
+        }
       });
-    } catch (error) {
-      console.log("Error sending verification code: ", error);
-    }
-    setLoading(false); // Kết thúc loading
-    setPhoneNumber("");
   };
 
   const gotoLogin = () => {

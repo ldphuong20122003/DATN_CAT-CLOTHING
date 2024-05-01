@@ -89,7 +89,9 @@ const AccountScreen = ({ navigation }) => {
   const gotoHisOrder = () => {
     navigation.navigate("History_Order");
   };
-  return (
+  const defaultAvatar = "https://chungcuhatecolaroma.net.vn/wp-content/uploads/2022/10/anh-avatar-dep-cho-con-gai-5.jpg";
+  const uriImage = data_User.length > 0 && data_User[0].Avatar ? data_User[0].Avatar : defaultAvatar;
+    return (
     <SafeAreaView style={{ flex: 0.93 }}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View>
@@ -102,7 +104,7 @@ const AccountScreen = ({ navigation }) => {
           <View style={styles.Voucher}>
             <View style={{ flexDirection: "row" }}>
               <Image
-                source={{uri:data_User.length > 0 ? data_User[0].Avatar : "https://chungcuhatecolaroma.net.vn/wp-content/uploads/2022/10/anh-avatar-dep-cho-con-gai-5.jpg"}}
+                source={{uri: uriImage}}
                 style={{
                   width: 60,
                   height: 60,

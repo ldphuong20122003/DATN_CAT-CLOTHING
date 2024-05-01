@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SvgXml } from "react-native-svg";
 import BannerSvg from "../../../assets/Svg/BannerSvg";
 import {
@@ -25,9 +25,9 @@ import LottieView from "lottie-react-native";
 
 const IP = config.IP;
 const Login = ({ navigation }) => {
-  const [phoneNumber, setPhoneNumber] = useState("0826930839");
-  const [password, setPassword] = useState("Phuong1234");
-  const [isChecked, setChecked] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [password, setPassword] = useState("");
+  const [isChecked, setChecked] = useState(true);
   const [loading, setLoading] = useState(false); // State cho loading
   const [showPassword, setShowPassword] = useState(false);
   const toggleShowPassword = () => {
@@ -73,8 +73,10 @@ const Login = ({ navigation }) => {
           } else {
             try {
               await AsyncStorage.setItem("UserId", objU.id);
-
-              await AsyncStorage.setItem("InforLogin", JSON.stringify(objU));
+              if (isChecked) {
+                await AsyncStorage.setItem("phoneNumber", phoneNumber);
+                await AsyncStorage.setItem("password", password);
+              }
               gotoHome();
             } catch (error) {
               console.log(error);
@@ -83,6 +85,22 @@ const Login = ({ navigation }) => {
         }
       });
   };
+  const loadSavedCredentials = async () => {
+    try {
+      const savedPhoneNumber = await AsyncStorage.getItem("phoneNumber");
+      const savedPassword = await AsyncStorage.getItem("password");
+      if (savedPhoneNumber && savedPassword) {
+        setPhoneNumber(savedPhoneNumber);
+        setPassword(savedPassword);
+      }
+    } catch (error) {
+      console.log("Error loading saved credentials:", error);
+    }
+  };
+
+  useEffect(() => {
+    loadSavedCredentials();
+  }, []);
 
   return (
     <View style={{ flex: 1, width: "100%", backgroundColor: "#fff" }}>

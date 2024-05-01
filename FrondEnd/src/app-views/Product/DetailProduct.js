@@ -265,19 +265,26 @@ const Detail_Product = ({ navigation }) => {
         quantityInCart: quantity,
         sizeInCart: selectedSize,
       };
-      try {
-        // Chuyển đổi danh sách sản phẩm đã chọn thành chuỗi JSON để lưu trữ
-        const jsonValue = JSON.stringify(newItem);
-        await AsyncStorage.setItem("@buy_product", jsonValue);
+      if (quantity > selectedSizeAmount) {
+        Alert.alert(
+          "Lỗi",
+          "Số lượng sản phẩm trong giỏ hàng vượt quá số lượng sản phẩm có sẵn."
+        );
+      } else {
+        try {
+          // Chuyển đổi danh sách sản phẩm đã chọn thành chuỗi JSON để lưu trữ
+          const jsonValue = JSON.stringify(newItem);
+          await AsyncStorage.setItem("@buy_product", jsonValue);
 
-        // Chuyển hướng sang màn hình Payment và truyền danh sách sản phẩm đã chọn
-        navigation.navigate("Payment", {
-          sourcePage: "buyProduct",
-          data: newItem,
-        });
-      } catch (error) {
-        // Xử lý lỗi khi lưu dữ liệu
-        console.error("Error saving data", error);
+          // Chuyển hướng sang màn hình Payment và truyền danh sách sản phẩm đã chọn
+          navigation.navigate("Payment", {
+            sourcePage: "buyProduct",
+            data: newItem,
+          });
+        } catch (error) {
+          // Xử lý lỗi khi lưu dữ liệu
+          console.error("Error saving data", error);
+        }
       }
     }
   };

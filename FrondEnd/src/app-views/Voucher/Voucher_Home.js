@@ -4,15 +4,17 @@ import { View } from "react-native";
 import config from "../../../config";
 
 const Voucher_Home = () => {
-  const IP= config.IP;
+  const IP = config.IP;
   const [data, setData] = useState([]);
   const getAPI = () => {
     return fetch(`http://${IP}:3000/API/Voucher`)
       .then((res) => res.json())
-      .then((data) => setData(data))
+      .then((data) => {
+        const filteredData = data.filter((item) => item.SoLuong !== 0);
+        setData(filteredData);
+      })
       .catch((err) => console.log(err));
   };
-
   useEffect(() => {
     getAPI();
   }, []);

@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Svg, SvgXml } from "react-native-svg";
 import BackSvg from "../../../assets/Svg/BackSvg";
 import AddressSvg from "../../../assets/Svg/AddressSvg";
@@ -22,19 +22,45 @@ import moment from "moment";
 import axios from "axios";
 import ModalPopups from "../Modal/ModalPopup";
 import LottieView from "lottie-react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const IP = config.IP;
 const InformationOrder = ({ navigation, route }) => {
   const [cancleOrder, setCancleOrder] = useState(false);
   const gotoBack = () => {
-    navigation.replace('History_Order');
+    navigation.replace("History_Order");
   };
   const item = route.params.item;
-  console.log(item);
   const products = route.params.item.product;
   const [selectedOption, setSelectedOption] = useState(null);
   const [visible, setVisible] = useState(false);
-
+  const [dataVoucher, setDataVoucher] = useState([]);
+  console.log(dataVoucher);
+  const getAPI = () => {
+    return fetch(`http://${IP}:3000/API/Voucher`)
+      .then((res) => res.json())
+      .then((data) => {
+        const filteredData = data.filter(
+          (item1) => item1.id == item.id_voucher
+        );
+        setDataVoucher(filteredData);
+      })
+      .catch((err) => console.log(err));
+  };
+  const [userId, setUserId] = useState("");
+  const getUserId = async () => {
+    try {
+      const userIdValue = await AsyncStorage.getItem("UserId");
+      if (userIdValue !== null) {
+        setUserId(userIdValue);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getUserId();
+  }, [userId]);
   const handleSelect = (option) => {
     setSelectedOption(option);
   };
@@ -118,7 +144,35 @@ const InformationOrder = ({ navigation, route }) => {
     } catch (error) {
       console.error("Error cancelling order:", error.message);
     }
+
+    const existingVouchers = await AsyncStorage.getItem(`Voucher${userId}`);
+    let newVoucherList = JSON.parse(existingVouchers) || [];
+
+    // Kiểm tra xem voucher này đã tồn tại trong danh sách chưa
+    let voucherExists = false;
+    for (const item of newVoucherList) {
+      if (item.id === dataVoucher[0].id) {
+        voucherExists = true;
+        break;
+      }
+    }
+    if (voucherExists) {
+      Alert.alert("Lỗi", "Tài khoản bạn đã có Voucher này.");
+      return;
+    }
+
+    // Thêm voucher mới vào danh sách
+    newVoucherList.push(dataVoucher[0]);
+
+    // Lưu danh sách voucher mới vào AsyncStorage
+    await AsyncStorage.setItem(
+      `Voucher${userId}`,
+      JSON.stringify(newVoucherList)
+    );
+
+    console.log("ok");
   };
+
   const product = item.product;
   let totalPayment = 0;
 
@@ -143,7 +197,9 @@ const InformationOrder = ({ navigation, route }) => {
   } else if (item.id_voucher === "SALE50K") {
     VoucherCost = 50000;
   }
-
+  useEffect(() => {
+    getAPI();
+  }, []);
   return (
     <View style={styles.Container}>
       <View style={styles.Header}>

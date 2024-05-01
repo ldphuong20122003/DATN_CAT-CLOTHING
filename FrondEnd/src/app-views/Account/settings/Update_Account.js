@@ -60,6 +60,8 @@ const Update_Account = ({ navigation }) => {
   useEffect(() => {
     if (data_User.length > 0 && data_User[0].Avatar) {
       setImage(data_User[0].Avatar);
+    }else{
+      setImage("https://chungcuhatecolaroma.net.vn/wp-content/uploads/2022/10/anh-avatar-dep-cho-con-gai-5.jpg")
     }
   }, [data_User]);
   const pickImage = async () => {
@@ -70,9 +72,6 @@ const Update_Account = ({ navigation }) => {
       aspect: [4, 3],
       quality: 1,
     });
-
-    console.log(result);
-
     if (!result.canceled) {
       setImage(result.assets[0].uri);
     }
@@ -169,7 +168,6 @@ const Update_Account = ({ navigation }) => {
     }
 };
 
-  console.log(image);
   const [visible, setVisible] = React.useState(false);
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>

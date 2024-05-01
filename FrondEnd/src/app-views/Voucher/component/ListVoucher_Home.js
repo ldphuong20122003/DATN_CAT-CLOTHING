@@ -24,7 +24,6 @@ const ListVoucher_Home = ({ data, onPress }) => {
     getUserId();
   }, [userId]);
   const saveVoucher = async (voucher) => {
-    console.log(voucher);
     try {
       const existingVouchers = await AsyncStorage.getItem(`Voucher${userId}`);
       let newVoucherList = JSON.parse(existingVouchers) || [];
@@ -49,6 +48,7 @@ const ListVoucher_Home = ({ data, onPress }) => {
       );
   
       // Gọi API để cập nhật số lượng voucher
+      
       const updateSoLuong = voucher.SoLuong - 1;
       const response = await axios.put(`http://${IP}:3000/API/Voucher/update/${voucher.id}`, {
         SoLuong: updateSoLuong

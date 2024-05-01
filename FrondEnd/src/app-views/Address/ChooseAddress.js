@@ -17,8 +17,6 @@ const ChooseAddress = ({ navigation, route }) => {
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState("");
   const [selectedItem, setSelectedItem] = useState(null);
-  // const addressorder = route.params.addressorder;
-  // console.log(addressorder);
 
   const gotoBack = () => {
     navigation.goBack();
@@ -91,7 +89,6 @@ const ChooseAddress = ({ navigation, route }) => {
     };
 
     fetchAddress(); 
-    console.log(data);
     const unsubscribe = navigation.addListener("focus", () => {
       fetchAddress(); // Gọi hàm fetchAddress khi màn hình được focus lại.
     });
