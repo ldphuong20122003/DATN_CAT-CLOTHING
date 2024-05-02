@@ -3,9 +3,12 @@ import { View } from "react-native";
 import ListReNoti from "./component/ListReNoti";
 import config from "../../../config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useIsFocused } from "@react-navigation/native";
 
 const Recommend_Noti = () => {
   const IP = config.IP;
+  const isFocused = useIsFocused();
+
   const [userId, setUserId] = useState("");
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -20,6 +23,7 @@ const Recommend_Noti = () => {
       console.log(error);
     }
   };
+  console.log(data);
 
   const fetchNotificationIDs = () => {
     setIsLoading(true);
@@ -56,8 +60,11 @@ const Recommend_Noti = () => {
   }, []);
 
   useEffect(() => {
-    fetchNotificationIDs();
-  }, [userId]);
+    if(isFocused){
+      fetchNotificationIDs();
+    }
+   
+  }, [userId,isFocused]);
 
   return (
     <View>

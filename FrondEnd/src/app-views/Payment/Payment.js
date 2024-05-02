@@ -299,7 +299,7 @@ const Payment = ({ navigation, route }) => {
       // Thêm thông báo khi đơn hàng được đặt thành công
       let data = {
         Img: "",
-        Time: currentDate.format("DD/MM"),
+        Time: currentDate.format("HH:mm DD/MM/YYYY"),
         Title: "Đã đặt",
         TypeNotification: `Đơn hàng với mã đơn ${createdDocumentID} đã được đặt thành công`,
         id_DonHang: createdDocumentID,

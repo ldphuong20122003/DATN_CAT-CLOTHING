@@ -61,7 +61,11 @@ const WebviewPayment = ({ navigation, route }) => {
   const [paymentHandled, setPaymentHandled] = useState(false); // Biến state để kiểm soát việc gọi hàm handlePayment
 
   const handleWebViewNavigationStateChange = (newState) => {
-    if (!paymentHandled && newState.url.includes(`http://192.168.1.7:3000/Success`)) { // Kiểm tra biến state paymentHandled trước khi gọi hàm handlePayment
+    if (
+      !paymentHandled &&
+      newState.url.includes(`http://192.168.1.7:3000/Success`)
+    ) {
+      // Kiểm tra biến state paymentHandled trước khi gọi hàm handlePayment
       handlePayment();
       setPaymentHandled(true); // Đánh dấu rằng đã xử lý thanh toán
     }
@@ -151,7 +155,7 @@ const WebviewPayment = ({ navigation, route }) => {
       // Lặp qua từng sản phẩm để cập nhật số lượng tồn kho
       for (const product of products) {
         const productId = product.id;
-        const sizeOrdered = product.sizeInCart;  
+        const sizeOrdered = product.sizeInCart;
         const quantityOrdered = product.quantityInCart;
         const responseProduct = await axios.get(
           `http://${IP}:3000/API/product/?id=${productId}`
@@ -177,7 +181,7 @@ const WebviewPayment = ({ navigation, route }) => {
       // Thêm thông báo khi đơn hàng được đặt thành công
       let data = {
         Img: "",
-        Time: currentDate.format("DD/MM"),
+        Time: currentDate.format("HH:mm DD/MM/YYYY"),
         Title: "Đã đặt",
         TypeNotification: `Đơn hàng với mã đơn ${createdDocumentID} đã được đặt thành công`,
         id_DonHang: createdDocumentID,
@@ -188,7 +192,6 @@ const WebviewPayment = ({ navigation, route }) => {
       console.error("Error handling payment:", error);
     }
   };
-
 
   return (
     <View style={styles.container}>
@@ -206,7 +209,7 @@ const WebviewPayment = ({ navigation, route }) => {
         style={{ flex: 1 }}
         onNavigationStateChange={handleWebViewNavigationStateChange}
       />
-      
+
       <ModalPopups visible={visible}>
         <View style={{ alignItems: "center" }}>
           <View style={{ width: 50, height: 70 }}>
@@ -301,7 +304,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
   },
-  
+
   footer: {
     marginHorizontal: 16,
     paddingVertical: 10,
@@ -309,13 +312,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#1890ff",
     borderRadius: 8,
     marginVertical: 16,
-    flexDirection:'row',
-    justifyContent:'center'
+    flexDirection: "row",
+    justifyContent: "center",
   },
   footerText: {
     color: "#fff",
     fontWeight: "600",
-    marginLeft:4,
+    marginLeft: 4,
   },
 });
 

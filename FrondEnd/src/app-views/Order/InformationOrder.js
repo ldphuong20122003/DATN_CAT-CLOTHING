@@ -135,7 +135,7 @@ const InformationOrder = ({ navigation, route }) => {
       // Nếu hủy thành công, thêm thông báo
       let data = {
         Img: "",
-        Time: currentDate.format("DD/MM"),
+        Time: currentDate.format("HH:mm DD/MM/YYYY"),
         Title: "Đã hủy",
         TypeNotification: `Đơn hàng với mã đơn ${item.id} đã được hủy thành công`,
         id_DonHang: item.id,

@@ -281,7 +281,20 @@ const CartScreen = ({ navigation }) => {
 
     // Lấy danh sách sản phẩm đã chọn từ cartItems dựa vào index đã chọn
     const selectedProducts = selectedItems.map((index) => cartItems[index]);
-
+    const invalidProducts = selectedProducts.filter((product) => {
+      const availableSizes = Object.keys(product.SizeProduct);
+      return (
+        !availableSizes.includes(product.sizeInCart) ||
+        parseInt(product.quantityInCart) > parseInt(product.SizeProduct[product.sizeInCart])
+      );
+    });
+  
+    // Nếu có sản phẩm không hợp lệ, hiển thị thông báo và dừng lại
+    if (invalidProducts.length > 0) {
+      const productNames = invalidProducts.map((product) => product.NameProduct).join(", ");
+      Alert.alert("Error", `Số lượng hoặc kích thước không hợp lệ cho sản phẩm: ${productNames}`);
+      return;
+    }
     try {
       // Chuyển đổi danh sách sản phẩm đã chọn thành chuỗi JSON để lưu trữ
       const jsonValue = JSON.stringify(selectedProducts);
@@ -297,6 +310,7 @@ const CartScreen = ({ navigation }) => {
       console.error("Error saving data", error);
     }
   };
+  console.log(cartItems);
   const handleCheckAll = () => {
     setIsCheckedAll(!isCheckedAll);
     if (!isCheckedAll) {
